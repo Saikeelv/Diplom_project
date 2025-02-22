@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.listBoxClients = new System.Windows.Forms.ListBox();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.labelClients = new System.Windows.Forms.Label();
@@ -58,22 +57,13 @@
             this.textBoxOilDictionary = new System.Windows.Forms.TextBox();
             this.buttonDataOfExp = new System.Windows.Forms.Button();
             this.buttonMakeExp = new System.Windows.Forms.Button();
-            this.sekectDBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.selectPortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuStrip.SuspendLayout();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.menuStrip2 = new System.Windows.Forms.MenuStrip();
+            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.selectBDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.selectCOMPortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip2.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // menuStrip
-            // 
-            this.menuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.sekectDBToolStripMenuItem,
-            this.selectPortToolStripMenuItem});
-            this.menuStrip.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(1902, 28);
-            this.menuStrip.TabIndex = 0;
-            this.menuStrip.Text = "menuStrip1";
             // 
             // listBoxClients
             // 
@@ -352,17 +342,48 @@
             this.buttonMakeExp.Text = "Make Experiment";
             this.buttonMakeExp.UseVisualStyleBackColor = true;
             // 
-            // sekectDBToolStripMenuItem
+            // menuStrip1
             // 
-            this.sekectDBToolStripMenuItem.Name = "sekectDBToolStripMenuItem";
-            this.sekectDBToolStripMenuItem.Size = new System.Drawing.Size(90, 24);
-            this.sekectDBToolStripMenuItem.Text = "Sekect DB";
+            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.menuStrip1.Location = new System.Drawing.Point(0, 28);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(1902, 24);
+            this.menuStrip1.TabIndex = 30;
+            this.menuStrip1.Text = "menuStrip1";
             // 
-            // selectPortToolStripMenuItem
+            // menuStrip2
             // 
-            this.selectPortToolStripMenuItem.Name = "selectPortToolStripMenuItem";
-            this.selectPortToolStripMenuItem.Size = new System.Drawing.Size(93, 24);
-            this.selectPortToolStripMenuItem.Text = "Select Port";
+            this.menuStrip2.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.menuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.settingsToolStripMenuItem});
+            this.menuStrip2.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip2.Name = "menuStrip2";
+            this.menuStrip2.Size = new System.Drawing.Size(1902, 28);
+            this.menuStrip2.TabIndex = 31;
+            this.menuStrip2.Text = "menuStrip2";
+            // 
+            // settingsToolStripMenuItem
+            // 
+            this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.selectBDToolStripMenuItem,
+            this.selectCOMPortToolStripMenuItem});
+            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(76, 24);
+            this.settingsToolStripMenuItem.Text = "Settings";
+            // 
+            // selectBDToolStripMenuItem
+            // 
+            this.selectBDToolStripMenuItem.Name = "selectBDToolStripMenuItem";
+            this.selectBDToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.selectBDToolStripMenuItem.Text = "Select BD";
+            this.selectBDToolStripMenuItem.Click += new System.EventHandler(this.selectBDToolStripMenuItem_Click);
+            // 
+            // selectCOMPortToolStripMenuItem
+            // 
+            this.selectCOMPortToolStripMenuItem.Name = "selectCOMPortToolStripMenuItem";
+            this.selectCOMPortToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.selectCOMPortToolStripMenuItem.Text = "Select COM port";
+            this.selectCOMPortToolStripMenuItem.Click += new System.EventHandler(this.selectCOMPortToolStripMenuItem_Click);
             // 
             // Main
             // 
@@ -396,22 +417,20 @@
             this.Controls.Add(this.buttonAddClient);
             this.Controls.Add(this.labelClients);
             this.Controls.Add(this.listBoxClients);
-            this.Controls.Add(this.menuStrip);
-            this.MainMenuStrip = this.menuStrip;
+            this.Controls.Add(this.menuStrip1);
+            this.Controls.Add(this.menuStrip2);
             this.Name = "Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Main";
             this.Load += new System.EventHandler(this.Main_Load);
-            this.menuStrip.ResumeLayout(false);
-            this.menuStrip.PerformLayout();
+            this.menuStrip2.ResumeLayout(false);
+            this.menuStrip2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.MenuStrip menuStrip;
         private System.Windows.Forms.ListBox listBoxClients;
         private System.Windows.Forms.ColorDialog colorDialog1;
         private System.Windows.Forms.Label labelClients;
@@ -441,8 +460,11 @@
         private System.Windows.Forms.TextBox textBoxOilDictionary;
         private System.Windows.Forms.Button buttonDataOfExp;
         private System.Windows.Forms.Button buttonMakeExp;
-        private System.Windows.Forms.ToolStripMenuItem sekectDBToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem selectPortToolStripMenuItem;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.MenuStrip menuStrip2;
+        private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem selectBDToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem selectCOMPortToolStripMenuItem;
     }
 }
 
