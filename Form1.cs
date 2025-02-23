@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using System.Data.SQLite;
+using System.IO.Ports;
 
 namespace Diplom_project
 {
@@ -131,7 +132,46 @@ namespace Diplom_project
 
         private void selectCOMPortToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
+            // Получаем список доступных COM-портов
+            string[] ports = SerialPort.GetPortNames();
+
+            if (ports.Length == 0)
+            {
+                MessageBox.Show("Нет доступных COM-портов.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Создаем всплывающее окно с выпадающим списком
+            Form comPortForm = new Form
+            {
+                Text = "Выбор COM-порта",
+                Size = new System.Drawing.Size(300, 150),
+                FormBorderStyle = FormBorderStyle.FixedDialog,
+                StartPosition = FormStartPosition.CenterScreen
+            };
+
+            ComboBox comboBoxPorts = new ComboBox
+            {
+                DataSource = ports,
+                Dock = DockStyle.Top
+            };
+
+            Button buttonOK = new Button
+            {
+                Text = "Выбрать",
+                Dock = DockStyle.Bottom
+            };
+
+            buttonOK.Click += (s, args) =>
+            {
+                string selectedPort = comboBoxPorts.SelectedItem.ToString();
+                MessageBox.Show($"Выбранный COM-порт: {selectedPort}", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                comPortForm.Close();
+            };
+
+            comPortForm.Controls.Add(comboBoxPorts);
+            comPortForm.Controls.Add(buttonOK);
+            comPortForm.ShowDialog();
         }
     }
 }
