@@ -17,6 +17,7 @@ namespace Diplom_project
     {
         private string selectedFilePath = ""; // Будет хранить путь к БД
         private string connectionString = ""; //строка для хранения полного пути к бд 
+        public string ConnectionString { get; private set; }
 
 
         public Main()
@@ -160,6 +161,8 @@ namespace Diplom_project
 
                     try
                     {
+                        ConnectionString = $"Data Source={selectedFilePath};Version=3;";
+
                         using (SQLiteConnection connection = new SQLiteConnection($"Data Source={selectedFilePath};Version=3;"))
                         {
                             connection.Open();
@@ -261,9 +264,29 @@ namespace Diplom_project
             this.Close();
         }
 
-        private void buttonChangeDataClient_Click(object sender, EventArgs e)
+        private void buttonChangeDataClient_Click(object sender, EventArgs e)//открываем форму для изменения данных клиента
         {
+            if (listBoxClients.SelectedItem == null)
+            {
+                MessageBox.Show("Выберите клиента для изменения!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
+            // Получаем выбранного клиента
+            string selectedClient = listBoxClients.SelectedItem.ToString();
+            string[] parts = selectedClient.Split('-');
+            if (parts.Length < 2)
+            {
+                MessageBox.Show("Ошибка в данных клиента!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            string fio = parts[0].Trim();
+            string phone = parts[1].Trim();
+
+            // Открываем ChangeClient (Form3), передавая данные фио и номер телефона для заполнения
+            ChangeClient form3 = new ChangeClient(this, fio, phone, ConnectionString);
+            form3.ShowDialog(); // Открываем форму
         }
     }
 }
