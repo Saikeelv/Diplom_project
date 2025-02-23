@@ -33,7 +33,6 @@
             this.labelClients = new System.Windows.Forms.Label();
             this.buttonAddClient = new System.Windows.Forms.Button();
             this.buttonDellClient = new System.Windows.Forms.Button();
-            this.buttonChangeClient = new System.Windows.Forms.Button();
             this.labelSamples = new System.Windows.Forms.Label();
             this.listBoxSamples = new System.Windows.Forms.ListBox();
             this.buttonAddSamples = new System.Windows.Forms.Button();
@@ -64,6 +63,7 @@
             this.selectCOMPortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonUpdate = new System.Windows.Forms.Button();
             this.buttonCloseMainForm = new System.Windows.Forms.Button();
+            this.buttonChangeDataClient = new System.Windows.Forms.Button();
             this.menuStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -71,7 +71,7 @@
             // 
             this.listBoxClients.Font = new System.Drawing.Font("Times New Roman", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.listBoxClients.FormattingEnabled = true;
-            this.listBoxClients.ItemHeight = 19;
+            this.listBoxClients.ItemHeight = 16;
             this.listBoxClients.Location = new System.Drawing.Point(12, 68);
             this.listBoxClients.Name = "listBoxClients";
             this.listBoxClients.Size = new System.Drawing.Size(348, 308);
@@ -84,7 +84,7 @@
             this.labelClients.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.labelClients.Location = new System.Drawing.Point(12, 37);
             this.labelClients.Name = "labelClients";
-            this.labelClients.Size = new System.Drawing.Size(66, 22);
+            this.labelClients.Size = new System.Drawing.Size(50, 19);
             this.labelClients.TabIndex = 3;
             this.labelClients.Text = "Clients";
             this.labelClients.Click += new System.EventHandler(this.label1_Click);
@@ -111,24 +111,13 @@
             this.buttonDellClient.UseVisualStyleBackColor = true;
             this.buttonDellClient.Click += new System.EventHandler(this.buttonDellClient_Click);
             // 
-            // buttonChangeClient
-            // 
-            this.buttonChangeClient.Font = new System.Drawing.Font("Times New Roman", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonChangeClient.Location = new System.Drawing.Point(248, 384);
-            this.buttonChangeClient.Name = "buttonChangeClient";
-            this.buttonChangeClient.Size = new System.Drawing.Size(112, 25);
-            this.buttonChangeClient.TabIndex = 6;
-            this.buttonChangeClient.Text = "Change";
-            this.buttonChangeClient.UseVisualStyleBackColor = true;
-            this.buttonChangeClient.Click += new System.EventHandler(this.buttonUpdate_Click);
-            // 
             // labelSamples
             // 
             this.labelSamples.AutoSize = true;
             this.labelSamples.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.labelSamples.Location = new System.Drawing.Point(471, 42);
             this.labelSamples.Name = "labelSamples";
-            this.labelSamples.Size = new System.Drawing.Size(77, 22);
+            this.labelSamples.Size = new System.Drawing.Size(60, 19);
             this.labelSamples.TabIndex = 7;
             this.labelSamples.Text = "Samples";
             // 
@@ -136,7 +125,7 @@
             // 
             this.listBoxSamples.Font = new System.Drawing.Font("Times New Roman", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.listBoxSamples.FormattingEnabled = true;
-            this.listBoxSamples.ItemHeight = 19;
+            this.listBoxSamples.ItemHeight = 16;
             this.listBoxSamples.Location = new System.Drawing.Point(474, 68);
             this.listBoxSamples.Name = "listBoxSamples";
             this.listBoxSamples.Size = new System.Drawing.Size(348, 308);
@@ -146,7 +135,7 @@
             // buttonAddSamples
             // 
             this.buttonAddSamples.Font = new System.Drawing.Font("Times New Roman", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonAddSamples.Location = new System.Drawing.Point(474, 383);
+            this.buttonAddSamples.Location = new System.Drawing.Point(474, 384);
             this.buttonAddSamples.Name = "buttonAddSamples";
             this.buttonAddSamples.Size = new System.Drawing.Size(112, 25);
             this.buttonAddSamples.TabIndex = 9;
@@ -156,7 +145,7 @@
             // buttonDellSamples
             // 
             this.buttonDellSamples.Font = new System.Drawing.Font("Times New Roman", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonDellSamples.Location = new System.Drawing.Point(592, 382);
+            this.buttonDellSamples.Location = new System.Drawing.Point(592, 384);
             this.buttonDellSamples.Name = "buttonDellSamples";
             this.buttonDellSamples.Size = new System.Drawing.Size(112, 25);
             this.buttonDellSamples.TabIndex = 10;
@@ -166,7 +155,7 @@
             // buttonChangeSamples
             // 
             this.buttonChangeSamples.Font = new System.Drawing.Font("Times New Roman", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonChangeSamples.Location = new System.Drawing.Point(710, 382);
+            this.buttonChangeSamples.Location = new System.Drawing.Point(710, 384);
             this.buttonChangeSamples.Name = "buttonChangeSamples";
             this.buttonChangeSamples.Size = new System.Drawing.Size(112, 25);
             this.buttonChangeSamples.TabIndex = 11;
@@ -179,7 +168,7 @@
             this.Note.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Note.Location = new System.Drawing.Point(867, 68);
             this.Note.Name = "Note";
-            this.Note.Size = new System.Drawing.Size(54, 22);
+            this.Note.Size = new System.Drawing.Size(43, 19);
             this.Note.TabIndex = 12;
             this.Note.Text = "Note:";
             this.Note.Click += new System.EventHandler(this.label1_Click_1);
@@ -190,7 +179,7 @@
             this.Date.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Date.Location = new System.Drawing.Point(868, 110);
             this.Date.Name = "Date";
-            this.Date.Size = new System.Drawing.Size(53, 22);
+            this.Date.Size = new System.Drawing.Size(41, 19);
             this.Date.TabIndex = 13;
             this.Date.Text = "Date:";
             // 
@@ -200,7 +189,7 @@
             this.EngineType.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.EngineType.Location = new System.Drawing.Point(867, 152);
             this.EngineType.Name = "EngineType";
-            this.EngineType.Size = new System.Drawing.Size(114, 22);
+            this.EngineType.Size = new System.Drawing.Size(86, 19);
             this.EngineType.TabIndex = 14;
             this.EngineType.Text = "Engine Type:";
             // 
@@ -210,7 +199,7 @@
             this.EngineBrand.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.EngineBrand.Location = new System.Drawing.Point(867, 194);
             this.EngineBrand.Name = "EngineBrand";
-            this.EngineBrand.Size = new System.Drawing.Size(123, 22);
+            this.EngineBrand.Size = new System.Drawing.Size(93, 19);
             this.EngineBrand.TabIndex = 15;
             this.EngineBrand.Text = "Engine Brand:";
             // 
@@ -220,7 +209,7 @@
             this.EngineNomber.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.EngineNomber.Location = new System.Drawing.Point(868, 236);
             this.EngineNomber.Name = "EngineNomber";
-            this.EngineNomber.Size = new System.Drawing.Size(139, 22);
+            this.EngineNomber.Size = new System.Drawing.Size(107, 19);
             this.EngineNomber.TabIndex = 16;
             this.EngineNomber.Text = "Engine Nomber:";
             // 
@@ -230,7 +219,7 @@
             this.EngineMileage.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.EngineMileage.Location = new System.Drawing.Point(867, 278);
             this.EngineMileage.Name = "EngineMileage";
-            this.EngineMileage.Size = new System.Drawing.Size(140, 22);
+            this.EngineMileage.Size = new System.Drawing.Size(104, 19);
             this.EngineMileage.TabIndex = 17;
             this.EngineMileage.Text = "Engine Mileage:";
             // 
@@ -240,7 +229,7 @@
             this.OilMileage.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.OilMileage.Location = new System.Drawing.Point(869, 320);
             this.OilMileage.Name = "OilMileage";
-            this.OilMileage.Size = new System.Drawing.Size(112, 22);
+            this.OilMileage.Size = new System.Drawing.Size(82, 19);
             this.OilMileage.TabIndex = 18;
             this.OilMileage.Text = "Oil Mileage:";
             // 
@@ -250,7 +239,7 @@
             this.textBoxNote.Location = new System.Drawing.Point(1058, 69);
             this.textBoxNote.Name = "textBoxNote";
             this.textBoxNote.ReadOnly = true;
-            this.textBoxNote.Size = new System.Drawing.Size(220, 22);
+            this.textBoxNote.Size = new System.Drawing.Size(220, 19);
             this.textBoxNote.TabIndex = 19;
             // 
             // textBoxData
@@ -259,7 +248,7 @@
             this.textBoxData.Location = new System.Drawing.Point(1058, 111);
             this.textBoxData.Name = "textBoxData";
             this.textBoxData.ReadOnly = true;
-            this.textBoxData.Size = new System.Drawing.Size(220, 22);
+            this.textBoxData.Size = new System.Drawing.Size(220, 19);
             this.textBoxData.TabIndex = 20;
             // 
             // textBoxEngineType
@@ -268,7 +257,7 @@
             this.textBoxEngineType.Location = new System.Drawing.Point(1058, 153);
             this.textBoxEngineType.Name = "textBoxEngineType";
             this.textBoxEngineType.ReadOnly = true;
-            this.textBoxEngineType.Size = new System.Drawing.Size(220, 22);
+            this.textBoxEngineType.Size = new System.Drawing.Size(220, 19);
             this.textBoxEngineType.TabIndex = 21;
             // 
             // textBoxEhgineBrand
@@ -277,7 +266,7 @@
             this.textBoxEhgineBrand.Location = new System.Drawing.Point(1058, 194);
             this.textBoxEhgineBrand.Name = "textBoxEhgineBrand";
             this.textBoxEhgineBrand.ReadOnly = true;
-            this.textBoxEhgineBrand.Size = new System.Drawing.Size(220, 22);
+            this.textBoxEhgineBrand.Size = new System.Drawing.Size(220, 19);
             this.textBoxEhgineBrand.TabIndex = 22;
             // 
             // textBoxEngineNomber
@@ -286,7 +275,7 @@
             this.textBoxEngineNomber.Location = new System.Drawing.Point(1058, 237);
             this.textBoxEngineNomber.Name = "textBoxEngineNomber";
             this.textBoxEngineNomber.ReadOnly = true;
-            this.textBoxEngineNomber.Size = new System.Drawing.Size(220, 22);
+            this.textBoxEngineNomber.Size = new System.Drawing.Size(220, 19);
             this.textBoxEngineNomber.TabIndex = 23;
             // 
             // textBoxEngineMileage
@@ -295,7 +284,7 @@
             this.textBoxEngineMileage.Location = new System.Drawing.Point(1058, 279);
             this.textBoxEngineMileage.Name = "textBoxEngineMileage";
             this.textBoxEngineMileage.ReadOnly = true;
-            this.textBoxEngineMileage.Size = new System.Drawing.Size(100, 22);
+            this.textBoxEngineMileage.Size = new System.Drawing.Size(100, 19);
             this.textBoxEngineMileage.TabIndex = 24;
             // 
             // textBoxOilMileage
@@ -304,7 +293,7 @@
             this.textBoxOilMileage.Location = new System.Drawing.Point(1058, 321);
             this.textBoxOilMileage.Name = "textBoxOilMileage";
             this.textBoxOilMileage.ReadOnly = true;
-            this.textBoxOilMileage.Size = new System.Drawing.Size(100, 22);
+            this.textBoxOilMileage.Size = new System.Drawing.Size(100, 19);
             this.textBoxOilMileage.TabIndex = 25;
             // 
             // textBoxEngineDictionary
@@ -313,7 +302,7 @@
             this.textBoxEngineDictionary.Location = new System.Drawing.Point(1178, 278);
             this.textBoxEngineDictionary.Name = "textBoxEngineDictionary";
             this.textBoxEngineDictionary.ReadOnly = true;
-            this.textBoxEngineDictionary.Size = new System.Drawing.Size(100, 22);
+            this.textBoxEngineDictionary.Size = new System.Drawing.Size(100, 19);
             this.textBoxEngineDictionary.TabIndex = 26;
             // 
             // textBoxOilDictionary
@@ -322,7 +311,7 @@
             this.textBoxOilDictionary.Location = new System.Drawing.Point(1178, 321);
             this.textBoxOilDictionary.Name = "textBoxOilDictionary";
             this.textBoxOilDictionary.ReadOnly = true;
-            this.textBoxOilDictionary.Size = new System.Drawing.Size(100, 22);
+            this.textBoxOilDictionary.Size = new System.Drawing.Size(100, 19);
             this.textBoxOilDictionary.TabIndex = 27;
             // 
             // buttonDataOfExp
@@ -348,7 +337,7 @@
             // menuStrip1
             // 
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.menuStrip1.Location = new System.Drawing.Point(0, 28);
+            this.menuStrip1.Location = new System.Drawing.Point(0, 24);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1309, 24);
             this.menuStrip1.TabIndex = 30;
@@ -361,7 +350,7 @@
             this.settingsToolStripMenuItem});
             this.menuStrip2.Location = new System.Drawing.Point(0, 0);
             this.menuStrip2.Name = "menuStrip2";
-            this.menuStrip2.Size = new System.Drawing.Size(1309, 28);
+            this.menuStrip2.Size = new System.Drawing.Size(1309, 24);
             this.menuStrip2.TabIndex = 31;
             this.menuStrip2.Text = "menuStrip2";
             // 
@@ -371,20 +360,20 @@
             this.selectBDToolStripMenuItem,
             this.selectCOMPortToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(76, 24);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.settingsToolStripMenuItem.Text = "Settings";
             // 
             // selectBDToolStripMenuItem
             // 
             this.selectBDToolStripMenuItem.Name = "selectBDToolStripMenuItem";
-            this.selectBDToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
+            this.selectBDToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
             this.selectBDToolStripMenuItem.Text = "Select BD";
             this.selectBDToolStripMenuItem.Click += new System.EventHandler(this.selectBDToolStripMenuItem_Click);
             // 
             // selectCOMPortToolStripMenuItem
             // 
             this.selectCOMPortToolStripMenuItem.Name = "selectCOMPortToolStripMenuItem";
-            this.selectCOMPortToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
+            this.selectCOMPortToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
             this.selectCOMPortToolStripMenuItem.Text = "Select COM port";
             this.selectCOMPortToolStripMenuItem.Click += new System.EventHandler(this.selectCOMPortToolStripMenuItem_Click);
             // 
@@ -409,10 +398,22 @@
             this.buttonCloseMainForm.UseVisualStyleBackColor = true;
             this.buttonCloseMainForm.Click += new System.EventHandler(this.buttonCloseMainForm_Click);
             // 
+            // buttonChangeDataClient
+            // 
+            this.buttonChangeDataClient.Font = new System.Drawing.Font("Times New Roman", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonChangeDataClient.Location = new System.Drawing.Point(248, 384);
+            this.buttonChangeDataClient.Name = "buttonChangeDataClient";
+            this.buttonChangeDataClient.Size = new System.Drawing.Size(112, 25);
+            this.buttonChangeDataClient.TabIndex = 34;
+            this.buttonChangeDataClient.Text = "Change";
+            this.buttonChangeDataClient.UseVisualStyleBackColor = true;
+            this.buttonChangeDataClient.Click += new System.EventHandler(this.buttonChangeDataClient_Click);
+            // 
             // Main
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(1309, 470);
+            this.ClientSize = new System.Drawing.Size(1309, 471);
+            this.Controls.Add(this.buttonChangeDataClient);
             this.Controls.Add(this.buttonCloseMainForm);
             this.Controls.Add(this.buttonUpdate);
             this.Controls.Add(this.buttonMakeExp);
@@ -438,7 +439,6 @@
             this.Controls.Add(this.buttonAddSamples);
             this.Controls.Add(this.listBoxSamples);
             this.Controls.Add(this.labelSamples);
-            this.Controls.Add(this.buttonChangeClient);
             this.Controls.Add(this.buttonDellClient);
             this.Controls.Add(this.buttonAddClient);
             this.Controls.Add(this.labelClients);
@@ -462,7 +462,6 @@
         private System.Windows.Forms.Label labelClients;
         private System.Windows.Forms.Button buttonAddClient;
         private System.Windows.Forms.Button buttonDellClient;
-        private System.Windows.Forms.Button buttonChangeClient;
         private System.Windows.Forms.Label labelSamples;
         private System.Windows.Forms.ListBox listBoxSamples;
         private System.Windows.Forms.Button buttonAddSamples;
@@ -493,6 +492,7 @@
         private System.Windows.Forms.ToolStripMenuItem selectCOMPortToolStripMenuItem;
         private System.Windows.Forms.Button buttonUpdate;
         private System.Windows.Forms.Button buttonCloseMainForm;
+        private System.Windows.Forms.Button buttonChangeDataClient;
     }
 }
 
