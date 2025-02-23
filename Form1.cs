@@ -250,10 +250,6 @@ namespace Diplom_project
             comPortForm.ShowDialog();
         }
 
-        private void buttonUpdate_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void buttonUpdate_Click_1(object sender, EventArgs e)//кнопка обновления интерфейса
         {
@@ -263,6 +259,11 @@ namespace Diplom_project
         private void buttonCloseMainForm_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void buttonChangeDataClient_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

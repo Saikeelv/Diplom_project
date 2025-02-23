@@ -33,7 +33,6 @@
             this.labelClients = new System.Windows.Forms.Label();
             this.buttonAddClient = new System.Windows.Forms.Button();
             this.buttonDellClient = new System.Windows.Forms.Button();
-            this.buttonChangeClient = new System.Windows.Forms.Button();
             this.labelSamples = new System.Windows.Forms.Label();
             this.listBoxSamples = new System.Windows.Forms.ListBox();
             this.buttonAddSamples = new System.Windows.Forms.Button();
@@ -64,6 +63,7 @@
             this.selectCOMPortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonUpdate = new System.Windows.Forms.Button();
             this.buttonCloseMainForm = new System.Windows.Forms.Button();
+            this.buttonChangeDataClient = new System.Windows.Forms.Button();
             this.menuStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -111,17 +111,6 @@
             this.buttonDellClient.UseVisualStyleBackColor = true;
             this.buttonDellClient.Click += new System.EventHandler(this.buttonDellClient_Click);
             // 
-            // buttonChangeClient
-            // 
-            this.buttonChangeClient.Font = new System.Drawing.Font("Times New Roman", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonChangeClient.Location = new System.Drawing.Point(248, 384);
-            this.buttonChangeClient.Name = "buttonChangeClient";
-            this.buttonChangeClient.Size = new System.Drawing.Size(112, 25);
-            this.buttonChangeClient.TabIndex = 6;
-            this.buttonChangeClient.Text = "Change";
-            this.buttonChangeClient.UseVisualStyleBackColor = true;
-            this.buttonChangeClient.Click += new System.EventHandler(this.buttonUpdate_Click);
-            // 
             // labelSamples
             // 
             this.labelSamples.AutoSize = true;
@@ -146,7 +135,7 @@
             // buttonAddSamples
             // 
             this.buttonAddSamples.Font = new System.Drawing.Font("Times New Roman", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonAddSamples.Location = new System.Drawing.Point(474, 383);
+            this.buttonAddSamples.Location = new System.Drawing.Point(474, 384);
             this.buttonAddSamples.Name = "buttonAddSamples";
             this.buttonAddSamples.Size = new System.Drawing.Size(112, 25);
             this.buttonAddSamples.TabIndex = 9;
@@ -156,7 +145,7 @@
             // buttonDellSamples
             // 
             this.buttonDellSamples.Font = new System.Drawing.Font("Times New Roman", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonDellSamples.Location = new System.Drawing.Point(592, 382);
+            this.buttonDellSamples.Location = new System.Drawing.Point(592, 384);
             this.buttonDellSamples.Name = "buttonDellSamples";
             this.buttonDellSamples.Size = new System.Drawing.Size(112, 25);
             this.buttonDellSamples.TabIndex = 10;
@@ -166,7 +155,7 @@
             // buttonChangeSamples
             // 
             this.buttonChangeSamples.Font = new System.Drawing.Font("Times New Roman", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonChangeSamples.Location = new System.Drawing.Point(710, 382);
+            this.buttonChangeSamples.Location = new System.Drawing.Point(710, 384);
             this.buttonChangeSamples.Name = "buttonChangeSamples";
             this.buttonChangeSamples.Size = new System.Drawing.Size(112, 25);
             this.buttonChangeSamples.TabIndex = 11;
@@ -348,9 +337,9 @@
             // menuStrip1
             // 
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.menuStrip1.Location = new System.Drawing.Point(0, 28);
+            this.menuStrip1.Location = new System.Drawing.Point(0, 48);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1309, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1636, 38);
             this.menuStrip1.TabIndex = 30;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -361,7 +350,7 @@
             this.settingsToolStripMenuItem});
             this.menuStrip2.Location = new System.Drawing.Point(0, 0);
             this.menuStrip2.Name = "menuStrip2";
-            this.menuStrip2.Size = new System.Drawing.Size(1309, 28);
+            this.menuStrip2.Size = new System.Drawing.Size(1636, 38);
             this.menuStrip2.TabIndex = 31;
             this.menuStrip2.Text = "menuStrip2";
             // 
@@ -371,7 +360,7 @@
             this.selectBDToolStripMenuItem,
             this.selectCOMPortToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(76, 24);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(76, 34);
             this.settingsToolStripMenuItem.Text = "Settings";
             // 
             // selectBDToolStripMenuItem
@@ -409,10 +398,22 @@
             this.buttonCloseMainForm.UseVisualStyleBackColor = true;
             this.buttonCloseMainForm.Click += new System.EventHandler(this.buttonCloseMainForm_Click);
             // 
+            // buttonChangeDataClient
+            // 
+            this.buttonChangeDataClient.Font = new System.Drawing.Font("Times New Roman", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonChangeDataClient.Location = new System.Drawing.Point(248, 384);
+            this.buttonChangeDataClient.Name = "buttonChangeDataClient";
+            this.buttonChangeDataClient.Size = new System.Drawing.Size(112, 25);
+            this.buttonChangeDataClient.TabIndex = 34;
+            this.buttonChangeDataClient.Text = "Change";
+            this.buttonChangeDataClient.UseVisualStyleBackColor = true;
+            this.buttonChangeDataClient.Click += new System.EventHandler(this.buttonChangeDataClient_Click);
+            // 
             // Main
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(1309, 470);
+            this.ClientSize = new System.Drawing.Size(1309, 661);
+            this.Controls.Add(this.buttonChangeDataClient);
             this.Controls.Add(this.buttonCloseMainForm);
             this.Controls.Add(this.buttonUpdate);
             this.Controls.Add(this.buttonMakeExp);
@@ -438,7 +439,6 @@
             this.Controls.Add(this.buttonAddSamples);
             this.Controls.Add(this.listBoxSamples);
             this.Controls.Add(this.labelSamples);
-            this.Controls.Add(this.buttonChangeClient);
             this.Controls.Add(this.buttonDellClient);
             this.Controls.Add(this.buttonAddClient);
             this.Controls.Add(this.labelClients);
@@ -462,7 +462,6 @@
         private System.Windows.Forms.Label labelClients;
         private System.Windows.Forms.Button buttonAddClient;
         private System.Windows.Forms.Button buttonDellClient;
-        private System.Windows.Forms.Button buttonChangeClient;
         private System.Windows.Forms.Label labelSamples;
         private System.Windows.Forms.ListBox listBoxSamples;
         private System.Windows.Forms.Button buttonAddSamples;
@@ -493,6 +492,7 @@
         private System.Windows.Forms.ToolStripMenuItem selectCOMPortToolStripMenuItem;
         private System.Windows.Forms.Button buttonUpdate;
         private System.Windows.Forms.Button buttonCloseMainForm;
+        private System.Windows.Forms.Button buttonChangeDataClient;
     }
 }
 
