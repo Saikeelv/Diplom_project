@@ -16,6 +16,8 @@ namespace Diplom_project
     public partial class Main: Form
     {
         private string selectedFilePath = ""; // Будет хранить путь к БД
+        private string connectionString = ""; //строка для хранения полного пути к бд 
+
 
         public Main()
         {
@@ -52,17 +54,91 @@ namespace Diplom_project
 
         private void listBoxClients_SelectedIndexChanged(object sender, EventArgs e)
         {
-            LoadClients();
+           // LoadClients();
         }
 
-        private void buttonDellClient_Click(object sender, EventArgs e)
+        private void buttonDellClient_Click(object sender, EventArgs e)//удаление клиента
         {
+            if (listBoxClients.SelectedItem == null)
+            {
+                MessageBox.Show("Выберите клиента для удаления!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
+            // Получаем выбранного клиента
+            string selectedClient = listBoxClients.SelectedItem.ToString();
+            string[] parts = selectedClient.Split('-');
+            if (parts.Length < 2)
+            {
+                MessageBox.Show("Ошибка в данных клиента!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            string clientFIO = parts[0].Trim(); // ФИО клиента
+
+            // Подтверждение удаления
+            DialogResult result = MessageBox.Show($"Вы уверены, что хотите удалить клиента {clientFIO} и все связанные данные?",
+                                                  "Подтверждение удаления",
+                                                  MessageBoxButtons.YesNo,
+                                                  MessageBoxIcon.Warning);
+
+            if (result != DialogResult.Yes)
+                return;
+
+            try
+            {
+                connectionString = $"Data Source={selectedFilePath};Version=3;";
+                using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+                {
+                    connection.Open();
+
+                    // Получаем ID клиента перед удалением
+                    string clientID = "";
+                    string queryGetID = "SELECT Client_PK FROM Client WHERE FIO = @FIO";
+                    using (SQLiteCommand cmd = new SQLiteCommand(queryGetID, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@FIO", clientFIO);
+                        object idResult = cmd.ExecuteScalar();
+                        if (idResult != null)
+                        {
+                            clientID = idResult.ToString();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Клиент не найден в базе данных!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+                    }
+
+                    // Удаляем зависимые данные вручную (если нет каскадного удаления)
+                    string queryDeleteData = @"
+                DELETE FROM Data_of_exp WHERE Experiment_FK IN (SELECT Experiment_PK FROM Experiment WHERE Sample_FK IN (SELECT Sample_PK FROM Sample WHERE Client_FK = @ClientID));
+                DELETE FROM Experiment WHERE Sample_FK IN (SELECT Sample_PK FROM Sample WHERE Client_FK = @ClientID);
+                DELETE FROM Sample WHERE Client_FK = @ClientID;
+                DELETE FROM Client WHERE Client_PK = @ClientID;
+            ";
+
+                    using (SQLiteCommand deleteCmd = new SQLiteCommand(queryDeleteData, connection))
+                    {
+                        deleteCmd.Parameters.AddWithValue("@ClientID", clientID);
+                        deleteCmd.ExecuteNonQuery();
+                    }
+                }
+
+                MessageBox.Show("Клиент и его данные успешно удалены!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // Удаляем клиента из listBox
+                listBoxClients.Items.Remove(listBoxClients.SelectedItem);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при удалении: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void Main_Load(object sender, EventArgs e)
         {
-
+            
         }
 
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -100,7 +176,7 @@ namespace Diplom_project
                 }
             }
         }
-        private void LoadClients()//выгрузка списка клиентов из базы в листбокс
+        public void LoadClients()//выгрузка списка клиентов из базы в листбокс
         {
             if (string.IsNullOrEmpty(selectedFilePath))
             {
@@ -129,8 +205,8 @@ namespace Diplom_project
         }
 
 
-
-        private void selectCOMPortToolStripMenuItem_Click(object sender, EventArgs e)
+        //должен быть установлен драйвер для ардуино 
+        private void selectCOMPortToolStripMenuItem_Click(object sender, EventArgs e)//выбор компорта - сначала полдключаем контролллер
         {
             // Получаем список доступных COM-портов
             string[] ports = SerialPort.GetPortNames();
@@ -141,7 +217,7 @@ namespace Diplom_project
                 return;
             }
 
-            // Создаем всплывающее окно с выпадающим списком
+            // Создаем всплывающее окно с выпадающим списком из подключенных ком портов
             Form comPortForm = new Form
             {
                 Text = "Выбор COM-порта",
@@ -172,6 +248,21 @@ namespace Diplom_project
             comPortForm.Controls.Add(comboBoxPorts);
             comPortForm.Controls.Add(buttonOK);
             comPortForm.ShowDialog();
+        }
+
+        private void buttonUpdate_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonUpdate_Click_1(object sender, EventArgs e)//кнопка обновления интерфейса
+        {
+            LoadClients();
+        }
+
+        private void buttonCloseMainForm_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

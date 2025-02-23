@@ -75,12 +75,16 @@ namespace Diplom_project
 
                 MessageBox.Show("Клиент успешно добавлен!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
+
+                
+                
                 this.Close(); // Закрываем форму после успешного добавления
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка добавления клиента: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+
         }
     }
 }

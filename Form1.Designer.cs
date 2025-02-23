@@ -62,6 +62,8 @@
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectBDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectCOMPortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.buttonUpdate = new System.Windows.Forms.Button();
+            this.buttonCloseMainForm = new System.Windows.Forms.Button();
             this.menuStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -118,6 +120,7 @@
             this.buttonChangeClient.TabIndex = 6;
             this.buttonChangeClient.Text = "Change";
             this.buttonChangeClient.UseVisualStyleBackColor = true;
+            this.buttonChangeClient.Click += new System.EventHandler(this.buttonUpdate_Click);
             // 
             // labelSamples
             // 
@@ -347,7 +350,7 @@
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Location = new System.Drawing.Point(0, 28);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1902, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1309, 24);
             this.menuStrip1.TabIndex = 30;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -358,7 +361,7 @@
             this.settingsToolStripMenuItem});
             this.menuStrip2.Location = new System.Drawing.Point(0, 0);
             this.menuStrip2.Name = "menuStrip2";
-            this.menuStrip2.Size = new System.Drawing.Size(1902, 28);
+            this.menuStrip2.Size = new System.Drawing.Size(1309, 28);
             this.menuStrip2.TabIndex = 31;
             this.menuStrip2.Text = "menuStrip2";
             // 
@@ -374,21 +377,44 @@
             // selectBDToolStripMenuItem
             // 
             this.selectBDToolStripMenuItem.Name = "selectBDToolStripMenuItem";
-            this.selectBDToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.selectBDToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
             this.selectBDToolStripMenuItem.Text = "Select BD";
             this.selectBDToolStripMenuItem.Click += new System.EventHandler(this.selectBDToolStripMenuItem_Click);
             // 
             // selectCOMPortToolStripMenuItem
             // 
             this.selectCOMPortToolStripMenuItem.Name = "selectCOMPortToolStripMenuItem";
-            this.selectCOMPortToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.selectCOMPortToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
             this.selectCOMPortToolStripMenuItem.Text = "Select COM port";
             this.selectCOMPortToolStripMenuItem.Click += new System.EventHandler(this.selectCOMPortToolStripMenuItem_Click);
+            // 
+            // buttonUpdate
+            // 
+            this.buttonUpdate.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonUpdate.Location = new System.Drawing.Point(12, 417);
+            this.buttonUpdate.Name = "buttonUpdate";
+            this.buttonUpdate.Size = new System.Drawing.Size(810, 31);
+            this.buttonUpdate.TabIndex = 32;
+            this.buttonUpdate.Text = "Update";
+            this.buttonUpdate.UseVisualStyleBackColor = true;
+            this.buttonUpdate.Click += new System.EventHandler(this.buttonUpdate_Click_1);
+            // 
+            // buttonCloseMainForm
+            // 
+            this.buttonCloseMainForm.Location = new System.Drawing.Point(1202, 9);
+            this.buttonCloseMainForm.Name = "buttonCloseMainForm";
+            this.buttonCloseMainForm.Size = new System.Drawing.Size(89, 33);
+            this.buttonCloseMainForm.TabIndex = 33;
+            this.buttonCloseMainForm.Text = "Close";
+            this.buttonCloseMainForm.UseVisualStyleBackColor = true;
+            this.buttonCloseMainForm.Click += new System.EventHandler(this.buttonCloseMainForm_Click);
             // 
             // Main
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(1902, 1033);
+            this.ClientSize = new System.Drawing.Size(1309, 470);
+            this.Controls.Add(this.buttonCloseMainForm);
+            this.Controls.Add(this.buttonUpdate);
             this.Controls.Add(this.buttonMakeExp);
             this.Controls.Add(this.buttonDataOfExp);
             this.Controls.Add(this.textBoxOilDictionary);
@@ -465,6 +491,8 @@
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem selectBDToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem selectCOMPortToolStripMenuItem;
+        private System.Windows.Forms.Button buttonUpdate;
+        private System.Windows.Forms.Button buttonCloseMainForm;
     }
 }
 
