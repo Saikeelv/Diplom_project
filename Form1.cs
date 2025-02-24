@@ -39,7 +39,7 @@ namespace Diplom_project
                 return;
             }
 
-            AddClient form2 = new AddClient(selectedFilePath);
+            AddClient form2 = new AddClient(selectedFilePath, this);
             form2.ShowDialog(); // Открываем форму модально
         }
 
@@ -142,10 +142,7 @@ namespace Diplom_project
             
         }
 
-        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
+        
 
         private void selectBDToolStripMenuItem_Click(object sender, EventArgs e)//выбор файла базы данных
         {
@@ -258,7 +255,7 @@ namespace Diplom_project
         {
             LoadClients();
         }
-
+        
         private void buttonCloseMainForm_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -287,6 +284,11 @@ namespace Diplom_project
             // Открываем ChangeClient (Form3), передавая данные фио и номер телефона для заполнения
             ChangeClient form3 = new ChangeClient(this, fio, phone, ConnectionString);
             form3.ShowDialog(); // Открываем форму
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

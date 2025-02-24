@@ -16,10 +16,12 @@ namespace Diplom_project
     public partial class AddClient: Form
     {
         private string connectionString;
-        public AddClient(string dbPath)
+        private Main mainForm;
+        public AddClient(string dbPath, Main form)
         {
             InitializeComponent();
             connectionString = $"Data Source={dbPath};Version=3;";
+            mainForm = form;
         }
 
         private void AddClient_Load(object sender, EventArgs e)
@@ -76,8 +78,8 @@ namespace Diplom_project
                 MessageBox.Show("Клиент успешно добавлен!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
 
-                
-                
+
+                mainForm.LoadClients(); // Обновляем список клиентов
                 this.Close(); // Закрываем форму после успешного добавления
             }
             catch (Exception ex)
