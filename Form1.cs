@@ -71,7 +71,7 @@ namespace Diplom_project
 
         private void button1_Click(object sender, EventArgs e)//ОТКРЫТИЕ ФОРМЫ РЕГИСТРАЦИЯ КЛИЕНТА
         {
-            
+            int selectedIndex = listBoxClients.SelectedIndex; // Запоминаем индекс
             if (string.IsNullOrEmpty(selectedFilePath))
             {
                 MessageBox.Show("Сначала выберите базу данных!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -80,6 +80,16 @@ namespace Diplom_project
 
             AddClient form2 = new AddClient(selectedFilePath, this);
             form2.ShowDialog(); // Открываем форму модально
+                                // После удаления восстанавливаем выделение
+            if (listBoxClients.Items.Count > 0)
+            {
+                if (selectedIndex >= listBoxClients.Items.Count)
+                {
+                    selectedIndex = listBoxClients.Items.Count - 1; // Если удалили последний, выбираем предыдущий
+                }
+
+                listBoxClients.SelectedIndex = selectedIndex; // Восстанавливаем выделение
+            }
         }
 
         private void label1_Click_1(object sender, EventArgs e)
@@ -288,6 +298,7 @@ namespace Diplom_project
             }
 
             // Получаем выбранного клиента
+            int selectedIndex = listBoxClients.SelectedIndex; // Запоминаем индекс
             string selectedClient = listBoxClients.SelectedItem.ToString();
             string[] parts = selectedClient.Split('-');
             if (parts.Length < 2)
@@ -302,6 +313,16 @@ namespace Diplom_project
             // Открываем ChangeClient (Form3), передавая данные фио и номер телефона для заполнения
             ChangeClient form3 = new ChangeClient(this, fio, phone, ConnectionString);
             form3.ShowDialog(); // Открываем форму
+                                // После удаления восстанавливаем выделение
+            if (listBoxClients.Items.Count > 0)
+            {
+                if (selectedIndex >= listBoxClients.Items.Count)
+                {
+                    selectedIndex = listBoxClients.Items.Count - 1; // Если удалили последний, выбираем предыдущий
+                }
+
+                listBoxClients.SelectedIndex = selectedIndex; // Восстанавливаем выделение
+            }
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
