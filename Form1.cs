@@ -99,7 +99,7 @@ namespace Diplom_project
 
         private void buttonDellClient_Click(object sender, EventArgs e)//удаление клиента
         {
-            if (listBoxClients.SelectedItem == null)
+             if (listBoxClients.SelectedItem == null)
             {
                 MessageBox.Show("Выберите клиента для удаления!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -229,7 +229,7 @@ namespace Diplom_project
             using (SQLiteConnection connection = new SQLiteConnection($"Data Source={selectedFilePath};Version=3;"))
             {
                 connection.Open();
-                string query = "SELECT FIO, Phone_num FROM Client";
+                string query = "SELECT FIO, Phone_num FROM Client ORDER BY FIO ASC";
 
                 using (SQLiteCommand command = new SQLiteCommand(query, connection))
                 using (SQLiteDataReader reader = command.ExecuteReader())
