@@ -18,9 +18,21 @@ namespace Diplom_project
     public partial class Main: Form
     {
         private string selectedFilePath = ""; // Будет хранить путь к БД
-        private string connectionString = ""; //строка для хранения полного пути к бд 
+        
         private string configFilePath = "C:/Users/isavr/OneDrive/Рабочий стол/Диплом/Diplom_project/tmp/Diplom_project.inc"; // Файл конфигурации
         public string ConnectionString { get; private set; }
+
+        private string sortOrder = "FIO"; // По умолчанию сортировка по ФИО
+
+        public string SortOrder
+        {
+            get { return sortOrder; }
+            set
+            {
+                sortOrder = value;
+                LoadClients(); // Автообновление списка при изменении сортировки
+            }
+        }
 
 
         public Main()
@@ -170,7 +182,6 @@ namespace Diplom_project
         }
 
         
-
         private void selectBDToolStripMenuItem_Click(object sender, EventArgs e)//выбор файла базы данных
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
@@ -217,7 +228,7 @@ namespace Diplom_project
             using (SQLiteConnection connection = new SQLiteConnection($"Data Source={selectedFilePath};Version=3;"))
             {
                 connection.Open();
-                string query = "SELECT FIO, Phone_num FROM Client ORDER BY FIO ASC";
+                string query = $"SELECT FIO, Phone_num FROM Client ORDER BY {SortOrder} ASC";
 
                 using (SQLiteCommand command = new SQLiteCommand(query, connection))
                 using (SQLiteDataReader reader = command.ExecuteReader())
@@ -278,16 +289,8 @@ namespace Diplom_project
             comPortForm.ShowDialog();
         }
 
-
-        private void buttonUpdate_Click_1(object sender, EventArgs e)//кнопка обновления интерфейса
-        {
-            LoadClients();
-        }
+                  
         
-        private void buttonCloseMainForm_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
 
         private void buttonChangeDataClient_Click(object sender, EventArgs e)//открываем форму для изменения данных клиента
         {
@@ -330,9 +333,20 @@ namespace Diplom_project
             this.Close();
         }
 
-        private void tabPage1_Click(object sender, EventArgs e)
+        
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void sortedByFIOToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SortOrder = "FIO"; // Меняем сортировку на ФИО
+        }
+
+        private void sortedByPhoneNumToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SortOrder = "Phone_num"; // Меняем сортировку на телефон
         }
     }
 }

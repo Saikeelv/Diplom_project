@@ -62,6 +62,11 @@
             this.selectCOMPortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonChangeDataClient = new System.Windows.Forms.Button();
+            this.sortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clientsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.samplesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sortedByFIOToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sortedByPhoneNumToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -349,29 +354,31 @@
             this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.selectBDToolStripMenuItem,
             this.selectCOMPortToolStripMenuItem,
+            this.sortToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(76, 24);
             this.settingsToolStripMenuItem.Text = "Settings";
+            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
             // 
             // selectBDToolStripMenuItem
             // 
             this.selectBDToolStripMenuItem.Name = "selectBDToolStripMenuItem";
-            this.selectBDToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
+            this.selectBDToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.selectBDToolStripMenuItem.Text = "Select BD";
             this.selectBDToolStripMenuItem.Click += new System.EventHandler(this.selectBDToolStripMenuItem_Click);
             // 
             // selectCOMPortToolStripMenuItem
             // 
             this.selectCOMPortToolStripMenuItem.Name = "selectCOMPortToolStripMenuItem";
-            this.selectCOMPortToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
+            this.selectCOMPortToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.selectCOMPortToolStripMenuItem.Text = "Select COM port";
             this.selectCOMPortToolStripMenuItem.Click += new System.EventHandler(this.selectCOMPortToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -385,6 +392,44 @@
             this.buttonChangeDataClient.Text = "Change";
             this.buttonChangeDataClient.UseVisualStyleBackColor = true;
             this.buttonChangeDataClient.Click += new System.EventHandler(this.buttonChangeDataClient_Click);
+            // 
+            // sortToolStripMenuItem
+            // 
+            this.sortToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.clientsToolStripMenuItem,
+            this.samplesToolStripMenuItem});
+            this.sortToolStripMenuItem.Name = "sortToolStripMenuItem";
+            this.sortToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.sortToolStripMenuItem.Text = "Sort";
+            // 
+            // clientsToolStripMenuItem
+            // 
+            this.clientsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.sortedByFIOToolStripMenuItem,
+            this.sortedByPhoneNumToolStripMenuItem});
+            this.clientsToolStripMenuItem.Name = "clientsToolStripMenuItem";
+            this.clientsToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.clientsToolStripMenuItem.Text = "Clients";
+            // 
+            // samplesToolStripMenuItem
+            // 
+            this.samplesToolStripMenuItem.Name = "samplesToolStripMenuItem";
+            this.samplesToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.samplesToolStripMenuItem.Text = "Samples";
+            // 
+            // sortedByFIOToolStripMenuItem
+            // 
+            this.sortedByFIOToolStripMenuItem.Name = "sortedByFIOToolStripMenuItem";
+            this.sortedByFIOToolStripMenuItem.Size = new System.Drawing.Size(235, 26);
+            this.sortedByFIOToolStripMenuItem.Text = "Sorted by FIO";
+            this.sortedByFIOToolStripMenuItem.Click += new System.EventHandler(this.sortedByFIOToolStripMenuItem_Click);
+            // 
+            // sortedByPhoneNumToolStripMenuItem
+            // 
+            this.sortedByPhoneNumToolStripMenuItem.Name = "sortedByPhoneNumToolStripMenuItem";
+            this.sortedByPhoneNumToolStripMenuItem.Size = new System.Drawing.Size(235, 26);
+            this.sortedByPhoneNumToolStripMenuItem.Text = "Sorted by phone num";
+            this.sortedByPhoneNumToolStripMenuItem.Click += new System.EventHandler(this.sortedByPhoneNumToolStripMenuItem_Click);
             // 
             // Main
             // 
@@ -465,6 +510,11 @@
         private System.Windows.Forms.ToolStripMenuItem selectCOMPortToolStripMenuItem;
         private System.Windows.Forms.Button buttonChangeDataClient;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem sortToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem clientsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem sortedByFIOToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem sortedByPhoneNumToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem samplesToolStripMenuItem;
     }
 }
 
