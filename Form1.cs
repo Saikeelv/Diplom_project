@@ -99,80 +99,58 @@ namespace Diplom_project
 
         private void buttonDellClient_Click(object sender, EventArgs e)//удаление клиента
         {
-             if (listBoxClients.SelectedItem == null)
+            if (listBoxClients.SelectedItem == null)
             {
                 MessageBox.Show("Выберите клиента для удаления!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            // Получаем выбранного клиента
+            int selectedIndex = listBoxClients.SelectedIndex; // Запоминаем индекс
             string selectedClient = listBoxClients.SelectedItem.ToString();
             string[] parts = selectedClient.Split('-');
+
             if (parts.Length < 2)
             {
                 MessageBox.Show("Ошибка в данных клиента!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            string clientFIO = parts[0].Trim(); // ФИО клиента
+            string fio = parts[0].Trim();
 
-            // Подтверждение удаления
-            DialogResult result = MessageBox.Show($"Вы уверены, что хотите удалить клиента {clientFIO} и все связанные данные?",
-                                                  "Подтверждение удаления",
-                                                  MessageBoxButtons.YesNo,
-                                                  MessageBoxIcon.Warning);
+            DialogResult result = MessageBox.Show($"Вы уверены, что хотите удалить {fio}?", "Подтверждение", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
-            if (result != DialogResult.Yes)
-                return;
-
-            try
+            if (result == DialogResult.Yes)
             {
-                connectionString = $"Data Source={selectedFilePath};Version=3;";
-                using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+                try
                 {
-                    connection.Open();
-
-                    // Получаем ID клиента перед удалением
-                    string clientID = "";
-                    string queryGetID = "SELECT Client_PK FROM Client WHERE FIO = @FIO";
-                    using (SQLiteCommand cmd = new SQLiteCommand(queryGetID, connection))
+                    using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
                     {
-                        cmd.Parameters.AddWithValue("@FIO", clientFIO);
-                        object idResult = cmd.ExecuteScalar();
-                        if (idResult != null)
+                        connection.Open();
+                        string query = "DELETE FROM Client WHERE FIO = @FIO";
+                        using (SQLiteCommand command = new SQLiteCommand(query, connection))
                         {
-                            clientID = idResult.ToString();
-                        }
-                        else
-                        {
-                            MessageBox.Show("Клиент не найден в базе данных!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            return;
+                            command.Parameters.AddWithValue("@FIO", fio);
+                            command.ExecuteNonQuery();
                         }
                     }
 
-                    // Удаляем зависимые данные вручную (если нет каскадного удаления)
-                    string queryDeleteData = @"
-                DELETE FROM Data_of_exp WHERE Experiment_FK IN (SELECT Experiment_PK FROM Experiment WHERE Sample_FK IN (SELECT Sample_PK FROM Sample WHERE Client_FK = @ClientID));
-                DELETE FROM Experiment WHERE Sample_FK IN (SELECT Sample_PK FROM Sample WHERE Client_FK = @ClientID);
-                DELETE FROM Sample WHERE Client_FK = @ClientID;
-                DELETE FROM Client WHERE Client_PK = @ClientID;
-            ";
+                    LoadClients(); // Обновляем список
 
-                    using (SQLiteCommand deleteCmd = new SQLiteCommand(queryDeleteData, connection))
+                    // После удаления восстанавливаем выделение
+                    if (listBoxClients.Items.Count > 0)
                     {
-                        deleteCmd.Parameters.AddWithValue("@ClientID", clientID);
-                        deleteCmd.ExecuteNonQuery();
+                        if (selectedIndex >= listBoxClients.Items.Count)
+                        {
+                            selectedIndex = listBoxClients.Items.Count - 1; // Если удалили последний, выбираем предыдущий
+                        }
+
+                        listBoxClients.SelectedIndex = selectedIndex; // Восстанавливаем выделение
                     }
                 }
-
-                
-
-                // Удаляем клиента из listBox
-                listBoxClients.Items.Remove(listBoxClients.SelectedItem);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Ошибка при удалении: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Ошибка при удалении: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
