@@ -10,6 +10,8 @@ using System.Windows.Forms;
 
 using System.Data.SQLite;
 using System.IO.Ports;
+using System.IO;
+
 
 namespace Diplom_project
 {
@@ -17,13 +19,50 @@ namespace Diplom_project
     {
         private string selectedFilePath = ""; // Будет хранить путь к БД
         private string connectionString = ""; //строка для хранения полного пути к бд 
+        private string configFilePath = "C:/Users/isavr/OneDrive/Рабочий стол/Диплом/Diplom_project/tmp/Diplom_project.inc"; // Файл конфигурации
         public string ConnectionString { get; private set; }
 
 
         public Main()
         {
             InitializeComponent();
-        }        
+        }
+
+        private void LoadDatabasePath()
+        {
+            if (File.Exists(configFilePath))
+            {
+                string path = File.ReadAllText(configFilePath).Trim();
+
+                if (!string.IsNullOrEmpty(path) && File.Exists(path))
+                {
+                    selectedFilePath = path;
+                    ConnectionString = $"Data Source={selectedFilePath};Version=3;";
+
+                    try
+                    {
+                        using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
+                        {
+                            connection.Open();
+                        }
+
+                        LoadClients(); // Загружаем данные из базы
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Ошибка подключения: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Файл конфигурации найден, но путь к базе данных неверен.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Файл конфигурации не найден. Выберите базу данных.", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
 
         private void label1_Click(object sender, EventArgs e)
         {
@@ -126,7 +165,7 @@ namespace Diplom_project
                     }
                 }
 
-                MessageBox.Show("Клиент и его данные успешно удалены!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                
 
                 // Удаляем клиента из listBox
                 listBoxClients.Items.Remove(listBoxClients.SelectedItem);
@@ -139,7 +178,7 @@ namespace Diplom_project
 
         private void Main_Load(object sender, EventArgs e)
         {
-            
+            LoadDatabasePath();
         }
 
         
@@ -155,18 +194,19 @@ namespace Diplom_project
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     selectedFilePath = openFileDialog.FileName;
+                    ConnectionString = $"Data Source={selectedFilePath};Version=3;";
 
                     try
                     {
-                        ConnectionString = $"Data Source={selectedFilePath};Version=3;";
-
-                        using (SQLiteConnection connection = new SQLiteConnection($"Data Source={selectedFilePath};Version=3;"))
+                        using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
                         {
                             connection.Open();
-                            MessageBox.Show("Подключение к базе данных успешно!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
 
-                        // Загружаем клиентов после подключения к БД
+                        // Сохраняем путь в конфигурационный файл
+                        File.WriteAllText(configFilePath, selectedFilePath);
+
+                        // Загружаем клиентов
                         LoadClients();
                     }
                     catch (Exception ex)

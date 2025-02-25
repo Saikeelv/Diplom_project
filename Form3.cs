@@ -72,7 +72,7 @@ namespace Diplom_project
                     }
                 }
 
-                MessageBox.Show("Данные обновлены!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                
 
                 mainForm.LoadClients(); // Обновляем список клиентов
                 this.Close(); // Закрываем форму

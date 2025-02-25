@@ -75,7 +75,7 @@ namespace Diplom_project
                     }
                 }
 
-                MessageBox.Show("Клиент успешно добавлен!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                
 
 
 
