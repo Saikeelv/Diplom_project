@@ -247,9 +247,12 @@ namespace Diplom_project
             LoadDatabasePath();
             listViewClients.Columns.Add("ФИО", 200);
             listViewClients.Columns.Add("Телефон", 150);
+
             listViewClients.View = View.Details;
             listViewClients.SelectedIndexChanged += listViewClients_SelectedIndexChanged;//обработчик событий
 
+            listViewSamples.Columns.Add("Note", 200);
+            listViewSamples.Columns.Add("Дата и время", 150);
 
         }
 
@@ -325,17 +328,19 @@ namespace Diplom_project
                 using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
                 {
                     connection.Open();
-                    string query = $"SELECT FIO, Phone_num FROM Client ORDER BY {SortOrder} ASC";
+                    string query = $"SELECT Client_PK, FIO, Phone_num FROM Client ORDER BY {SortOrder} ASC";
 
                     using (SQLiteCommand command = new SQLiteCommand(query, connection))
                     using (SQLiteDataReader reader = command.ExecuteReader())
                     {
                         while (reader.Read())
                         {
+                            int clientId = Convert.ToInt32(reader["Client_PK"]);
                             string fio = reader["FIO"].ToString();
                             string phone = reader["Phone_num"].ToString();
 
                             ListViewItem item = new ListViewItem(fio);
+                            item.Tag = clientId; // Сохраняем ID клиента в Tag
                             item.SubItems.Add(phone);
                             listViewClients.Items.Add(item);
                         }
@@ -474,10 +479,6 @@ namespace Diplom_project
 
 
 
-
-
-
-
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -501,8 +502,53 @@ namespace Diplom_project
 
         private void listViewClients_SelectedIndexChanged(object sender, EventArgs e)
         {
-            
+            if (listViewClients.SelectedItems.Count > 0) // Проверяем, есть ли выделенный элемент
+            {
+                LoadSamples(); // Загружаем образцы при выборе клиента
+            }
         }
+
+
+        // Метод для загрузки образцов в listViewSamples
+        private void LoadSamples()
+        {
+            listViewSamples.Items.Clear(); // Очищаем список перед загрузкой новых данных
+
+            int? clientId = GetSelectedClientId(); // Получаем ID выбранного клиента
+            if (clientId == null)
+                return; // Если клиент не выбран, выходим
+
+            using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
+            {
+                connection.Open();
+                string query = @"
+            SELECT s.Note, d.Date, d.Time 
+            FROM Sample s
+            JOIN Datetime d ON s.Datetime_FK = d.Datetime_PK
+            WHERE s.Client_FK = @ClientId";
+
+                using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@ClientId", clientId);
+
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            string note = reader["Note"].ToString();
+                            string date = reader["Date"].ToString();
+                            string time = reader["Time"].ToString();
+
+                            ListViewItem item = new ListViewItem(note); // Первый столбец (Note)
+                            item.SubItems.Add($"{date} {time}"); // Второй столбец (Дата + Время)
+
+                            listViewSamples.Items.Add(item);
+                        }
+                    }
+                }
+            }
+        }
+
 
 
         private int? GetSelectedClientId()//получение id выбранного клиента
