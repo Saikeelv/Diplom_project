@@ -33,7 +33,6 @@
             this.buttonAddClient = new System.Windows.Forms.Button();
             this.buttonDellClient = new System.Windows.Forms.Button();
             this.labelSamples = new System.Windows.Forms.Label();
-            this.listBoxSamples = new System.Windows.Forms.ListBox();
             this.buttonAddSamples = new System.Windows.Forms.Button();
             this.buttonDellSamples = new System.Windows.Forms.Button();
             this.buttonChangeSamples = new System.Windows.Forms.Button();
@@ -83,23 +82,23 @@
             // 
             // buttonAddClient
             // 
-            this.buttonAddClient.Font = new System.Drawing.Font("Times New Roman", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonAddClient.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.buttonAddClient.Location = new System.Drawing.Point(12, 384);
             this.buttonAddClient.Name = "buttonAddClient";
-            this.buttonAddClient.Size = new System.Drawing.Size(112, 25);
+            this.buttonAddClient.Size = new System.Drawing.Size(112, 39);
             this.buttonAddClient.TabIndex = 4;
-            this.buttonAddClient.Text = "Add";
+            this.buttonAddClient.Text = "ADD";
             this.buttonAddClient.UseVisualStyleBackColor = true;
             this.buttonAddClient.Click += new System.EventHandler(this.button1_Click);
             // 
             // buttonDellClient
             // 
-            this.buttonDellClient.Font = new System.Drawing.Font("Times New Roman", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonDellClient.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.buttonDellClient.Location = new System.Drawing.Point(130, 384);
             this.buttonDellClient.Name = "buttonDellClient";
-            this.buttonDellClient.Size = new System.Drawing.Size(112, 25);
+            this.buttonDellClient.Size = new System.Drawing.Size(112, 39);
             this.buttonDellClient.TabIndex = 5;
-            this.buttonDellClient.Text = "Dell";
+            this.buttonDellClient.Text = "DEL";
             this.buttonDellClient.UseVisualStyleBackColor = true;
             this.buttonDellClient.Click += new System.EventHandler(this.buttonDellClient_Click);
             // 
@@ -113,45 +112,34 @@
             this.labelSamples.TabIndex = 7;
             this.labelSamples.Text = "Samples";
             // 
-            // listBoxSamples
-            // 
-            this.listBoxSamples.Font = new System.Drawing.Font("Times New Roman", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.listBoxSamples.FormattingEnabled = true;
-            this.listBoxSamples.ItemHeight = 19;
-            this.listBoxSamples.Location = new System.Drawing.Point(474, 68);
-            this.listBoxSamples.Name = "listBoxSamples";
-            this.listBoxSamples.Size = new System.Drawing.Size(348, 308);
-            this.listBoxSamples.TabIndex = 8;
-            this.listBoxSamples.SelectedIndexChanged += new System.EventHandler(this.listBoxSamples_SelectedIndexChanged);
-            // 
             // buttonAddSamples
             // 
-            this.buttonAddSamples.Font = new System.Drawing.Font("Times New Roman", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonAddSamples.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.buttonAddSamples.Location = new System.Drawing.Point(474, 384);
             this.buttonAddSamples.Name = "buttonAddSamples";
-            this.buttonAddSamples.Size = new System.Drawing.Size(112, 25);
+            this.buttonAddSamples.Size = new System.Drawing.Size(112, 39);
             this.buttonAddSamples.TabIndex = 9;
-            this.buttonAddSamples.Text = "Add";
+            this.buttonAddSamples.Text = "ADD";
             this.buttonAddSamples.UseVisualStyleBackColor = true;
             // 
             // buttonDellSamples
             // 
-            this.buttonDellSamples.Font = new System.Drawing.Font("Times New Roman", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonDellSamples.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.buttonDellSamples.Location = new System.Drawing.Point(592, 384);
             this.buttonDellSamples.Name = "buttonDellSamples";
-            this.buttonDellSamples.Size = new System.Drawing.Size(112, 25);
+            this.buttonDellSamples.Size = new System.Drawing.Size(112, 39);
             this.buttonDellSamples.TabIndex = 10;
-            this.buttonDellSamples.Text = "Dell";
+            this.buttonDellSamples.Text = "DEL";
             this.buttonDellSamples.UseVisualStyleBackColor = true;
             // 
             // buttonChangeSamples
             // 
-            this.buttonChangeSamples.Font = new System.Drawing.Font("Times New Roman", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonChangeSamples.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.buttonChangeSamples.Location = new System.Drawing.Point(710, 384);
             this.buttonChangeSamples.Name = "buttonChangeSamples";
-            this.buttonChangeSamples.Size = new System.Drawing.Size(112, 25);
+            this.buttonChangeSamples.Size = new System.Drawing.Size(112, 39);
             this.buttonChangeSamples.TabIndex = 11;
-            this.buttonChangeSamples.Text = "Change";
+            this.buttonChangeSamples.Text = "CHANGE";
             this.buttonChangeSamples.UseVisualStyleBackColor = true;
             // 
             // Note
@@ -308,22 +296,23 @@
             // 
             // buttonDataOfExp
             // 
-            this.buttonDataOfExp.Font = new System.Drawing.Font("Times New Roman", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonDataOfExp.Location = new System.Drawing.Point(871, 353);
+            this.buttonDataOfExp.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonDataOfExp.Location = new System.Drawing.Point(832, 384);
             this.buttonDataOfExp.Name = "buttonDataOfExp";
-            this.buttonDataOfExp.Size = new System.Drawing.Size(168, 54);
+            this.buttonDataOfExp.Size = new System.Drawing.Size(220, 39);
             this.buttonDataOfExp.TabIndex = 28;
-            this.buttonDataOfExp.Text = "Data of Exp";
+            this.buttonDataOfExp.Text = "DATA";
             this.buttonDataOfExp.UseVisualStyleBackColor = true;
+            this.buttonDataOfExp.Click += new System.EventHandler(this.buttonDataOfExp_Click);
             // 
             // buttonMakeExp
             // 
-            this.buttonMakeExp.Font = new System.Drawing.Font("Times New Roman", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonMakeExp.Location = new System.Drawing.Point(1058, 353);
+            this.buttonMakeExp.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonMakeExp.Location = new System.Drawing.Point(1058, 384);
             this.buttonMakeExp.Name = "buttonMakeExp";
-            this.buttonMakeExp.Size = new System.Drawing.Size(220, 54);
+            this.buttonMakeExp.Size = new System.Drawing.Size(220, 39);
             this.buttonMakeExp.TabIndex = 29;
-            this.buttonMakeExp.Text = "Make Experiment";
+            this.buttonMakeExp.Text = "RUN";
             this.buttonMakeExp.UseVisualStyleBackColor = true;
             // 
             // menuStrip2
@@ -410,17 +399,18 @@
             // 
             // buttonChangeDataClient
             // 
-            this.buttonChangeDataClient.Font = new System.Drawing.Font("Times New Roman", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonChangeDataClient.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.buttonChangeDataClient.Location = new System.Drawing.Point(248, 384);
             this.buttonChangeDataClient.Name = "buttonChangeDataClient";
-            this.buttonChangeDataClient.Size = new System.Drawing.Size(112, 25);
+            this.buttonChangeDataClient.Size = new System.Drawing.Size(112, 39);
             this.buttonChangeDataClient.TabIndex = 34;
-            this.buttonChangeDataClient.Text = "Change";
+            this.buttonChangeDataClient.Text = "CHANGE";
             this.buttonChangeDataClient.UseVisualStyleBackColor = true;
             this.buttonChangeDataClient.Click += new System.EventHandler(this.buttonChangeDataClient_Click);
             // 
             // listViewClients
             // 
+            this.listViewClients.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.listViewClients.FullRowSelect = true;
             this.listViewClients.GridLines = true;
             this.listViewClients.HideSelection = false;
@@ -435,7 +425,7 @@
             // Main
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(1305, 445);
+            this.ClientSize = new System.Drawing.Size(1305, 528);
             this.Controls.Add(this.listViewClients);
             this.Controls.Add(this.buttonChangeDataClient);
             this.Controls.Add(this.buttonMakeExp);
@@ -459,7 +449,6 @@
             this.Controls.Add(this.buttonChangeSamples);
             this.Controls.Add(this.buttonDellSamples);
             this.Controls.Add(this.buttonAddSamples);
-            this.Controls.Add(this.listBoxSamples);
             this.Controls.Add(this.labelSamples);
             this.Controls.Add(this.buttonDellClient);
             this.Controls.Add(this.buttonAddClient);
@@ -482,7 +471,6 @@
         private System.Windows.Forms.Button buttonAddClient;
         private System.Windows.Forms.Button buttonDellClient;
         private System.Windows.Forms.Label labelSamples;
-        private System.Windows.Forms.ListBox listBoxSamples;
         private System.Windows.Forms.Button buttonAddSamples;
         private System.Windows.Forms.Button buttonDellSamples;
         private System.Windows.Forms.Button buttonChangeSamples;

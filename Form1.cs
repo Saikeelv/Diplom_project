@@ -444,30 +444,34 @@ namespace Diplom_project
 
             // Получаем выделенный элемент
             ListViewItem selectedItem = listViewClients.SelectedItems[0];
-            int selectedIndex = selectedItem.Index; // Запоминаем индекс
 
             string fio = selectedItem.Text; // ФИО (первый столбец)
             string phone = selectedItem.SubItems[1].Text; // Телефон (второй столбец)
 
             // Открываем ChangeClient (Form3), передавая данные ФИО и номер телефона
             ChangeClient form3 = new ChangeClient(this, fio, phone, ConnectionString);
-            form3.ShowDialog(); // Открываем форму
 
-            // После изменения обновляем список клиентов
-            LoadClients();
-
-            // Восстанавливаем выделение
-            if (listViewClients.Items.Count > 0)
+            if (form3.ShowDialog() == DialogResult.OK) // Ожидаем закрытия формы
             {
-                if (selectedIndex >= listViewClients.Items.Count)
-                {
-                    selectedIndex = listViewClients.Items.Count - 1; // Если изменяли последний, выбираем предыдущий
-                }
+                string newFIO = form3.UpdatedFIO;
+                string newPhone = form3.UpdatedPhone;
 
-                listViewClients.Items[selectedIndex].Selected = true;
-                listViewClients.Select();
+                // Обновляем список клиентов
+                LoadClients();
+
+                // Находим измененного клиента в ListView
+                foreach (ListViewItem item in listViewClients.Items)
+                {
+                    if (item.Text == newFIO && item.SubItems[1].Text == newPhone)
+                    {
+                        item.Selected = true; // Выделяем измененного клиента
+                        listViewClients.Select();
+                        break;
+                    }
+                }
             }
         }
+
 
 
 
@@ -543,5 +547,9 @@ namespace Diplom_project
             }
         }
 
+        private void buttonDataOfExp_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

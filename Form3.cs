@@ -48,6 +48,8 @@ namespace Diplom_project
 
         }
 
+        public string UpdatedFIO { get; private set; }
+        public string UpdatedPhone { get; private set; }
         private void buttonChangeDataClient_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(textBox1.Text) || string.IsNullOrWhiteSpace(textBox2.Text))
@@ -55,7 +57,8 @@ namespace Diplom_project
                 MessageBox.Show("Заполните все поля!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
+            UpdatedFIO = textBox1.Text.Trim();
+            UpdatedPhone = textBox2.Text.Trim();
             try
             {
                 using (SQLiteConnection connection = new SQLiteConnection(connectionString))
@@ -75,6 +78,7 @@ namespace Diplom_project
                 
 
                 mainForm.LoadClients(); // Обновляем список клиентов
+                this.DialogResult = DialogResult.OK;
                 this.Close(); // Закрываем форму
             }
             catch (Exception ex)
