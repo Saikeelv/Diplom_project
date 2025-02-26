@@ -80,7 +80,7 @@ namespace Diplom_project
         {
 
         }
-
+        /*
         private void button1_Click(object sender, EventArgs e)//ОТКРЫТИЕ ФОРМЫ РЕГИСТРАЦИЯ КЛИЕНТА
         {
             int selectedIndex = listBoxClients.SelectedIndex; // Запоминаем индекс
@@ -103,6 +103,32 @@ namespace Diplom_project
                 listBoxClients.SelectedIndex = selectedIndex; // Восстанавливаем выделение
             }
         }
+        */
+        private void button1_Click(object sender, EventArgs e)
+        {
+            // Открываем форму добавления клиента
+            AddClient addForm = new AddClient(selectedFilePath, this);
+            if (addForm.ShowDialog() == DialogResult.OK) // Ждем, пока пользователь добавит клиента
+            {
+                string newFIO = addForm.fio;
+                string newPhone = addForm.phone;
+
+                // Загружаем обновленный список клиентов
+                LoadClients();
+
+                // Ищем нового клиента в ListView
+                foreach (ListViewItem item in listViewClients.Items)
+                {
+                    if (item.Text == newFIO && item.SubItems[1].Text == newPhone)
+                    {
+                        item.Selected = true; // Выделяем найденного клиента
+                        listViewClients.Select();
+                        break;
+                    }
+                }
+            }
+        }
+
 
         private void label1_Click_1(object sender, EventArgs e)
         {
@@ -118,7 +144,7 @@ namespace Diplom_project
         {
            // LoadClients();
         }
-
+        /*
         private void buttonDellClient_Click(object sender, EventArgs e)//удаление клиента
         {
             if (listBoxClients.SelectedItem == null)
@@ -175,13 +201,57 @@ namespace Diplom_project
                 }
             }
         }
+        */
+        private void buttonDellClient_Click(object sender, EventArgs e)
+        {
+            int? clientId = GetSelectedClientId();
+            if (clientId == null)
+            {
+                MessageBox.Show("Выберите клиента для удаления!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            DialogResult result = MessageBox.Show("Вы уверены, что хотите удалить этого клиента?", "Подтверждение", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == DialogResult.No) return;
+
+            using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
+            {
+                connection.Open();
+
+                using (SQLiteCommand command = new SQLiteCommand("DELETE FROM Client WHERE CLIENT_PK = @ID", connection))
+                {
+                    command.Parameters.AddWithValue("@ID", clientId);
+                    command.ExecuteNonQuery();
+                }
+            }
+
+            // Запоминаем индекс
+            int index = listViewClients.SelectedIndices[0];
+
+            LoadClients(); // Обновляем список клиентов
+
+            // Смещаем выделение вверх
+            if (listViewClients.Items.Count > 0)
+            {
+                int newIndex = Math.Max(index - 1, 0);
+                listViewClients.Items[newIndex].Selected = true;
+                listViewClients.Select();
+            }
+        }
+
 
         private void Main_Load(object sender, EventArgs e)
         {
             LoadDatabasePath();
+            listViewClients.Columns.Add("ФИО", 200);
+            listViewClients.Columns.Add("Телефон", 150);
+            listViewClients.View = View.Details;
+            listViewClients.SelectedIndexChanged += listViewClients_SelectedIndexChanged;//обработчик событий
+
+
         }
 
-        
+
         private void selectBDToolStripMenuItem_Click(object sender, EventArgs e)//выбор файла базы данных
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
@@ -215,6 +285,7 @@ namespace Diplom_project
                 }
             }
         }
+        /*
         public void LoadClients()//выгрузка списка клиентов из базы в листбокс
         {
             if (string.IsNullOrEmpty(selectedFilePath))
@@ -242,6 +313,39 @@ namespace Diplom_project
                 }
             }
         }
+        */
+        public void LoadClients()
+        {
+            listViewClients.Items.Clear();
+
+            try
+            {
+                using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
+                {
+                    connection.Open();
+                    string query = $"SELECT FIO, Phone_num FROM Client ORDER BY {SortOrder} ASC";
+
+                    using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            string fio = reader["FIO"].ToString();
+                            string phone = reader["Phone_num"].ToString();
+
+                            ListViewItem item = new ListViewItem(fio);
+                            item.SubItems.Add(phone);
+                            listViewClients.Items.Add(item);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка загрузки клиентов: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
 
 
         //должен быть установлен драйвер для ардуино 
@@ -289,9 +393,9 @@ namespace Diplom_project
             comPortForm.ShowDialog();
         }
 
-                  
+        /*
         
-
+        
         private void buttonChangeDataClient_Click(object sender, EventArgs e)//открываем форму для изменения данных клиента
         {
             if (listBoxClients.SelectedItem == null)
@@ -327,6 +431,46 @@ namespace Diplom_project
                 listBoxClients.SelectedIndex = selectedIndex; // Восстанавливаем выделение
             }
         }
+        */
+        private void buttonChangeDataClient_Click(object sender, EventArgs e)
+        {
+            if (listViewClients.SelectedItems.Count == 0) // Проверяем, есть ли выделенный элемент
+            {
+                MessageBox.Show("Выберите клиента для изменения!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Получаем выделенный элемент
+            ListViewItem selectedItem = listViewClients.SelectedItems[0];
+            int selectedIndex = selectedItem.Index; // Запоминаем индекс
+
+            string fio = selectedItem.Text; // ФИО (первый столбец)
+            string phone = selectedItem.SubItems[1].Text; // Телефон (второй столбец)
+
+            // Открываем ChangeClient (Form3), передавая данные ФИО и номер телефона
+            ChangeClient form3 = new ChangeClient(this, fio, phone, ConnectionString);
+            form3.ShowDialog(); // Открываем форму
+
+            // После изменения обновляем список клиентов
+            LoadClients();
+
+            // Восстанавливаем выделение
+            if (listViewClients.Items.Count > 0)
+            {
+                if (selectedIndex >= listViewClients.Items.Count)
+                {
+                    selectedIndex = listViewClients.Items.Count - 1; // Если изменяли последний, выбираем предыдущий
+                }
+
+                listViewClients.Items[selectedIndex].Selected = true;
+                listViewClients.Select();
+            }
+        }
+
+
+
+
+
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -348,5 +492,36 @@ namespace Diplom_project
         {
             SortOrder = "Phone_num"; // Меняем сортировку на телефон
         }
+
+        private void listViewClients_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+
+        private int? GetSelectedClientId()//получение id выбранного клиента
+        {
+            if (listViewClients.SelectedItems.Count == 0)
+                return null;
+
+            string selectedFIO = listViewClients.SelectedItems[0].Text;
+            string selectedPhone = listViewClients.SelectedItems[0].SubItems[1].Text;
+
+            using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
+            {
+                connection.Open();
+                string query = "SELECT CLIENT_PK FROM Client WHERE FIO = @FIO AND Phone_num = @Phone";
+
+                using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@FIO", selectedFIO);
+                    command.Parameters.AddWithValue("@Phone", selectedPhone);
+
+                    object result = command.ExecuteScalar();
+                    return result != null ? Convert.ToInt32(result) : (int?)null;
+                }
+            }
+        }
+
     }
 }

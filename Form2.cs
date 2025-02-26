@@ -48,11 +48,12 @@ namespace Diplom_project
         {
 
         }
-
+        public string fio { get; private set; }
+        public string phone { get; private set; }
         private void Apply_Click(object sender, EventArgs e)
         {
-            string fio = textBoxFIO.Text.Trim();
-            string phone = textBoxNomber.Text.Trim();
+            fio = textBoxFIO.Text.Trim();
+            phone = textBoxNomber.Text.Trim();
 
             if (string.IsNullOrWhiteSpace(fio) || string.IsNullOrWhiteSpace(phone))
             {
@@ -80,7 +81,8 @@ namespace Diplom_project
 
 
                 mainForm.LoadClients(); // Обновляем список клиентов
-                this.Close(); // Закрываем форму после успешного добавления
+                this.DialogResult = DialogResult.OK;// Закрываем форму и передаем результат
+                this.Close(); 
             }
             catch (Exception ex)
             {

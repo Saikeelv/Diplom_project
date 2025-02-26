@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.listBoxClients = new System.Windows.Forms.ListBox();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.labelClients = new System.Windows.Forms.Label();
             this.buttonAddClient = new System.Windows.Forms.Button();
@@ -60,27 +59,16 @@
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectBDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectCOMPortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.buttonChangeDataClient = new System.Windows.Forms.Button();
             this.sortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clientsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.samplesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sortedByFIOToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sortedByPhoneNumToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.samplesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.buttonChangeDataClient = new System.Windows.Forms.Button();
+            this.listViewClients = new System.Windows.Forms.ListView();
             this.menuStrip2.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // listBoxClients
-            // 
-            this.listBoxClients.Font = new System.Drawing.Font("Times New Roman", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.listBoxClients.FormattingEnabled = true;
-            this.listBoxClients.HorizontalScrollbar = true;
-            this.listBoxClients.ItemHeight = 19;
-            this.listBoxClients.Location = new System.Drawing.Point(12, 68);
-            this.listBoxClients.Name = "listBoxClients";
-            this.listBoxClients.Size = new System.Drawing.Size(348, 308);
-            this.listBoxClients.TabIndex = 1;
-            this.listBoxClients.SelectedIndexChanged += new System.EventHandler(this.listBoxClients_SelectedIndexChanged);
             // 
             // labelClients
             // 
@@ -364,34 +352,16 @@
             // selectBDToolStripMenuItem
             // 
             this.selectBDToolStripMenuItem.Name = "selectBDToolStripMenuItem";
-            this.selectBDToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.selectBDToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
             this.selectBDToolStripMenuItem.Text = "Select BD";
             this.selectBDToolStripMenuItem.Click += new System.EventHandler(this.selectBDToolStripMenuItem_Click);
             // 
             // selectCOMPortToolStripMenuItem
             // 
             this.selectCOMPortToolStripMenuItem.Name = "selectCOMPortToolStripMenuItem";
-            this.selectCOMPortToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.selectCOMPortToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
             this.selectCOMPortToolStripMenuItem.Text = "Select COM port";
             this.selectCOMPortToolStripMenuItem.Click += new System.EventHandler(this.selectCOMPortToolStripMenuItem_Click);
-            // 
-            // exitToolStripMenuItem
-            // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.exitToolStripMenuItem.Text = "Exit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
-            // 
-            // buttonChangeDataClient
-            // 
-            this.buttonChangeDataClient.Font = new System.Drawing.Font("Times New Roman", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonChangeDataClient.Location = new System.Drawing.Point(248, 384);
-            this.buttonChangeDataClient.Name = "buttonChangeDataClient";
-            this.buttonChangeDataClient.Size = new System.Drawing.Size(112, 25);
-            this.buttonChangeDataClient.TabIndex = 34;
-            this.buttonChangeDataClient.Text = "Change";
-            this.buttonChangeDataClient.UseVisualStyleBackColor = true;
-            this.buttonChangeDataClient.Click += new System.EventHandler(this.buttonChangeDataClient_Click);
             // 
             // sortToolStripMenuItem
             // 
@@ -399,7 +369,7 @@
             this.clientsToolStripMenuItem,
             this.samplesToolStripMenuItem});
             this.sortToolStripMenuItem.Name = "sortToolStripMenuItem";
-            this.sortToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.sortToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
             this.sortToolStripMenuItem.Text = "Sort";
             // 
             // clientsToolStripMenuItem
@@ -408,14 +378,8 @@
             this.sortedByFIOToolStripMenuItem,
             this.sortedByPhoneNumToolStripMenuItem});
             this.clientsToolStripMenuItem.Name = "clientsToolStripMenuItem";
-            this.clientsToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.clientsToolStripMenuItem.Size = new System.Drawing.Size(148, 26);
             this.clientsToolStripMenuItem.Text = "Clients";
-            // 
-            // samplesToolStripMenuItem
-            // 
-            this.samplesToolStripMenuItem.Name = "samplesToolStripMenuItem";
-            this.samplesToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.samplesToolStripMenuItem.Text = "Samples";
             // 
             // sortedByFIOToolStripMenuItem
             // 
@@ -431,10 +395,48 @@
             this.sortedByPhoneNumToolStripMenuItem.Text = "Sorted by phone num";
             this.sortedByPhoneNumToolStripMenuItem.Click += new System.EventHandler(this.sortedByPhoneNumToolStripMenuItem_Click);
             // 
+            // samplesToolStripMenuItem
+            // 
+            this.samplesToolStripMenuItem.Name = "samplesToolStripMenuItem";
+            this.samplesToolStripMenuItem.Size = new System.Drawing.Size(148, 26);
+            this.samplesToolStripMenuItem.Text = "Samples";
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
+            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
+            // buttonChangeDataClient
+            // 
+            this.buttonChangeDataClient.Font = new System.Drawing.Font("Times New Roman", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonChangeDataClient.Location = new System.Drawing.Point(248, 384);
+            this.buttonChangeDataClient.Name = "buttonChangeDataClient";
+            this.buttonChangeDataClient.Size = new System.Drawing.Size(112, 25);
+            this.buttonChangeDataClient.TabIndex = 34;
+            this.buttonChangeDataClient.Text = "Change";
+            this.buttonChangeDataClient.UseVisualStyleBackColor = true;
+            this.buttonChangeDataClient.Click += new System.EventHandler(this.buttonChangeDataClient_Click);
+            // 
+            // listViewClients
+            // 
+            this.listViewClients.FullRowSelect = true;
+            this.listViewClients.GridLines = true;
+            this.listViewClients.HideSelection = false;
+            this.listViewClients.Location = new System.Drawing.Point(12, 68);
+            this.listViewClients.Name = "listViewClients";
+            this.listViewClients.Size = new System.Drawing.Size(348, 308);
+            this.listViewClients.TabIndex = 35;
+            this.listViewClients.UseCompatibleStateImageBehavior = false;
+            this.listViewClients.View = System.Windows.Forms.View.Details;
+            this.listViewClients.SelectedIndexChanged += new System.EventHandler(this.listViewClients_SelectedIndexChanged);
+            // 
             // Main
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(1305, 437);
+            this.ClientSize = new System.Drawing.Size(1305, 445);
+            this.Controls.Add(this.listViewClients);
             this.Controls.Add(this.buttonChangeDataClient);
             this.Controls.Add(this.buttonMakeExp);
             this.Controls.Add(this.buttonDataOfExp);
@@ -462,7 +464,6 @@
             this.Controls.Add(this.buttonDellClient);
             this.Controls.Add(this.buttonAddClient);
             this.Controls.Add(this.labelClients);
-            this.Controls.Add(this.listBoxClients);
             this.Controls.Add(this.menuStrip2);
             this.Name = "Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -476,7 +477,6 @@
         }
 
         #endregion
-        private System.Windows.Forms.ListBox listBoxClients;
         private System.Windows.Forms.ColorDialog colorDialog1;
         private System.Windows.Forms.Label labelClients;
         private System.Windows.Forms.Button buttonAddClient;
@@ -515,6 +515,7 @@
         private System.Windows.Forms.ToolStripMenuItem sortedByFIOToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sortedByPhoneNumToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem samplesToolStripMenuItem;
+        private System.Windows.Forms.ListView listViewClients;
     }
 }
 
