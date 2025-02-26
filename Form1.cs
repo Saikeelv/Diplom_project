@@ -36,8 +36,10 @@ namespace Diplom_project
 
 
         public Main()
-        {
+        {   
+
             InitializeComponent();
+            listViewClients.ColumnClick += listViewClients_ColumnClick;
         }
 
         private void LoadDatabasePath()
@@ -520,6 +522,24 @@ namespace Diplom_project
                     object result = command.ExecuteScalar();
                     return result != null ? Convert.ToInt32(result) : (int?)null;
                 }
+            }
+        }
+
+        private void listViewClients_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            // Получаем заголовок колонки
+            string columnName = listViewClients.Columns[e.Column].Text;
+
+            //сортруем в зависимости от выбранной колонки            
+            if (columnName == "ФИО")
+            {
+                SortOrder = "FIO"; // Меняем сортировку на ФИО
+                LoadClients();
+            }
+            if (columnName == "Телефон")
+            {
+                SortOrder = "Phone_num"; // Меняем сортировку на телефон
+                LoadClients();
             }
         }
 
