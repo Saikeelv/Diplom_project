@@ -551,7 +551,7 @@ namespace Diplom_project
 
 
 
-        private int? GetSelectedClientId()//получение id выбранного клиента
+        public int? GetSelectedClientId()//получение id выбранного клиента
         {
             if (listViewClients.SelectedItems.Count == 0)
                 return null;
@@ -597,5 +597,65 @@ namespace Diplom_project
         {
 
         }
+
+        private void listViewSamples_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listViewSamples.SelectedItems.Count == 0)
+                return;
+
+            string selectedNote = listViewSamples.SelectedItems[0].Text;
+
+            using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
+            {
+                connection.Open();
+                string query = @"
+            SELECT 
+                s.Note, d.Date, d.Time, 
+                e.Marka AS EngineBrand, t.Type_eng AS EngineType, ne.Number_eng AS EngineNumber,
+                em.Engine_mil AS EngineMileage, om.Oil_mil AS OilMileage,
+                ge.Unit_of_measure AS EngineDictionary, go.Unit_of_measure AS OilDictionary
+            FROM Sample s
+            JOIN Datetime d ON s.Datetime_FK = d.Datetime_PK
+            LEFT JOIN Number_engine ne ON s.Number_eng_FK = ne.Number_eng_PK
+            LEFT JOIN Engine e ON ne.Engine_FK = e.Engine_PK
+            LEFT JOIN Type_engine t ON e.Type_eng_FK = t.Type_eng_PK
+            LEFT JOIN Engine_mileage em ON s.Engine_mileage_FK = em.Engine_mileage_PK
+            LEFT JOIN Oil_mileage om ON s.Oil_mileage_FK = om.Oil_mileage_PK
+            LEFT JOIN Guide ge ON em.Guide_FK = ge.Guide_PK
+            LEFT JOIN Guide go ON om.Guide_FK = go.Guide_PK
+            WHERE s.Note = @Note;";
+
+                using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Note", selectedNote);
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            textBoxNote.Text = reader["Note"].ToString();
+                            textBoxData.Text = $"{reader["Date"]} {reader["Time"]}";
+                            textBoxEngineType.Text = reader["EngineType"].ToString();
+                            textBoxEhgineBrand.Text = reader["EngineBrand"].ToString();
+                            textBoxEngineNomber.Text = reader["EngineNumber"].ToString();
+                            textBoxEngineMileage.Text = reader["EngineMileage"].ToString();
+                            textBoxOilMileage.Text = reader["OilMileage"].ToString();
+                            textBoxEngineDictionary.Text = reader["EngineDictionary"].ToString();
+                            textBoxOilDictionary.Text = reader["OilDictionary"].ToString();
+                        }
+                    }
+                }
+            }
+        }
+
+        private void buttonAddSamples_Click(object sender, EventArgs e)
+        {
+            
+            AddSample addSampleForm = new AddSample(selectedFilePath, this);
+            addSampleForm.ShowDialog();
+
+            // После закрытия формы обновляем список образцов
+            LoadSamples();
+        }
+
     }
 }
