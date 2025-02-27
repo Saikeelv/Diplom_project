@@ -133,6 +133,7 @@
             this.buttonDellSamples.TabIndex = 10;
             this.buttonDellSamples.Text = "DEL";
             this.buttonDellSamples.UseVisualStyleBackColor = true;
+            this.buttonDellSamples.Click += new System.EventHandler(this.buttonDellSamples_Click);
             // 
             // buttonChangeSamples
             // 

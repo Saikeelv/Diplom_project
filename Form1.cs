@@ -522,10 +522,10 @@ namespace Diplom_project
             {
                 connection.Open();
                 string query = @"
-            SELECT s.Note, d.Date, d.Time 
-            FROM Sample s
-            JOIN Datetime d ON s.Datetime_FK = d.Datetime_PK
-            WHERE s.Client_FK = @ClientId";
+        SELECT s.Sample_PK, s.Note, d.Date, d.Time 
+        FROM Sample s
+        JOIN Datetime d ON s.Datetime_FK = d.Datetime_PK
+        WHERE s.Client_FK = @ClientId";
 
                 using (SQLiteCommand command = new SQLiteCommand(query, connection))
                 {
@@ -535,12 +535,14 @@ namespace Diplom_project
                     {
                         while (reader.Read())
                         {
+                            int sampleId = Convert.ToInt32(reader["Sample_PK"]); // Получаем первичный ключ
                             string note = reader["Note"].ToString();
                             string date = reader["Date"].ToString();
                             string time = reader["Time"].ToString();
 
                             ListViewItem item = new ListViewItem(note); // Первый столбец (Note)
                             item.SubItems.Add($"{date} {time}"); // Второй столбец (Дата + Время)
+                            item.Tag = sampleId; // Сохраняем первичный ключ в Tag
 
                             listViewSamples.Items.Add(item);
                         }
@@ -548,6 +550,8 @@ namespace Diplom_project
                 }
             }
         }
+
+        
 
 
 
@@ -574,6 +578,19 @@ namespace Diplom_project
                 }
             }
         }
+
+        private int? GetSelectedSampleId()//получение id выбранного образца
+        {
+            if (listViewSamples.SelectedItems.Count == 0 || listViewSamples.SelectedItems[0].Tag == null)
+                return null;
+
+            int sampleId;
+            if (!int.TryParse(listViewSamples.SelectedItems[0].Tag.ToString(), out sampleId))
+                return null;
+
+            return sampleId;
+        }
+
 
         private void listViewClients_ColumnClick(object sender, ColumnClickEventArgs e)
         {
@@ -656,6 +673,85 @@ namespace Diplom_project
             // После закрытия формы обновляем список образцов
             LoadSamples();
         }
+
+        private void buttonDellSamples_Click(object sender, EventArgs e)
+        {
+            
+
+            int? sampleId = GetSelectedSampleId();
+            if (sampleId == null)
+            {
+                MessageBox.Show("Выберите образец для удаления!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+           
+
+            DialogResult result = MessageBox.Show(
+                "Вы уверены, что хотите удалить этот образец и все связанные с ним данные?",
+                "Подтверждение удаления",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning);
+
+            if (result == DialogResult.No)
+                return;
+
+            try
+            {
+                using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
+                {
+                    connection.Open();
+
+                    // Включаем поддержку внешних ключей
+                    using (SQLiteCommand cmd = new SQLiteCommand("PRAGMA foreign_keys = ON;", connection))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    // 1. Удаляем записи из Data_of_exp
+                    string deleteDataOfExpQuery = "DELETE FROM Data_of_exp WHERE Experiment_FK IN (SELECT Experiment_PK FROM Experiment WHERE Sample_FK = @SampleId)";
+                    using (SQLiteCommand cmd = new SQLiteCommand(deleteDataOfExpQuery, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@SampleId", sampleId);
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    // 2. Удаляем записи из Experiment
+                    string deleteExperimentQuery = "DELETE FROM Experiment WHERE Sample_FK = @SampleId";
+                    using (SQLiteCommand cmd = new SQLiteCommand(deleteExperimentQuery, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@SampleId", sampleId);
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    // 3. Удаляем сам Sample
+                    string deleteSampleQuery = "DELETE FROM Sample WHERE Sample_PK = @SampleId";
+                    using (SQLiteCommand cmd = new SQLiteCommand(deleteSampleQuery, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@SampleId", sampleId);
+                        int rowsAffected = cmd.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+                           // MessageBox.Show("Образец успешно удален!", "Удаление завершено", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Ошибка: образец не найден!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                }
+
+                LoadSamples(); // Обновляем список
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка при удалении: " + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+
+
 
     }
 }

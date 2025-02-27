@@ -127,6 +127,21 @@ namespace Diplom_project
 
         private void ApplyAdd_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(textBoxNoteAdd.Text) ||
+        string.IsNullOrWhiteSpace(textBoxEngineNomberAdd.Text) ||
+        string.IsNullOrWhiteSpace(textBoxEngineMileageAdd.Text) ||
+        string.IsNullOrWhiteSpace(textBoxOilMileageAdd.Text) ||
+        comboBoxAddEngineType.SelectedIndex == -1 ||
+        comboBoxAddEngineType.SelectedValue == null ||
+        comboBoxAddGuide1.SelectedIndex == -1 ||
+        comboBoxAddGuide1.SelectedValue == null ||
+        comboBoxAddGuide2.SelectedIndex == -1 ||
+        comboBoxAddGuide2.SelectedValue == null)
+            {
+                MessageBox.Show("Заполните все поля перед добавлением!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
             {
                 connection.Open();
@@ -289,9 +304,9 @@ namespace Diplom_project
                             cmd.Parameters.AddWithValue("@ClientId", clientId);
                             cmd.ExecuteNonQuery();
                         }
-
+                        
                         transaction.Commit();
-                        MessageBox.Show("Образец успешно добавлен!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        //MessageBox.Show("Образец успешно добавлен!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         this.Close();
                     }
                     catch (Exception ex)
