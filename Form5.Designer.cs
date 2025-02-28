@@ -117,7 +117,6 @@
             this.textBoxEngineNomberChange.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.textBoxEngineNomberChange.Location = new System.Drawing.Point(207, 202);
             this.textBoxEngineNomberChange.Name = "textBoxEngineNomberChange";
-            this.textBoxEngineNomberChange.ReadOnly = true;
             this.textBoxEngineNomberChange.Size = new System.Drawing.Size(220, 25);
             this.textBoxEngineNomberChange.TabIndex = 51;
             // 

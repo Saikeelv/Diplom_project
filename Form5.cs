@@ -120,6 +120,7 @@ WHERE s.Sample_PK = @SampleId;";
                 return;
             }
 
+
             using (SQLiteConnection connection = new SQLiteConnection(connectionString))
             {
                 connection.Open();
@@ -127,42 +128,54 @@ WHERE s.Sample_PK = @SampleId;";
                 {
                     try
                     {
-                        // 🔹 Получаем PK двигателя (Number_eng_PK)
-                        string getNumberEngPKQuery = "SELECT Number_eng_PK FROM Number_engine WHERE Number_eng = @EngineNumber";
+                        // 🔹 Получаем Number_eng_FK из Sample
+                        string getNumberEngFKQuery = "SELECT Number_eng_FK FROM Sample WHERE Sample_PK = @SampleId";
                         int numberEngFK;
-                        using (SQLiteCommand cmd = new SQLiteCommand(getNumberEngPKQuery, connection, transaction))
+                        using (SQLiteCommand cmd = new SQLiteCommand(getNumberEngFKQuery, connection, transaction))
                         {
-                            cmd.Parameters.AddWithValue("@EngineNumber", textBoxEngineNomberChange.Text);
+                            cmd.Parameters.AddWithValue("@SampleId", sampleId);
                             object result = cmd.ExecuteScalar();
                             if (result == null)
                             {
-                                MessageBox.Show("Ошибка: изменять номер двигателя запрщено!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                MessageBox.Show("Ошибка: не удалось найти номер двигателя!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                 return;
                             }
                             numberEngFK = Convert.ToInt32(result);
                         }
 
-                        // 🔹 Получаем PK двигателя (Engine_PK) через найденный Number_eng_PK
-                        string getEnginePKQuery = "SELECT Engine_FK FROM Number_engine WHERE Number_eng_PK = @NumberEngFK";
+                        // 🔹 Получаем Engine_FK из Number_engine
+                        string getEngineFKQuery = "SELECT Engine_FK FROM Number_engine WHERE Number_eng_PK = @NumberEngFK";
                         int engineFK;
-                        using (SQLiteCommand cmd = new SQLiteCommand(getEnginePKQuery, connection, transaction))
+                        using (SQLiteCommand cmd = new SQLiteCommand(getEngineFKQuery, connection, transaction))
                         {
                             cmd.Parameters.AddWithValue("@NumberEngFK", numberEngFK);
                             object result = cmd.ExecuteScalar();
                             if (result == null)
                             {
-                                MessageBox.Show("Ошибка: двигатель не найден!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                MessageBox.Show("Ошибка: не удалось найти двигатель!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                 return;
                             }
                             engineFK = Convert.ToInt32(result);
                         }
 
+                        // 🔹 Обновляем номер двигателя в Number_engine
+                        string updateNumberEngineQuery = @"
+                UPDATE Number_engine 
+                SET Number_eng = @NewEngineNumber
+                WHERE Number_eng_PK = @NumberEngFK";
+                        using (SQLiteCommand cmd = new SQLiteCommand(updateNumberEngineQuery, connection, transaction))
+                        {
+                            cmd.Parameters.AddWithValue("@NewEngineNumber", textBoxEngineNomberChange.Text);
+                            cmd.Parameters.AddWithValue("@NumberEngFK", numberEngFK);
+                            cmd.ExecuteNonQuery();
+                        }
+
                         // 🔹 Обновляем данные в Engine
                         string updateEngineQuery = @"
-                    UPDATE Engine 
-                    SET Marka = @EngineBrand, 
-                        Type_eng_FK = (SELECT Type_eng_PK FROM Type_engine WHERE Type_eng = @TypeEngine)
-                    WHERE Engine_PK = @EnginePK";
+                UPDATE Engine 
+                SET Marka = @EngineBrand, 
+                    Type_eng_FK = (SELECT Type_eng_PK FROM Type_engine WHERE Type_eng = @TypeEngine)
+                WHERE Engine_PK = @EnginePK";
                         using (SQLiteCommand cmd = new SQLiteCommand(updateEngineQuery, connection, transaction))
                         {
                             cmd.Parameters.AddWithValue("@EngineBrand", textBoxEhgineBrandChange.Text);
@@ -173,10 +186,10 @@ WHERE s.Sample_PK = @SampleId;";
 
                         // 🔹 Обновляем пробег двигателя
                         string updateEngineMileageQuery = @"
-                    UPDATE Engine_mileage 
-                    SET Engine_mil = @EngineMileage, 
-                        Guide_FK = (SELECT Guide_PK FROM Guide WHERE Unit_of_measure = @Guide1)
-                    WHERE Engine_mileage_PK = (SELECT Engine_mileage_FK FROM Sample WHERE Sample_PK = @SampleId)";
+                UPDATE Engine_mileage 
+                SET Engine_mil = @EngineMileage, 
+                    Guide_FK = (SELECT Guide_PK FROM Guide WHERE Unit_of_measure = @Guide1)
+                WHERE Engine_mileage_PK = (SELECT Engine_mileage_FK FROM Sample WHERE Sample_PK = @SampleId)";
                         using (SQLiteCommand cmd = new SQLiteCommand(updateEngineMileageQuery, connection, transaction))
                         {
                             cmd.Parameters.AddWithValue("@EngineMileage", textBoxEngineMileageChange.Text);
@@ -187,10 +200,10 @@ WHERE s.Sample_PK = @SampleId;";
 
                         // 🔹 Обновляем пробег масла
                         string updateOilMileageQuery = @"
-                    UPDATE Oil_mileage 
-                    SET Oil_mil = @OilMileage, 
-                        Guide_FK = (SELECT Guide_PK FROM Guide WHERE Unit_of_measure = @Guide2)
-                    WHERE Oil_mileage_PK = (SELECT Oil_mileage_FK FROM Sample WHERE Sample_PK = @SampleId)";
+                UPDATE Oil_mileage 
+                SET Oil_mil = @OilMileage, 
+                    Guide_FK = (SELECT Guide_PK FROM Guide WHERE Unit_of_measure = @Guide2)
+                WHERE Oil_mileage_PK = (SELECT Oil_mileage_FK FROM Sample WHERE Sample_PK = @SampleId)";
                         using (SQLiteCommand cmd = new SQLiteCommand(updateOilMileageQuery, connection, transaction))
                         {
                             cmd.Parameters.AddWithValue("@OilMileage", textBoxOilMileageChange.Text);
@@ -199,22 +212,21 @@ WHERE s.Sample_PK = @SampleId;";
                             cmd.ExecuteNonQuery();
                         }
 
-                        // 🔹 Обновляем образец, вносим Number_eng_FK и привязываем клиента
+                        // 🔹 Обновляем образец, оставляя связь с клиентом и Number_eng_FK
                         string updateSampleQuery = @"
-                    UPDATE Sample 
-                    SET Note = @Note, 
-                        Number_eng_FK = @NumberEngFK,
-                        Client_FK = (SELECT Client_FK FROM Sample WHERE Sample_PK = @SampleId) 
-                    WHERE Sample_PK = @SampleId";
+                UPDATE Sample 
+                SET Note = @Note 
+                WHERE Sample_PK = @SampleId";
                         using (SQLiteCommand cmd = new SQLiteCommand(updateSampleQuery, connection, transaction))
                         {
                             cmd.Parameters.AddWithValue("@Note", textBoxNoteChange.Text);
-                            cmd.Parameters.AddWithValue("@NumberEngFK", numberEngFK);
                             cmd.Parameters.AddWithValue("@SampleId", sampleId);
                             cmd.ExecuteNonQuery();
                         }
 
                         transaction.Commit();
+                       
+                        this.Close();
                     }
                     catch (Exception ex)
                     {
@@ -224,7 +236,8 @@ WHERE s.Sample_PK = @SampleId;";
                 }
             }
 
-            MessageBox.Show("Данные успешно изменены!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            //MessageBox.Show("Данные успешно изменены!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
             this.Close();
         }
         
