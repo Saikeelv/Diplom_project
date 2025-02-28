@@ -144,6 +144,7 @@
             this.buttonChangeSamples.TabIndex = 11;
             this.buttonChangeSamples.Text = "CHANGE";
             this.buttonChangeSamples.UseVisualStyleBackColor = true;
+            this.buttonChangeSamples.Click += new System.EventHandler(this.buttonChangeSamples_Click);
             // 
             // Note
             // 
@@ -325,7 +326,7 @@
             this.settingsToolStripMenuItem});
             this.menuStrip2.Location = new System.Drawing.Point(0, 0);
             this.menuStrip2.Name = "menuStrip2";
-            this.menuStrip2.Size = new System.Drawing.Size(1305, 28);
+            this.menuStrip2.Size = new System.Drawing.Size(1305, 30);
             this.menuStrip2.TabIndex = 31;
             this.menuStrip2.Text = "menuStrip2";
             // 

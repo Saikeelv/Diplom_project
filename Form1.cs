@@ -579,17 +579,33 @@ namespace Diplom_project
             }
         }
 
-        private int? GetSelectedSampleId()//получение id выбранного образца
+        private int? GetSelectedSampleId()
         {
-            if (listViewSamples.SelectedItems.Count == 0 || listViewSamples.SelectedItems[0].Tag == null)
+            if (listViewSamples.SelectedItems.Count == 0)
                 return null;
 
-            int sampleId;
-            if (!int.TryParse(listViewSamples.SelectedItems[0].Tag.ToString(), out sampleId))
-                return null;
+            string selectedNote = listViewSamples.SelectedItems[0].Text;
+            string selectedDateTime = listViewSamples.SelectedItems[0].SubItems[1].Text;
 
-            return sampleId;
+            using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
+            {
+                connection.Open();
+                string query = @"
+        SELECT s.Sample_PK FROM Sample s
+        JOIN Datetime d ON s.Datetime_FK = d.Datetime_PK
+        WHERE s.Note = @Note AND d.Date || ' ' || d.Time = @DateTime";
+
+                using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Note", selectedNote);
+                    command.Parameters.AddWithValue("@DateTime", selectedDateTime);
+
+                    object result = command.ExecuteScalar();
+                    return result != null ? Convert.ToInt32(result) : (int?)null;
+                }
+            }
         }
+
 
 
         private void listViewClients_ColumnClick(object sender, ColumnClickEventArgs e)
@@ -750,8 +766,28 @@ namespace Diplom_project
             }
         }
 
+        private void buttonChangeSamples_Click(object sender, EventArgs e)
+        {
+            if (listViewSamples.SelectedItems.Count == 0)
+            {
+                MessageBox.Show("Выберите образец для изменения!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
+            // Получаем ID выбранного образца
+            int? sampleId = GetSelectedSampleId();
+            if (sampleId == null)
+            {
+                MessageBox.Show("Ошибка: Не удалось получить ID образца.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
+            // Открываем форму изменения
+            ChangeSample form5 = new ChangeSample(sampleId.Value, ConnectionString);
+            form5.ShowDialog();
 
+            // После закрытия формы перезагружаем список
+            LoadSamples();
+        }
     }
 }
