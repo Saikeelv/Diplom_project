@@ -136,33 +136,87 @@ namespace Diplom_project
                 return;
             }
 
-            DialogResult result = MessageBox.Show("Вы уверены, что хотите удалить этого клиента?", "Подтверждение", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (result == DialogResult.No) return;
+            DialogResult result = MessageBox.Show(
+                "Вы уверены, что хотите удалить клиента и все связанные с ним данные?",
+                "Подтверждение удаления",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning);
+
+            if (result == DialogResult.No)
+                return;
 
             using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
             {
                 connection.Open();
-
-                using (SQLiteCommand command = new SQLiteCommand("DELETE FROM Client WHERE CLIENT_PK = @ID", connection))
+                using (SQLiteTransaction transaction = connection.BeginTransaction())
                 {
-                    command.Parameters.AddWithValue("@ID", clientId);
-                    command.ExecuteNonQuery();
+                    try
+                    {
+                        // Включаем поддержку внешних ключей
+                        using (SQLiteCommand cmd = new SQLiteCommand("PRAGMA foreign_keys = ON;", connection, transaction))
+                        {
+                            cmd.ExecuteNonQuery();
+                        }
+
+                        // 🔹 Удаляем все данные из Data_of_experiment, связанные с экспериментами клиента
+                        string deleteDataOfExpQuery = @"
+                    DELETE FROM Data_of_exp 
+                    WHERE Experiment_FK IN (SELECT Experiment_PK FROM Experiment WHERE Sample_FK IN 
+                        (SELECT Sample_PK FROM Sample WHERE Client_FK = @ClientId))";
+                        using (SQLiteCommand cmd = new SQLiteCommand(deleteDataOfExpQuery, connection, transaction))
+                        {
+                            cmd.Parameters.AddWithValue("@ClientId", clientId);
+                            cmd.ExecuteNonQuery();
+                        }
+
+                        // 🔹 Удаляем все эксперименты, связанные с образцами клиента
+                        string deleteExperimentQuery = @"
+                    DELETE FROM Experiment 
+                    WHERE Sample_FK IN (SELECT Sample_PK FROM Sample WHERE Client_FK = @ClientId)";
+                        using (SQLiteCommand cmd = new SQLiteCommand(deleteExperimentQuery, connection, transaction))
+                        {
+                            cmd.Parameters.AddWithValue("@ClientId", clientId);
+                            cmd.ExecuteNonQuery();
+                        }
+
+                        // 🔹 Удаляем все образцы клиента
+                        string deleteSamplesQuery = "DELETE FROM Sample WHERE Client_FK = @ClientId";
+                        using (SQLiteCommand cmd = new SQLiteCommand(deleteSamplesQuery, connection, transaction))
+                        {
+                            cmd.Parameters.AddWithValue("@ClientId", clientId);
+                            cmd.ExecuteNonQuery();
+                        }
+
+                        // 🔹 Удаляем самого клиента
+                        string deleteClientQuery = "DELETE FROM Client WHERE CLIENT_PK = @ClientId";
+                        using (SQLiteCommand cmd = new SQLiteCommand(deleteClientQuery, connection, transaction))
+                        {
+                            cmd.Parameters.AddWithValue("@ClientId", clientId);
+                            cmd.ExecuteNonQuery();
+                        }
+
+                        transaction.Commit();
+                       
+                        int index = listViewClients.SelectedIndices[0];
+                        LoadClients(); // Перезагружаем список клиентов
+                        listViewSamples.Items.Clear(); // Очищаем список образцов
+                        if (listViewClients.Items.Count > 0)
+                        {
+                            int newIndex = Math.Max(index - 1, 0);
+                            listViewClients.Items[newIndex].Selected = true;
+                            listViewClients.Select();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        MessageBox.Show($"Ошибка при удалении клиента: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             }
-
-            // Запоминаем индекс
-            int index = listViewClients.SelectedIndices[0];
-
-            LoadClients(); // Обновляем список клиентов
-
-            // Смещаем выделение вверх
-            if (listViewClients.Items.Count > 0)
-            {
-                int newIndex = Math.Max(index - 1, 0);
-                listViewClients.Items[newIndex].Selected = true;
-                listViewClients.Select();
-            }
         }
+
+
 
 
         private void Main_Load(object sender, EventArgs e)
