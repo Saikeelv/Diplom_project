@@ -234,7 +234,11 @@ namespace Diplom_project
             listViewClients.Items[0].Selected = true;
             listViewClients.Select();
             listViewClients.Focus();
-            
+
+            listViewSamples.Items[0].Selected = true;
+            listViewSamples.Select();
+            listViewSamples.Focus();
+
         }
 
         private void selectBDToolStripMenuItem_Click(object sender, EventArgs e)//выбор файла базы данных
@@ -303,6 +307,7 @@ namespace Diplom_project
             {
                 MessageBox.Show($"Ошибка загрузки клиентов: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            
         }
 
 
@@ -428,41 +433,40 @@ namespace Diplom_project
 
 
         // Метод для загрузки образцов в listViewSamples
-        private void LoadSamples()
+       
+        private void LoadSamples(int? selectedSampleId = null)
         {
-            listViewSamples.Items.Clear(); // Очищаем список перед загрузкой новых данных
+            listViewSamples.Items.Clear(); // Очищаем список
 
-            int? clientId = GetSelectedClientId(); // Получаем ID выбранного клиента
-            if (clientId == null)
-                return; // Если клиент не выбран, выходим
+            int? clientId = GetSelectedClientId(); // Получаем ID клиента
+            if (clientId == null) return;
 
             using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
             {
                 connection.Open();
+
                 string query = $@"
 SELECT s.Sample_PK, s.Note, d.Date, d.Time 
 FROM Sample s
 JOIN Datetime d ON s.Datetime_FK = d.Datetime_PK
 WHERE s.Client_FK = @ClientId
-ORDER BY 
-    {(sampleSortOrder == "Note" ? "s.Note ASC" : "strftime('%Y-%m-%d %H:%M:%S', d.Date || ' ' || d.Time) ASC")}";
+ORDER BY {(sampleSortOrder == "Note" ? "s.Note ASC" : "strftime('%Y-%m-%d %H:%M:%S', d.Date || ' ' || d.Time) ASC")}";
 
                 using (SQLiteCommand command = new SQLiteCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@ClientId", clientId);
-
                     using (SQLiteDataReader reader = command.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            int sampleId = Convert.ToInt32(reader["Sample_PK"]); // Получаем первичный ключ
+                            int sampleId = Convert.ToInt32(reader["Sample_PK"]);
                             string note = reader["Note"].ToString();
                             string date = reader["Date"].ToString();
                             string time = reader["Time"].ToString();
 
-                            ListViewItem item = new ListViewItem(note); // Первый столбец (Note)
-                            item.SubItems.Add($"{date} {time}"); // Второй столбец (Дата + Время)
-                            item.Tag = sampleId; // Сохраняем первичный ключ в Tag
+                            ListViewItem item = new ListViewItem(note);
+                            item.SubItems.Add($"{date} {time}");
+                            item.Tag = sampleId;
 
                             listViewSamples.Items.Add(item);
                         }
@@ -470,13 +474,21 @@ ORDER BY
                 }
             }
 
-            // Автоматически выделяем первый образец
-            if (listViewSamples.Items.Count > 0)
+            // 🔹 Восстанавливаем выделение, если передан `selectedSampleId`
+            if (selectedSampleId != null)
             {
-                listViewSamples.Items[0].Selected = true;
-                listViewSamples.Select(); // Фокус на ListView
+                foreach (ListViewItem item in listViewSamples.Items)
+                {
+                    if (Convert.ToInt32(item.Tag) == selectedSampleId)
+                    {
+                        item.Selected = true;
+                        listViewSamples.Select();
+                        return; // Выделяем только один элемент, предотвращаем двойное выделение
+                    }
+                }
             }
         }
+
 
         public int? GetSelectedClientId()//получение id выбранного клиента
         {
@@ -531,6 +543,7 @@ ORDER BY
         //сортировка образцов
         private void listViewSamples_ColumnClick(object sender, ColumnClickEventArgs e)
         {
+            int? selectedSampleId = GetSelectedSampleId(); // Запоминаем выделенный образец
             string columnName = listViewSamples.Columns[e.Column].Text;
 
             if (columnName == "Note")
@@ -547,6 +560,19 @@ ORDER BY
             }
             
             LoadSamples(); // Перезагружаем список с новым порядком сортировки
+                           // 🔹 Восстанавливаем выделение после сортировки
+            if (selectedSampleId != null)
+            {
+                foreach (ListViewItem item in listViewSamples.Items)
+                {
+                    if (Convert.ToInt32(item.Tag) == selectedSampleId)
+                    {
+                        item.Selected = true;
+                        listViewSamples.Select();
+                        break;
+                    }
+                }
+            }
         }
 
 
@@ -642,18 +668,37 @@ ORDER BY
 
         private void buttonAddSamples_Click(object sender, EventArgs e)
         {
-            
+            int? clientId = GetSelectedClientId();
+            if (clientId == null)
+            {
+                MessageBox.Show("Выберите клиента перед добавлением образца!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             AddSample addSampleForm = new AddSample(selectedFilePath, this);
             addSampleForm.ShowDialog();
-
+            int? newSampleId = null;
+            using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
+            {
+                connection.Open();
+                string query = "SELECT MAX(Sample_PK) FROM Sample WHERE Client_FK = @ClientId";
+                using (SQLiteCommand cmd = new SQLiteCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@ClientId", clientId);
+                    object result = cmd.ExecuteScalar();
+                    if (result != null && result != DBNull.Value)
+                    {
+                        newSampleId = Convert.ToInt32(result);
+                    }
+                }
+            }
             // После закрытия формы обновляем список образцов
-            LoadSamples();
+            LoadSamples(newSampleId);
         }
 
         private void buttonDellSamples_Click(object sender, EventArgs e)
         {
-            
 
+            int? selectedSampleId = GetSelectedSampleId();
             int? sampleId = GetSelectedSampleId();
             if (sampleId == null)
             {
@@ -671,6 +716,16 @@ ORDER BY
 
             if (result == DialogResult.No)
                 return;
+
+            int selectedIndex = -1;
+            for (int i = 0; i < listViewSamples.Items.Count; i++)
+            {
+                if (Convert.ToInt32(listViewSamples.Items[i].Tag) == selectedSampleId)
+                {
+                    selectedIndex = i;
+                    break;
+                }
+            }
 
             try
             {
@@ -719,15 +774,26 @@ ORDER BY
                 }
 
                 LoadSamples(); // Обновляем список
+
             }
+
             catch (Exception ex)
             {
                 MessageBox.Show("Ошибка при удалении: " + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            // 🔹 Выбираем элемент выше удаленного (если он есть)
+            if (listViewSamples.Items.Count > 0)
+            {
+                int newIndex = Math.Max(0, selectedIndex - 1); // Если удалили первый элемент, выбираем новый первый
+                listViewSamples.Items[newIndex].Selected = true;
+                listViewSamples.Select();
             }
         }
 
         private void buttonChangeSamples_Click(object sender, EventArgs e)
         {
+
+            int? selectedSampleId = GetSelectedSampleId();
             if (listViewSamples.SelectedItems.Count == 0)
             {
                 MessageBox.Show("Выберите образец для изменения!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -748,6 +814,15 @@ ORDER BY
 
             // После закрытия формы перезагружаем список
             LoadSamples();
+            foreach (ListViewItem item in listViewSamples.Items)
+            {
+                if (Convert.ToInt32(item.Tag) == selectedSampleId)
+                {
+                    item.Selected = true;
+                    listViewSamples.Select();
+                    return; // Выделяем только один элемент, предотвращаем двойное выделение
+                }
+            }
         }
 
         
