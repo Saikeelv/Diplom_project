@@ -217,8 +217,6 @@ namespace Diplom_project
         }
 
 
-
-
         private void Main_Load(object sender, EventArgs e)
         {
             LoadDatabasePath();
@@ -231,8 +229,13 @@ namespace Diplom_project
             listViewSamples.Columns.Add("Note", 200);
             listViewSamples.Columns.Add("Дата и время", 150);
 
+            //Выбор первого элемента в списке
+            
+            listViewClients.Items[0].Selected = true;
+            listViewClients.Select();
+            listViewClients.Focus();
+            
         }
-
 
         private void selectBDToolStripMenuItem_Click(object sender, EventArgs e)//выбор файла базы данных
         {
@@ -303,7 +306,6 @@ namespace Diplom_project
         }
 
 
-
         //должен быть установлен драйвер для ардуино 
         private void selectCOMPortToolStripMenuItem_Click(object sender, EventArgs e)//выбор компорта - сначала полдключаем контролллер
         {
@@ -349,7 +351,6 @@ namespace Diplom_project
             comPortForm.ShowDialog();
         }
 
-        
         private void buttonChangeDataClient_Click(object sender, EventArgs e)
         {
             if (listViewClients.SelectedItems.Count == 0) // Проверяем, есть ли выделенный элемент
@@ -388,14 +389,11 @@ namespace Diplom_project
             }
         }
 
-
-
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
         }
-
-        
+                
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
@@ -420,8 +418,6 @@ namespace Diplom_project
             sampleSortOrder = "DateTime";
             LoadSamples();
         }
-
-
         private void listViewClients_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (listViewClients.SelectedItems.Count > 0) // Проверяем, есть ли выделенный элемент
@@ -449,7 +445,7 @@ FROM Sample s
 JOIN Datetime d ON s.Datetime_FK = d.Datetime_PK
 WHERE s.Client_FK = @ClientId
 ORDER BY 
-    {(sampleSortOrder == "Note" ? "s.Note DESC" : "strftime('%Y-%m-%d %H:%M:%S', d.Date || ' ' || d.Time) DESC")}";
+    {(sampleSortOrder == "Note" ? "s.Note ASC" : "strftime('%Y-%m-%d %H:%M:%S', d.Date || ' ' || d.Time) ASC")}";
 
                 using (SQLiteCommand command = new SQLiteCommand(query, connection))
                 {
@@ -481,12 +477,6 @@ ORDER BY
                 listViewSamples.Select(); // Фокус на ListView
             }
         }
-
-
-
-
-
-
 
         public int? GetSelectedClientId()//получение id выбранного клиента
         {
@@ -555,7 +545,7 @@ ORDER BY
             {
                 return;
             }
-
+            
             LoadSamples(); // Перезагружаем список с новым порядком сортировки
         }
 
@@ -563,6 +553,7 @@ ORDER BY
 
         private void listViewClients_ColumnClick(object sender, ColumnClickEventArgs e)
         {
+            int? selectedClientId = GetSelectedClientId();
             // Получаем заголовок колонки
             string columnName = listViewClients.Columns[e.Column].Text;
 
@@ -570,12 +561,28 @@ ORDER BY
             if (columnName == "ФИО")
             {
                 SortOrder = "FIO"; // Меняем сортировку на ФИО
-                LoadClients();
+                
             }
             if (columnName == "Телефон")
             {
                 SortOrder = "Phone_num"; // Меняем сортировку на телефон
-                LoadClients();
+                
+            }
+            LoadClients();
+
+            // 🔹 После загрузки клиентов восстанавливаем выделение
+            if (selectedClientId != null)
+            {
+                foreach (ListViewItem item in listViewClients.Items)
+                {
+                    if (Convert.ToInt32(item.Tag) == selectedClientId)
+                    {
+                        item.Selected = true;
+                        listViewClients.Select();
+                        listViewClients.Focus();
+                        break;
+                    }
+                }
             }
         }
 
