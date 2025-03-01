@@ -67,6 +67,8 @@
             this.buttonChangeDataClient = new System.Windows.Forms.Button();
             this.listViewClients = new System.Windows.Forms.ListView();
             this.listViewSamples = new System.Windows.Forms.ListView();
+            this.toolStripMenuItemSortNote = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuSortDatetime = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -326,7 +328,7 @@
             this.settingsToolStripMenuItem});
             this.menuStrip2.Location = new System.Drawing.Point(0, 0);
             this.menuStrip2.Name = "menuStrip2";
-            this.menuStrip2.Size = new System.Drawing.Size(1305, 30);
+            this.menuStrip2.Size = new System.Drawing.Size(1044, 28);
             this.menuStrip2.TabIndex = 31;
             this.menuStrip2.Text = "menuStrip2";
             // 
@@ -345,14 +347,14 @@
             // selectBDToolStripMenuItem
             // 
             this.selectBDToolStripMenuItem.Name = "selectBDToolStripMenuItem";
-            this.selectBDToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
+            this.selectBDToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.selectBDToolStripMenuItem.Text = "Select BD";
             this.selectBDToolStripMenuItem.Click += new System.EventHandler(this.selectBDToolStripMenuItem_Click);
             // 
             // selectCOMPortToolStripMenuItem
             // 
             this.selectCOMPortToolStripMenuItem.Name = "selectCOMPortToolStripMenuItem";
-            this.selectCOMPortToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
+            this.selectCOMPortToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.selectCOMPortToolStripMenuItem.Text = "Select COM port";
             this.selectCOMPortToolStripMenuItem.Click += new System.EventHandler(this.selectCOMPortToolStripMenuItem_Click);
             // 
@@ -362,7 +364,7 @@
             this.clientsToolStripMenuItem,
             this.samplesToolStripMenuItem});
             this.sortToolStripMenuItem.Name = "sortToolStripMenuItem";
-            this.sortToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
+            this.sortToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.sortToolStripMenuItem.Text = "Sort";
             // 
             // clientsToolStripMenuItem
@@ -371,7 +373,7 @@
             this.sortedByFIOToolStripMenuItem,
             this.sortedByPhoneNumToolStripMenuItem});
             this.clientsToolStripMenuItem.Name = "clientsToolStripMenuItem";
-            this.clientsToolStripMenuItem.Size = new System.Drawing.Size(148, 26);
+            this.clientsToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.clientsToolStripMenuItem.Text = "Clients";
             // 
             // sortedByFIOToolStripMenuItem
@@ -390,14 +392,17 @@
             // 
             // samplesToolStripMenuItem
             // 
+            this.samplesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemSortNote,
+            this.toolStripMenuSortDatetime});
             this.samplesToolStripMenuItem.Name = "samplesToolStripMenuItem";
-            this.samplesToolStripMenuItem.Size = new System.Drawing.Size(148, 26);
+            this.samplesToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.samplesToolStripMenuItem.Text = "Samples";
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -440,10 +445,24 @@
             this.listViewSamples.View = System.Windows.Forms.View.Details;
             this.listViewSamples.SelectedIndexChanged += new System.EventHandler(this.listViewSamples_SelectedIndexChanged);
             // 
+            // toolStripMenuItemSortNote
+            // 
+            this.toolStripMenuItemSortNote.Name = "toolStripMenuItemSortNote";
+            this.toolStripMenuItemSortNote.Size = new System.Drawing.Size(278, 26);
+            this.toolStripMenuItemSortNote.Text = "Сортировка по Note";
+            this.toolStripMenuItemSortNote.Click += new System.EventHandler(this.toolStripMenuItemSortNote_Click);
+            // 
+            // toolStripMenuSortDatetime
+            // 
+            this.toolStripMenuSortDatetime.Name = "toolStripMenuSortDatetime";
+            this.toolStripMenuSortDatetime.Size = new System.Drawing.Size(278, 26);
+            this.toolStripMenuSortDatetime.Text = "Сортировка по ДатаВремя";
+            this.toolStripMenuSortDatetime.Click += new System.EventHandler(this.toolStripMenuSortDatetime_Click);
+            // 
             // Main
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(1305, 528);
+            this.ClientSize = new System.Drawing.Size(1044, 422);
             this.Controls.Add(this.listViewSamples);
             this.Controls.Add(this.listViewClients);
             this.Controls.Add(this.buttonChangeDataClient);
@@ -525,6 +544,8 @@
         private System.Windows.Forms.ToolStripMenuItem samplesToolStripMenuItem;
         private System.Windows.Forms.ListView listViewClients;
         private System.Windows.Forms.ListView listViewSamples;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSortNote;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuSortDatetime;
     }
 }
 

@@ -23,6 +23,8 @@ namespace Diplom_project
         public string ConnectionString { get; private set; }
 
         private string sortOrder = "FIO"; // По умолчанию сортировка по ФИО
+        private string sampleSortOrder = "Note"; // По умолчанию сортируем по Note
+
 
         public string SortOrder
         {
@@ -40,6 +42,7 @@ namespace Diplom_project
 
             InitializeComponent();
             listViewClients.ColumnClick += listViewClients_ColumnClick;
+            listViewSamples.ColumnClick += listViewSamples_ColumnClick;
         }
 
         private void LoadDatabasePath()
@@ -82,30 +85,7 @@ namespace Diplom_project
         {
 
         }
-        /*
-        private void button1_Click(object sender, EventArgs e)//ОТКРЫТИЕ ФОРМЫ РЕГИСТРАЦИЯ КЛИЕНТА
-        {
-            int selectedIndex = listBoxClients.SelectedIndex; // Запоминаем индекс
-            if (string.IsNullOrEmpty(selectedFilePath))
-            {
-                MessageBox.Show("Сначала выберите базу данных!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            AddClient form2 = new AddClient(selectedFilePath, this);
-            form2.ShowDialog(); // Открываем форму модально
-                                // После удаления восстанавливаем выделение
-            if (listBoxClients.Items.Count > 0)
-            {
-                if (selectedIndex >= listBoxClients.Items.Count)
-                {
-                    selectedIndex = listBoxClients.Items.Count - 1; // Если удалили последний, выбираем предыдущий
-                }
-
-                listBoxClients.SelectedIndex = selectedIndex; // Восстанавливаем выделение
-            }
-        }
-        */
+        
         private void button1_Click(object sender, EventArgs e)
         {
             // Открываем форму добавления клиента
@@ -146,64 +126,7 @@ namespace Diplom_project
         {
            // LoadClients();
         }
-        /*
-        private void buttonDellClient_Click(object sender, EventArgs e)//удаление клиента
-        {
-            if (listBoxClients.SelectedItem == null)
-            {
-                MessageBox.Show("Выберите клиента для удаления!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            int selectedIndex = listBoxClients.SelectedIndex; // Запоминаем индекс
-            string selectedClient = listBoxClients.SelectedItem.ToString();
-            string[] parts = selectedClient.Split('-');
-
-            if (parts.Length < 2)
-            {
-                MessageBox.Show("Ошибка в данных клиента!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            string fio = parts[0].Trim();
-
-            DialogResult result = MessageBox.Show($"Вы уверены, что хотите удалить {fio}?", "Подтверждение", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-            if (result == DialogResult.Yes)
-            {
-                try
-                {
-                    using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
-                    {
-                        connection.Open();
-                        string query = "DELETE FROM Client WHERE FIO = @FIO";
-                        using (SQLiteCommand command = new SQLiteCommand(query, connection))
-                        {
-                            command.Parameters.AddWithValue("@FIO", fio);
-                            command.ExecuteNonQuery();
-                        }
-                    }
-
-                    LoadClients(); // Обновляем список
-
-                    // После удаления восстанавливаем выделение
-                    if (listBoxClients.Items.Count > 0)
-                    {
-                        if (selectedIndex >= listBoxClients.Items.Count)
-                        {
-                            selectedIndex = listBoxClients.Items.Count - 1; // Если удалили последний, выбираем предыдущий
-                        }
-
-                        listBoxClients.SelectedIndex = selectedIndex; // Восстанавливаем выделение
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Ошибка при удалении: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-        }
-        */
+        
         private void buttonDellClient_Click(object sender, EventArgs e)
         {
             int? clientId = GetSelectedClientId();
@@ -290,35 +213,7 @@ namespace Diplom_project
                 }
             }
         }
-        /*
-        public void LoadClients()//выгрузка списка клиентов из базы в листбокс
-        {
-            if (string.IsNullOrEmpty(selectedFilePath))
-            {
-                MessageBox.Show("Сначала выберите базу данных!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            listBoxClients.Items.Clear(); // Очищаем ListBox перед загрузкой
-
-            using (SQLiteConnection connection = new SQLiteConnection($"Data Source={selectedFilePath};Version=3;"))
-            {
-                connection.Open();
-                string query = $"SELECT FIO, Phone_num FROM Client ORDER BY {SortOrder} ASC";
-
-                using (SQLiteCommand command = new SQLiteCommand(query, connection))
-                using (SQLiteDataReader reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        string clientName = reader["FIO"].ToString();
-                        string phoneNumber = reader["Phone_num"].ToString();
-                        listBoxClients.Items.Add($"{clientName} - {phoneNumber}");
-                    }
-                }
-            }
-        }
-        */
+        
         public void LoadClients()
         {
             listViewClients.Items.Clear();
@@ -400,45 +295,7 @@ namespace Diplom_project
             comPortForm.ShowDialog();
         }
 
-        /*
         
-        
-        private void buttonChangeDataClient_Click(object sender, EventArgs e)//открываем форму для изменения данных клиента
-        {
-            if (listBoxClients.SelectedItem == null)
-            {
-                MessageBox.Show("Выберите клиента для изменения!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            // Получаем выбранного клиента
-            int selectedIndex = listBoxClients.SelectedIndex; // Запоминаем индекс
-            string selectedClient = listBoxClients.SelectedItem.ToString();
-            string[] parts = selectedClient.Split('-');
-            if (parts.Length < 2)
-            {
-                MessageBox.Show("Ошибка в данных клиента!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            string fio = parts[0].Trim();
-            string phone = parts[1].Trim();
-
-            // Открываем ChangeClient (Form3), передавая данные фио и номер телефона для заполнения
-            ChangeClient form3 = new ChangeClient(this, fio, phone, ConnectionString);
-            form3.ShowDialog(); // Открываем форму
-                                // После удаления восстанавливаем выделение
-            if (listBoxClients.Items.Count > 0)
-            {
-                if (selectedIndex >= listBoxClients.Items.Count)
-                {
-                    selectedIndex = listBoxClients.Items.Count - 1; // Если удалили последний, выбираем предыдущий
-                }
-
-                listBoxClients.SelectedIndex = selectedIndex; // Восстанавливаем выделение
-            }
-        }
-        */
         private void buttonChangeDataClient_Click(object sender, EventArgs e)
         {
             if (listViewClients.SelectedItems.Count == 0) // Проверяем, есть ли выделенный элемент
@@ -499,6 +356,17 @@ namespace Diplom_project
         {
             SortOrder = "Phone_num"; // Меняем сортировку на телефон
         }
+        private void toolStripMenuItemSortNote_Click(object sender, EventArgs e)
+        {
+            sampleSortOrder = "Note";
+            LoadSamples();
+        }
+        private void toolStripMenuSortDatetime_Click(object sender, EventArgs e)
+        {
+            sampleSortOrder = "DateTime";
+            LoadSamples();
+        }
+
 
         private void listViewClients_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -521,11 +389,13 @@ namespace Diplom_project
             using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
             {
                 connection.Open();
-                string query = @"
-        SELECT s.Sample_PK, s.Note, d.Date, d.Time 
-        FROM Sample s
-        JOIN Datetime d ON s.Datetime_FK = d.Datetime_PK
-        WHERE s.Client_FK = @ClientId";
+                string query = $@"
+SELECT s.Sample_PK, s.Note, d.Date, d.Time 
+FROM Sample s
+JOIN Datetime d ON s.Datetime_FK = d.Datetime_PK
+WHERE s.Client_FK = @ClientId
+ORDER BY 
+    {(sampleSortOrder == "Note" ? "s.Note DESC" : "strftime('%Y-%m-%d %H:%M:%S', d.Date || ' ' || d.Time) DESC")}";
 
                 using (SQLiteCommand command = new SQLiteCommand(query, connection))
                 {
@@ -549,9 +419,18 @@ namespace Diplom_project
                     }
                 }
             }
+
+            // Автоматически выделяем первый образец
+            if (listViewSamples.Items.Count > 0)
+            {
+                listViewSamples.Items[0].Selected = true;
+                listViewSamples.Select(); // Фокус на ListView
+            }
         }
 
-        
+
+
+
 
 
 
@@ -604,6 +483,26 @@ namespace Diplom_project
                     return result != null ? Convert.ToInt32(result) : (int?)null;
                 }
             }
+        }
+        //сортировка образцов
+        private void listViewSamples_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            string columnName = listViewSamples.Columns[e.Column].Text;
+
+            if (columnName == "Note")
+            {
+                sampleSortOrder = "Note"; // Сортируем по названию образца
+            }
+            else if (columnName == "Дата и время")
+            {
+                sampleSortOrder = "DateTime"; // Сортируем по дате и времени
+            }
+            else
+            {
+                return;
+            }
+
+            LoadSamples(); // Перезагружаем список с новым порядком сортировки
         }
 
 
@@ -789,5 +688,7 @@ namespace Diplom_project
             // После закрытия формы перезагружаем список
             LoadSamples();
         }
+
+        
     }
 }
