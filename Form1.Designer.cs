@@ -320,6 +320,7 @@
             this.buttonMakeExp.TabIndex = 29;
             this.buttonMakeExp.Text = "RUN";
             this.buttonMakeExp.UseVisualStyleBackColor = true;
+            this.buttonMakeExp.Click += new System.EventHandler(this.buttonMakeExp_Click);
             // 
             // menuStrip2
             // 

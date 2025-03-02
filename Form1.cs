@@ -18,7 +18,7 @@ namespace Diplom_project
     public partial class Main: Form
     {
         private string selectedFilePath = ""; // Будет хранить путь к БД
-        
+        public string selectedPort; // Будет хранить выбранный COM-порт
         private string configFilePath = "C:/Users/isavr/OneDrive/Рабочий стол/Диплом/Diplom_project/tmp/Diplom_project.inc"; // Файл конфигурации
         public string ConnectionString { get; private set; }
 
@@ -49,11 +49,11 @@ namespace Diplom_project
         {
             if (File.Exists(configFilePath))
             {
-                string path = File.ReadAllText(configFilePath).Trim();
+                string[] lines = File.ReadAllLines(configFilePath);
 
-                if (!string.IsNullOrEmpty(path) && File.Exists(path))
+                if (lines.Length > 0 && !string.IsNullOrEmpty(lines[0]) && File.Exists(lines[0]))
                 {
-                    selectedFilePath = path;
+                    selectedFilePath = lines[0].Trim();
                     ConnectionString = $"Data Source={selectedFilePath};Version=3;";
 
                     try
@@ -74,12 +74,19 @@ namespace Diplom_project
                 {
                     MessageBox.Show("Файл конфигурации найден, но путь к базе данных неверен.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
+
+                // Загружаем последний выбранный COM-порт, если он есть
+                if (lines.Length > 1 && !string.IsNullOrEmpty(lines[1]))
+                {
+                    selectedPort = lines[1].Trim();
+                }
             }
             else
             {
                 MessageBox.Show("Файл конфигурации не найден. Выберите базу данных.", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
+
 
         private void label1_Click(object sender, EventArgs e)
         {
@@ -230,19 +237,32 @@ namespace Diplom_project
             listViewSamples.Columns.Add("Дата и время", 150);
 
             //Выбор первого элемента в списке
-            
-            listViewClients.Items[0].Selected = true;
-            listViewClients.Select();
-            listViewClients.Focus();
+            SalectFirstsElement();
 
-            listViewSamples.Items[0].Selected = true;
-            listViewSamples.Select();
-            listViewSamples.Focus();
+
 
         }
-
-        private void selectBDToolStripMenuItem_Click(object sender, EventArgs e)//выбор файла базы данных
+        private void SalectFirstsElement()
         {
+            if (listViewSamples.Items.Count > 0)
+            {
+                listViewSamples.Items[0].Selected = true;
+                listViewSamples.Select();
+                listViewSamples.Focus();
+            }
+
+            if (listViewClients.Items.Count > 0)
+            {
+                listViewClients.Items[0].Selected = true;
+                listViewClients.Select();
+                listViewClients.Focus();
+            }
+        }
+
+        private void selectBDToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ClearSamples();
+            listViewSamples.Items.Clear(); 
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
                 openFileDialog.Title = "Выберите файл базы данных";
@@ -261,8 +281,8 @@ namespace Diplom_project
                             connection.Open();
                         }
 
-                        // Сохраняем путь в конфигурационный файл
-                        File.WriteAllText(configFilePath, selectedFilePath);
+                        // Сохраняем новый путь к БД
+                        SaveConfigFile();
 
                         // Загружаем клиентов
                         LoadClients();
@@ -273,8 +293,23 @@ namespace Diplom_project
                     }
                 }
             }
+            SalectFirstsElement();
         }
-        
+        private void SaveConfigFile()
+        {
+            string[] lines = new string[2];
+
+            // Первая строка — путь к базе данных
+            lines[0] = selectedFilePath ?? "";
+
+            // Вторая строка — последний выбранный COM-порт
+            lines[1] = selectedPort ?? "";
+
+            File.WriteAllLines(configFilePath, lines);
+        }
+
+
+
         public void LoadClients()
         {
             listViewClients.Items.Clear();
@@ -312,9 +347,8 @@ namespace Diplom_project
 
 
         //должен быть установлен драйвер для ардуино 
-        private void selectCOMPortToolStripMenuItem_Click(object sender, EventArgs e)//выбор компорта - сначала полдключаем контролллер
+        private void selectCOMPortToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Получаем список доступных COM-портов
             string[] ports = SerialPort.GetPortNames();
 
             if (ports.Length == 0)
@@ -323,7 +357,6 @@ namespace Diplom_project
                 return;
             }
 
-            // Создаем всплывающее окно с выпадающим списком из подключенных ком портов
             Form comPortForm = new Form
             {
                 Text = "Выбор COM-порта",
@@ -346,15 +379,19 @@ namespace Diplom_project
 
             buttonOK.Click += (s, args) =>
             {
-                string selectedPort = comboBoxPorts.SelectedItem.ToString();
+                selectedPort = comboBoxPorts.SelectedItem.ToString();
                 MessageBox.Show($"Выбранный COM-порт: {selectedPort}", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 comPortForm.Close();
+
+                // Сохраняем COM-порт во вторую строку файла конфигурации
+                SaveConfigFile();
             };
 
             comPortForm.Controls.Add(comboBoxPorts);
             comPortForm.Controls.Add(buttonOK);
             comPortForm.ShowDialog();
         }
+
 
         private void buttonChangeDataClient_Click(object sender, EventArgs e)
         {
@@ -442,6 +479,7 @@ namespace Diplom_project
        
         private void LoadSamples(int? selectedSampleId = null)
         {
+            ClearSamples();
             listViewSamples.Items.Clear(); // Очищаем список
 
             int? clientId = GetSelectedClientId(); // Получаем ID клиента
@@ -494,7 +532,18 @@ ORDER BY {(sampleSortOrder == "Note" ? "s.Note ASC" : "strftime('%Y-%m-%d %H:%M:
                 }
             }
         }
-
+        public void ClearSamples()
+        {
+            textBoxNote.Text = null;
+            textBoxData.Text = null;
+            textBoxEngineType.Text = null;
+            textBoxEhgineBrand.Text = null;
+            textBoxEngineNomber.Text = null;
+            textBoxEngineMileage.Text = null;
+            textBoxOilMileage.Text = null;
+            textBoxEngineDictionary.Text = null;
+            textBoxOilDictionary.Text = null;
+        }
 
         public int? GetSelectedClientId()//получение id выбранного клиента
         {
@@ -831,6 +880,9 @@ ORDER BY {(sampleSortOrder == "Note" ? "s.Note ASC" : "strftime('%Y-%m-%d %H:%M:
             }
         }
 
-        
+        private void buttonMakeExp_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
