@@ -428,6 +428,12 @@ namespace Diplom_project
             if (listViewClients.SelectedItems.Count > 0) // Проверяем, есть ли выделенный элемент
             {
                 LoadSamples(); // Загружаем образцы при выборе клиента
+                if (listViewSamples.Items.Count > 0)
+                {
+                    listViewSamples.Items[0].Selected = true;
+                    listViewSamples.Select();
+                    listViewSamples.Focus();
+                }
             }
         }
 
