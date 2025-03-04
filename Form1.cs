@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
 using System.Data.SQLite;
 using System.IO.Ports;
 using System.IO;
@@ -35,7 +34,6 @@ namespace Diplom_project
                 LoadClients(); // Автообновление списка при изменении сортировки
             }
         }
-
 
         public Main()
         {   
@@ -88,11 +86,8 @@ namespace Diplom_project
         }
 
 
-        private void label1_Click(object sender, EventArgs e)
-        {
+        private void label1_Click(object sender, EventArgs e) { }
 
-        }
-        
         private void button1_Click(object sender, EventArgs e)
         {
             // Открываем форму добавления клиента
@@ -119,15 +114,9 @@ namespace Diplom_project
         }
 
 
-        private void label1_Click_1(object sender, EventArgs e)
-        {
+        private void label1_Click_1(object sender, EventArgs e) { }
 
-        }
-
-        private void listBoxSamples_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
+        private void listBoxSamples_SelectedIndexChanged(object sender, EventArgs e){ }
 
         private void listBoxClients_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -164,7 +153,6 @@ namespace Diplom_project
                         {
                             cmd.ExecuteNonQuery();
                         }
-
                         // 🔹 Удаляем все данные из Data_of_experiment, связанные с экспериментами клиента
                         string deleteDataOfExpQuery = @"
                     DELETE FROM Data_of_exp 
@@ -238,9 +226,6 @@ namespace Diplom_project
 
             //Выбор первого элемента в списке
             SalectFirstsElement();
-
-
-
         }
         private void SalectFirstsElement()
         {
@@ -280,7 +265,6 @@ namespace Diplom_project
                         {
                             connection.Open();
                         }
-
                         // Сохраняем новый путь к БД
                         SaveConfigFile();
 
@@ -307,8 +291,6 @@ namespace Diplom_project
 
             File.WriteAllLines(configFilePath, lines);
         }
-
-
 
         public void LoadClients()
         {
@@ -436,29 +418,80 @@ namespace Diplom_project
             this.Close();
         }
                 
-        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e) { }
 
         private void sortedByFIOToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            int? selectedClientId = GetSelectedClientId();
             SortOrder = "FIO"; // Меняем сортировку на ФИО
+            if (selectedClientId != null)
+            {
+                foreach (ListViewItem item in listViewClients.Items)
+                {
+                    if (Convert.ToInt32(item.Tag) == selectedClientId)
+                    {
+                        item.Selected = true;
+                        listViewClients.Select();
+                        listViewClients.Focus();
+                        break;
+                    }
+                }
+            }
         }
 
         private void sortedByPhoneNumToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            int? selectedClientId = GetSelectedClientId();
             SortOrder = "Phone_num"; // Меняем сортировку на телефон
+            if (selectedClientId != null)
+            {
+                foreach (ListViewItem item in listViewClients.Items)
+                {
+                    if (Convert.ToInt32(item.Tag) == selectedClientId)
+                    {
+                        item.Selected = true;
+                        listViewClients.Select();
+                        listViewClients.Focus();
+                        break;
+                    }
+                }
+            }
         }
         private void toolStripMenuItemSortNote_Click(object sender, EventArgs e)
         {
+            int? selectedSampleId = GetSelectedSampleId(); // Запоминаем выделенный образец
             sampleSortOrder = "Note";
             LoadSamples();
+            if (selectedSampleId != null)
+            {
+                foreach (ListViewItem item in listViewSamples.Items)
+                {
+                    if (Convert.ToInt32(item.Tag) == selectedSampleId)
+                    {
+                        item.Selected = true;
+                        listViewSamples.Select();
+                        break;
+                    }
+                }
+            }
         }
         private void toolStripMenuSortDatetime_Click(object sender, EventArgs e)
         {
+            int? selectedSampleId = GetSelectedSampleId(); // Запоминаем выделенный образец
             sampleSortOrder = "DateTime";
             LoadSamples();
+            if (selectedSampleId != null)
+            {
+                foreach (ListViewItem item in listViewSamples.Items)
+                {
+                    if (Convert.ToInt32(item.Tag) == selectedSampleId)
+                    {
+                        item.Selected = true;
+                        listViewSamples.Select();
+                        break;
+                    }
+                }
+            }
         }
         private void listViewClients_SelectedIndexChanged(object sender, EventArgs e)
         {

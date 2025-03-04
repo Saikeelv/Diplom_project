@@ -329,7 +329,7 @@
             this.settingsToolStripMenuItem});
             this.menuStrip2.Location = new System.Drawing.Point(0, 0);
             this.menuStrip2.Name = "menuStrip2";
-            this.menuStrip2.Size = new System.Drawing.Size(1287, 28);
+            this.menuStrip2.Size = new System.Drawing.Size(1287, 30);
             this.menuStrip2.TabIndex = 31;
             this.menuStrip2.Text = "menuStrip2";
             // 
@@ -341,7 +341,7 @@
             this.sortToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(76, 24);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(76, 26);
             this.settingsToolStripMenuItem.Text = "Settings";
             this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
             // 
