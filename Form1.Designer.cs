@@ -28,6 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.labelClients = new System.Windows.Forms.Label();
             this.buttonAddClient = new System.Windows.Forms.Button();
@@ -52,8 +56,6 @@
             this.textBoxOilMileage = new System.Windows.Forms.TextBox();
             this.textBoxEngineDictionary = new System.Windows.Forms.TextBox();
             this.textBoxOilDictionary = new System.Windows.Forms.TextBox();
-            this.buttonDataOfExp = new System.Windows.Forms.Button();
-            this.buttonMakeExp = new System.Windows.Forms.Button();
             this.menuStrip2 = new System.Windows.Forms.MenuStrip();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectBDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -69,16 +71,26 @@
             this.buttonChangeDataClient = new System.Windows.Forms.Button();
             this.listViewClients = new System.Windows.Forms.ListView();
             this.listViewSamples = new System.Windows.Forms.ListView();
+            this.listViewExperiments = new System.Windows.Forms.ListView();
+            this.buttonChangeExp = new System.Windows.Forms.Button();
+            this.buttonDelExp = new System.Windows.Forms.Button();
+            this.buttonAddExp = new System.Windows.Forms.Button();
+            this.labelExperiments = new System.Windows.Forms.Label();
+            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.buttonMakeExp = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.menuStrip2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
             // 
             // labelClients
             // 
             this.labelClients.AutoSize = true;
-            this.labelClients.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.labelClients.Location = new System.Drawing.Point(12, 37);
+            this.labelClients.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.labelClients.Location = new System.Drawing.Point(12, 39);
             this.labelClients.Name = "labelClients";
-            this.labelClients.Size = new System.Drawing.Size(66, 22);
+            this.labelClients.Size = new System.Drawing.Size(76, 26);
             this.labelClients.TabIndex = 3;
             this.labelClients.Text = "Clients";
             this.labelClients.Click += new System.EventHandler(this.label1_Click);
@@ -86,10 +98,11 @@
             // buttonAddClient
             // 
             this.buttonAddClient.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonAddClient.Location = new System.Drawing.Point(12, 384);
+            this.buttonAddClient.Location = new System.Drawing.Point(12, 364);
             this.buttonAddClient.Name = "buttonAddClient";
-            this.buttonAddClient.Size = new System.Drawing.Size(112, 39);
+            this.buttonAddClient.Size = new System.Drawing.Size(136, 39);
             this.buttonAddClient.TabIndex = 4;
+            this.buttonAddClient.TabStop = false;
             this.buttonAddClient.Text = "ADD";
             this.buttonAddClient.UseVisualStyleBackColor = true;
             this.buttonAddClient.Click += new System.EventHandler(this.button1_Click);
@@ -97,10 +110,11 @@
             // buttonDellClient
             // 
             this.buttonDellClient.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonDellClient.Location = new System.Drawing.Point(248, 384);
+            this.buttonDellClient.Location = new System.Drawing.Point(296, 364);
             this.buttonDellClient.Name = "buttonDellClient";
-            this.buttonDellClient.Size = new System.Drawing.Size(112, 39);
+            this.buttonDellClient.Size = new System.Drawing.Size(136, 39);
             this.buttonDellClient.TabIndex = 5;
+            this.buttonDellClient.TabStop = false;
             this.buttonDellClient.Text = "DEL";
             this.buttonDellClient.UseVisualStyleBackColor = true;
             this.buttonDellClient.Click += new System.EventHandler(this.buttonDellClient_Click);
@@ -108,20 +122,21 @@
             // labelSamples
             // 
             this.labelSamples.AutoSize = true;
-            this.labelSamples.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.labelSamples.Location = new System.Drawing.Point(471, 42);
+            this.labelSamples.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.labelSamples.Location = new System.Drawing.Point(529, 39);
             this.labelSamples.Name = "labelSamples";
-            this.labelSamples.Size = new System.Drawing.Size(77, 22);
+            this.labelSamples.Size = new System.Drawing.Size(90, 26);
             this.labelSamples.TabIndex = 7;
             this.labelSamples.Text = "Samples";
             // 
             // buttonAddSamples
             // 
             this.buttonAddSamples.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonAddSamples.Location = new System.Drawing.Point(474, 384);
+            this.buttonAddSamples.Location = new System.Drawing.Point(534, 364);
             this.buttonAddSamples.Name = "buttonAddSamples";
-            this.buttonAddSamples.Size = new System.Drawing.Size(112, 39);
+            this.buttonAddSamples.Size = new System.Drawing.Size(136, 39);
             this.buttonAddSamples.TabIndex = 9;
+            this.buttonAddSamples.TabStop = false;
             this.buttonAddSamples.Text = "ADD";
             this.buttonAddSamples.UseVisualStyleBackColor = true;
             this.buttonAddSamples.Click += new System.EventHandler(this.buttonAddSamples_Click);
@@ -129,10 +144,11 @@
             // buttonDellSamples
             // 
             this.buttonDellSamples.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonDellSamples.Location = new System.Drawing.Point(710, 384);
+            this.buttonDellSamples.Location = new System.Drawing.Point(818, 364);
             this.buttonDellSamples.Name = "buttonDellSamples";
-            this.buttonDellSamples.Size = new System.Drawing.Size(112, 39);
+            this.buttonDellSamples.Size = new System.Drawing.Size(136, 39);
             this.buttonDellSamples.TabIndex = 10;
+            this.buttonDellSamples.TabStop = false;
             this.buttonDellSamples.Text = "DEL";
             this.buttonDellSamples.UseVisualStyleBackColor = true;
             this.buttonDellSamples.Click += new System.EventHandler(this.buttonDellSamples_Click);
@@ -140,10 +156,11 @@
             // buttonChangeSamples
             // 
             this.buttonChangeSamples.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonChangeSamples.Location = new System.Drawing.Point(592, 384);
+            this.buttonChangeSamples.Location = new System.Drawing.Point(676, 364);
             this.buttonChangeSamples.Name = "buttonChangeSamples";
-            this.buttonChangeSamples.Size = new System.Drawing.Size(112, 39);
+            this.buttonChangeSamples.Size = new System.Drawing.Size(136, 39);
             this.buttonChangeSamples.TabIndex = 11;
+            this.buttonChangeSamples.TabStop = false;
             this.buttonChangeSamples.Text = "CHANGE";
             this.buttonChangeSamples.UseVisualStyleBackColor = true;
             this.buttonChangeSamples.Click += new System.EventHandler(this.buttonChangeSamples_Click);
@@ -151,10 +168,10 @@
             // Note
             // 
             this.Note.AutoSize = true;
-            this.Note.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Note.Location = new System.Drawing.Point(867, 68);
+            this.Note.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Note.Location = new System.Drawing.Point(1017, 68);
             this.Note.Name = "Note";
-            this.Note.Size = new System.Drawing.Size(54, 22);
+            this.Note.Size = new System.Drawing.Size(62, 26);
             this.Note.TabIndex = 12;
             this.Note.Text = "Note:";
             this.Note.Click += new System.EventHandler(this.label1_Click_1);
@@ -162,165 +179,152 @@
             // Date
             // 
             this.Date.AutoSize = true;
-            this.Date.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Date.Location = new System.Drawing.Point(868, 110);
+            this.Date.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Date.Location = new System.Drawing.Point(1018, 110);
             this.Date.Name = "Date";
-            this.Date.Size = new System.Drawing.Size(53, 22);
+            this.Date.Size = new System.Drawing.Size(60, 26);
             this.Date.TabIndex = 13;
             this.Date.Text = "Date:";
             // 
             // EngineType
             // 
             this.EngineType.AutoSize = true;
-            this.EngineType.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.EngineType.Location = new System.Drawing.Point(867, 152);
+            this.EngineType.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.EngineType.Location = new System.Drawing.Point(1017, 152);
             this.EngineType.Name = "EngineType";
-            this.EngineType.Size = new System.Drawing.Size(114, 22);
+            this.EngineType.Size = new System.Drawing.Size(133, 26);
             this.EngineType.TabIndex = 14;
             this.EngineType.Text = "Engine Type:";
             // 
             // EngineBrand
             // 
             this.EngineBrand.AutoSize = true;
-            this.EngineBrand.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.EngineBrand.Location = new System.Drawing.Point(867, 194);
+            this.EngineBrand.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.EngineBrand.Location = new System.Drawing.Point(1017, 194);
             this.EngineBrand.Name = "EngineBrand";
-            this.EngineBrand.Size = new System.Drawing.Size(123, 22);
+            this.EngineBrand.Size = new System.Drawing.Size(144, 26);
             this.EngineBrand.TabIndex = 15;
             this.EngineBrand.Text = "Engine Brand:";
             // 
             // EngineNomber
             // 
             this.EngineNomber.AutoSize = true;
-            this.EngineNomber.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.EngineNomber.Location = new System.Drawing.Point(868, 236);
+            this.EngineNomber.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.EngineNomber.Location = new System.Drawing.Point(1018, 236);
             this.EngineNomber.Name = "EngineNomber";
-            this.EngineNomber.Size = new System.Drawing.Size(139, 22);
+            this.EngineNomber.Size = new System.Drawing.Size(164, 26);
             this.EngineNomber.TabIndex = 16;
             this.EngineNomber.Text = "Engine Nomber:";
             // 
             // EngineMileage
             // 
             this.EngineMileage.AutoSize = true;
-            this.EngineMileage.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.EngineMileage.Location = new System.Drawing.Point(867, 278);
+            this.EngineMileage.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.EngineMileage.Location = new System.Drawing.Point(1017, 278);
             this.EngineMileage.Name = "EngineMileage";
-            this.EngineMileage.Size = new System.Drawing.Size(140, 22);
+            this.EngineMileage.Size = new System.Drawing.Size(160, 26);
             this.EngineMileage.TabIndex = 17;
             this.EngineMileage.Text = "Engine Mileage:";
             // 
             // OilMileage
             // 
             this.OilMileage.AutoSize = true;
-            this.OilMileage.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.OilMileage.Location = new System.Drawing.Point(869, 320);
+            this.OilMileage.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.OilMileage.Location = new System.Drawing.Point(1019, 320);
             this.OilMileage.Name = "OilMileage";
-            this.OilMileage.Size = new System.Drawing.Size(112, 22);
+            this.OilMileage.Size = new System.Drawing.Size(125, 26);
             this.OilMileage.TabIndex = 18;
             this.OilMileage.Text = "Oil Mileage:";
             // 
             // textBoxNote
             // 
-            this.textBoxNote.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBoxNote.Location = new System.Drawing.Point(1058, 69);
+            this.textBoxNote.Font = new System.Drawing.Font("Times New Roman", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBoxNote.Location = new System.Drawing.Point(1221, 68);
             this.textBoxNote.Name = "textBoxNote";
             this.textBoxNote.ReadOnly = true;
-            this.textBoxNote.Size = new System.Drawing.Size(220, 25);
+            this.textBoxNote.Size = new System.Drawing.Size(282, 27);
             this.textBoxNote.TabIndex = 19;
+            this.textBoxNote.TabStop = false;
             // 
             // textBoxData
             // 
-            this.textBoxData.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBoxData.Location = new System.Drawing.Point(1058, 111);
+            this.textBoxData.Font = new System.Drawing.Font("Times New Roman", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBoxData.Location = new System.Drawing.Point(1221, 110);
             this.textBoxData.Name = "textBoxData";
             this.textBoxData.ReadOnly = true;
-            this.textBoxData.Size = new System.Drawing.Size(220, 25);
+            this.textBoxData.Size = new System.Drawing.Size(282, 27);
             this.textBoxData.TabIndex = 20;
+            this.textBoxData.TabStop = false;
             // 
             // textBoxEngineType
             // 
-            this.textBoxEngineType.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBoxEngineType.Location = new System.Drawing.Point(1058, 153);
+            this.textBoxEngineType.Font = new System.Drawing.Font("Times New Roman", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBoxEngineType.Location = new System.Drawing.Point(1221, 152);
             this.textBoxEngineType.Name = "textBoxEngineType";
             this.textBoxEngineType.ReadOnly = true;
-            this.textBoxEngineType.Size = new System.Drawing.Size(220, 25);
+            this.textBoxEngineType.Size = new System.Drawing.Size(282, 27);
             this.textBoxEngineType.TabIndex = 21;
+            this.textBoxEngineType.TabStop = false;
             // 
             // textBoxEhgineBrand
             // 
-            this.textBoxEhgineBrand.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBoxEhgineBrand.Location = new System.Drawing.Point(1058, 194);
+            this.textBoxEhgineBrand.Font = new System.Drawing.Font("Times New Roman", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBoxEhgineBrand.Location = new System.Drawing.Point(1221, 193);
             this.textBoxEhgineBrand.Name = "textBoxEhgineBrand";
             this.textBoxEhgineBrand.ReadOnly = true;
-            this.textBoxEhgineBrand.Size = new System.Drawing.Size(220, 25);
+            this.textBoxEhgineBrand.Size = new System.Drawing.Size(282, 27);
             this.textBoxEhgineBrand.TabIndex = 22;
+            this.textBoxEhgineBrand.TabStop = false;
             // 
             // textBoxEngineNomber
             // 
-            this.textBoxEngineNomber.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBoxEngineNomber.Location = new System.Drawing.Point(1058, 237);
+            this.textBoxEngineNomber.Font = new System.Drawing.Font("Times New Roman", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBoxEngineNomber.Location = new System.Drawing.Point(1221, 236);
             this.textBoxEngineNomber.Name = "textBoxEngineNomber";
             this.textBoxEngineNomber.ReadOnly = true;
-            this.textBoxEngineNomber.Size = new System.Drawing.Size(220, 25);
+            this.textBoxEngineNomber.Size = new System.Drawing.Size(282, 27);
             this.textBoxEngineNomber.TabIndex = 23;
+            this.textBoxEngineNomber.TabStop = false;
             // 
             // textBoxEngineMileage
             // 
-            this.textBoxEngineMileage.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBoxEngineMileage.Location = new System.Drawing.Point(1058, 279);
+            this.textBoxEngineMileage.Font = new System.Drawing.Font("Times New Roman", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBoxEngineMileage.Location = new System.Drawing.Point(1221, 278);
             this.textBoxEngineMileage.Name = "textBoxEngineMileage";
             this.textBoxEngineMileage.ReadOnly = true;
-            this.textBoxEngineMileage.Size = new System.Drawing.Size(100, 25);
+            this.textBoxEngineMileage.Size = new System.Drawing.Size(169, 27);
             this.textBoxEngineMileage.TabIndex = 24;
+            this.textBoxEngineMileage.TabStop = false;
             // 
             // textBoxOilMileage
             // 
-            this.textBoxOilMileage.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBoxOilMileage.Location = new System.Drawing.Point(1058, 321);
+            this.textBoxOilMileage.Font = new System.Drawing.Font("Times New Roman", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBoxOilMileage.Location = new System.Drawing.Point(1221, 320);
             this.textBoxOilMileage.Name = "textBoxOilMileage";
             this.textBoxOilMileage.ReadOnly = true;
-            this.textBoxOilMileage.Size = new System.Drawing.Size(100, 25);
+            this.textBoxOilMileage.Size = new System.Drawing.Size(169, 27);
             this.textBoxOilMileage.TabIndex = 25;
+            this.textBoxOilMileage.TabStop = false;
             // 
             // textBoxEngineDictionary
             // 
-            this.textBoxEngineDictionary.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBoxEngineDictionary.Location = new System.Drawing.Point(1178, 278);
+            this.textBoxEngineDictionary.Font = new System.Drawing.Font("Times New Roman", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBoxEngineDictionary.Location = new System.Drawing.Point(1409, 277);
             this.textBoxEngineDictionary.Name = "textBoxEngineDictionary";
             this.textBoxEngineDictionary.ReadOnly = true;
-            this.textBoxEngineDictionary.Size = new System.Drawing.Size(100, 25);
+            this.textBoxEngineDictionary.Size = new System.Drawing.Size(94, 27);
             this.textBoxEngineDictionary.TabIndex = 26;
+            this.textBoxEngineDictionary.TabStop = false;
             // 
             // textBoxOilDictionary
             // 
-            this.textBoxOilDictionary.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBoxOilDictionary.Location = new System.Drawing.Point(1178, 321);
+            this.textBoxOilDictionary.Font = new System.Drawing.Font("Times New Roman", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBoxOilDictionary.Location = new System.Drawing.Point(1409, 319);
             this.textBoxOilDictionary.Name = "textBoxOilDictionary";
             this.textBoxOilDictionary.ReadOnly = true;
-            this.textBoxOilDictionary.Size = new System.Drawing.Size(100, 25);
+            this.textBoxOilDictionary.Size = new System.Drawing.Size(94, 27);
             this.textBoxOilDictionary.TabIndex = 27;
-            // 
-            // buttonDataOfExp
-            // 
-            this.buttonDataOfExp.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonDataOfExp.Location = new System.Drawing.Point(871, 384);
-            this.buttonDataOfExp.Name = "buttonDataOfExp";
-            this.buttonDataOfExp.Size = new System.Drawing.Size(181, 39);
-            this.buttonDataOfExp.TabIndex = 28;
-            this.buttonDataOfExp.Text = "DATA";
-            this.buttonDataOfExp.UseVisualStyleBackColor = true;
-            this.buttonDataOfExp.Click += new System.EventHandler(this.buttonDataOfExp_Click);
-            // 
-            // buttonMakeExp
-            // 
-            this.buttonMakeExp.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonMakeExp.Location = new System.Drawing.Point(1058, 384);
-            this.buttonMakeExp.Name = "buttonMakeExp";
-            this.buttonMakeExp.Size = new System.Drawing.Size(220, 39);
-            this.buttonMakeExp.TabIndex = 29;
-            this.buttonMakeExp.Text = "RUN";
-            this.buttonMakeExp.UseVisualStyleBackColor = true;
-            this.buttonMakeExp.Click += new System.EventHandler(this.buttonMakeExp_Click);
+            this.textBoxOilDictionary.TabStop = false;
             // 
             // menuStrip2
             // 
@@ -329,7 +333,7 @@
             this.settingsToolStripMenuItem});
             this.menuStrip2.Location = new System.Drawing.Point(0, 0);
             this.menuStrip2.Name = "menuStrip2";
-            this.menuStrip2.Size = new System.Drawing.Size(1287, 30);
+            this.menuStrip2.Size = new System.Drawing.Size(1926, 38);
             this.menuStrip2.TabIndex = 31;
             this.menuStrip2.Text = "menuStrip2";
             // 
@@ -341,7 +345,7 @@
             this.sortToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(76, 26);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(76, 34);
             this.settingsToolStripMenuItem.Text = "Settings";
             this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
             // 
@@ -424,10 +428,11 @@
             // buttonChangeDataClient
             // 
             this.buttonChangeDataClient.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonChangeDataClient.Location = new System.Drawing.Point(130, 384);
+            this.buttonChangeDataClient.Location = new System.Drawing.Point(154, 364);
             this.buttonChangeDataClient.Name = "buttonChangeDataClient";
-            this.buttonChangeDataClient.Size = new System.Drawing.Size(112, 39);
+            this.buttonChangeDataClient.Size = new System.Drawing.Size(136, 39);
             this.buttonChangeDataClient.TabIndex = 34;
+            this.buttonChangeDataClient.TabStop = false;
             this.buttonChangeDataClient.Text = "CHANGE";
             this.buttonChangeDataClient.UseVisualStyleBackColor = true;
             this.buttonChangeDataClient.Click += new System.EventHandler(this.buttonChangeDataClient_Click);
@@ -440,7 +445,7 @@
             this.listViewClients.HideSelection = false;
             this.listViewClients.Location = new System.Drawing.Point(12, 68);
             this.listViewClients.Name = "listViewClients";
-            this.listViewClients.Size = new System.Drawing.Size(348, 308);
+            this.listViewClients.Size = new System.Drawing.Size(420, 290);
             this.listViewClients.TabIndex = 35;
             this.listViewClients.UseCompatibleStateImageBehavior = false;
             this.listViewClients.View = System.Windows.Forms.View.Details;
@@ -452,23 +457,136 @@
             this.listViewSamples.FullRowSelect = true;
             this.listViewSamples.GridLines = true;
             this.listViewSamples.HideSelection = false;
-            this.listViewSamples.Location = new System.Drawing.Point(473, 68);
+            this.listViewSamples.Location = new System.Drawing.Point(534, 68);
             this.listViewSamples.Name = "listViewSamples";
-            this.listViewSamples.Size = new System.Drawing.Size(349, 308);
+            this.listViewSamples.Size = new System.Drawing.Size(420, 290);
             this.listViewSamples.TabIndex = 36;
             this.listViewSamples.UseCompatibleStateImageBehavior = false;
             this.listViewSamples.View = System.Windows.Forms.View.Details;
             this.listViewSamples.SelectedIndexChanged += new System.EventHandler(this.listViewSamples_SelectedIndexChanged);
             // 
+            // listViewExperiments
+            // 
+            this.listViewExperiments.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.listViewExperiments.FullRowSelect = true;
+            this.listViewExperiments.GridLines = true;
+            this.listViewExperiments.HideSelection = false;
+            this.listViewExperiments.Location = new System.Drawing.Point(12, 458);
+            this.listViewExperiments.Name = "listViewExperiments";
+            this.listViewExperiments.Size = new System.Drawing.Size(420, 290);
+            this.listViewExperiments.TabIndex = 37;
+            this.listViewExperiments.UseCompatibleStateImageBehavior = false;
+            this.listViewExperiments.View = System.Windows.Forms.View.Details;
+            // 
+            // buttonChangeExp
+            // 
+            this.buttonChangeExp.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonChangeExp.Location = new System.Drawing.Point(154, 754);
+            this.buttonChangeExp.Name = "buttonChangeExp";
+            this.buttonChangeExp.Size = new System.Drawing.Size(136, 39);
+            this.buttonChangeExp.TabIndex = 40;
+            this.buttonChangeExp.TabStop = false;
+            this.buttonChangeExp.Text = "CHANGE";
+            this.buttonChangeExp.UseVisualStyleBackColor = true;
+            // 
+            // buttonDelExp
+            // 
+            this.buttonDelExp.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonDelExp.Location = new System.Drawing.Point(296, 754);
+            this.buttonDelExp.Name = "buttonDelExp";
+            this.buttonDelExp.Size = new System.Drawing.Size(136, 39);
+            this.buttonDelExp.TabIndex = 39;
+            this.buttonDelExp.TabStop = false;
+            this.buttonDelExp.Text = "DEL";
+            this.buttonDelExp.UseVisualStyleBackColor = true;
+            // 
+            // buttonAddExp
+            // 
+            this.buttonAddExp.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonAddExp.Location = new System.Drawing.Point(12, 754);
+            this.buttonAddExp.Name = "buttonAddExp";
+            this.buttonAddExp.Size = new System.Drawing.Size(136, 39);
+            this.buttonAddExp.TabIndex = 38;
+            this.buttonAddExp.TabStop = false;
+            this.buttonAddExp.Text = "ADD";
+            this.buttonAddExp.UseVisualStyleBackColor = true;
+            // 
+            // labelExperiments
+            // 
+            this.labelExperiments.AutoSize = true;
+            this.labelExperiments.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.labelExperiments.Location = new System.Drawing.Point(529, 429);
+            this.labelExperiments.Name = "labelExperiments";
+            this.labelExperiments.Size = new System.Drawing.Size(192, 26);
+            this.labelExperiments.TabIndex = 41;
+            this.labelExperiments.Text = "Data of Experiment";
+            // 
+            // chart1
+            // 
+            chartArea1.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.chart1.Legends.Add(legend1);
+            this.chart1.Location = new System.Drawing.Point(534, 458);
+            this.chart1.Name = "chart1";
+            this.chart1.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Excel;
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.chart1.Series.Add(series1);
+            this.chart1.Size = new System.Drawing.Size(420, 290);
+            this.chart1.TabIndex = 42;
+            this.chart1.TabStop = false;
+            this.chart1.Text = "chart1";
+            // 
+            // buttonMakeExp
+            // 
+            this.buttonMakeExp.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonMakeExp.Location = new System.Drawing.Point(534, 754);
+            this.buttonMakeExp.Name = "buttonMakeExp";
+            this.buttonMakeExp.Size = new System.Drawing.Size(420, 39);
+            this.buttonMakeExp.TabIndex = 43;
+            this.buttonMakeExp.TabStop = false;
+            this.buttonMakeExp.Text = "MAKE EXPERIMENT";
+            this.buttonMakeExp.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label1.Location = new System.Drawing.Point(7, 429);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(127, 26);
+            this.label1.TabIndex = 44;
+            this.label1.Text = "Experiments";
+            this.label1.Click += new System.EventHandler(this.label1_Click_2);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label2.Location = new System.Drawing.Point(1019, 429);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(186, 33);
+            this.label2.TabIndex = 45;
+            this.label2.Text = "Graph Settings";
+            // 
             // Main
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(1287, 439);
+            this.ClientSize = new System.Drawing.Size(1541, 823);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.buttonMakeExp);
+            this.Controls.Add(this.chart1);
+            this.Controls.Add(this.labelExperiments);
+            this.Controls.Add(this.buttonChangeExp);
+            this.Controls.Add(this.buttonDelExp);
+            this.Controls.Add(this.buttonAddExp);
+            this.Controls.Add(this.listViewExperiments);
             this.Controls.Add(this.listViewSamples);
             this.Controls.Add(this.listViewClients);
             this.Controls.Add(this.buttonChangeDataClient);
-            this.Controls.Add(this.buttonMakeExp);
-            this.Controls.Add(this.buttonDataOfExp);
             this.Controls.Add(this.textBoxOilDictionary);
             this.Controls.Add(this.textBoxEngineDictionary);
             this.Controls.Add(this.textBoxOilMileage);
@@ -494,12 +612,15 @@
             this.Controls.Add(this.labelClients);
             this.Controls.Add(this.menuStrip2);
             this.Font = new System.Drawing.Font("Times New Roman", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Main";
+            this.Text = "Project";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.Main_Load);
             this.menuStrip2.ResumeLayout(false);
             this.menuStrip2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -530,8 +651,6 @@
         private System.Windows.Forms.TextBox textBoxOilMileage;
         private System.Windows.Forms.TextBox textBoxEngineDictionary;
         private System.Windows.Forms.TextBox textBoxOilDictionary;
-        private System.Windows.Forms.Button buttonDataOfExp;
-        private System.Windows.Forms.Button buttonMakeExp;
         private System.Windows.Forms.MenuStrip menuStrip2;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem selectBDToolStripMenuItem;
@@ -547,6 +666,15 @@
         private System.Windows.Forms.ListView listViewSamples;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSortNote;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuSortDatetime;
+        private System.Windows.Forms.ListView listViewExperiments;
+        private System.Windows.Forms.Button buttonChangeExp;
+        private System.Windows.Forms.Button buttonDelExp;
+        private System.Windows.Forms.Button buttonAddExp;
+        private System.Windows.Forms.Label labelExperiments;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
+        private System.Windows.Forms.Button buttonMakeExp;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
     }
 }
 

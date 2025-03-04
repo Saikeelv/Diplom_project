@@ -917,5 +917,10 @@ ORDER BY {(sampleSortOrder == "Note" ? "s.Note ASC" : "strftime('%Y-%m-%d %H:%M:
         {
 
         }
+
+        private void label1_Click_2(object sender, EventArgs e)
+        {
+
+        }
     }
 }
