@@ -476,6 +476,7 @@
             this.listViewExperiments.TabIndex = 37;
             this.listViewExperiments.UseCompatibleStateImageBehavior = false;
             this.listViewExperiments.View = System.Windows.Forms.View.Details;
+            this.listViewExperiments.SelectedIndexChanged += new System.EventHandler(this.listViewExperiments_SelectedIndexChanged);
             // 
             // buttonDelExp
             // 

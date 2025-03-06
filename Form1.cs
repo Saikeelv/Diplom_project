@@ -23,6 +23,8 @@ namespace Diplom_project
 
         private string sortOrder = "FIO"; // По умолчанию сортировка по ФИО
         private string sampleSortOrder = "Note"; // По умолчанию сортируем по Note
+        private string experimentSortOrder = "Number"; // По умолчанию сортируем по номеру эксперимента
+
 
 
         public string SortOrder
@@ -41,8 +43,9 @@ namespace Diplom_project
             InitializeComponent();
             listViewClients.ColumnClick += listViewClients_ColumnClick;
             listViewSamples.ColumnClick += listViewSamples_ColumnClick;
+            listViewExperiments.ColumnClick += listViewExperiments_ColumnClick;
 
-            
+
 
         }
 
@@ -931,22 +934,28 @@ ORDER BY {(sampleSortOrder == "Note" ? "s.Note ASC" : "strftime('%Y-%m-%d %H:%M:
         {
 
         }
+        //загрузка экспериментов для выбранного образца
         private void LoadExperimentsForSelectedSample()
         {
             int? selectedSampleId = GetSelectedSampleId();
             if (selectedSampleId == null) return;
 
-            listViewExperiments.Items.Clear(); // Очищаем список перед загрузкой новых данных
+            listViewExperiments.Items.Clear();
 
             using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
             {
                 connection.Open();
-
-                string query = @"
-            SELECT e.Experiment_PK, e.Number, d.Date, d.Time, e.Error
-            FROM Experiment e
-            JOIN Datetime d ON e.Datetime_FK = d.Datetime_PK
-            WHERE e.Sample_FK = @SampleId";
+                
+                // Запрос с сортировкой в зависимости от выбранного столбца
+                string query = $@"
+SELECT e.Experiment_PK, e.Number, d.Date, d.Time, e.Error
+FROM Experiment e
+JOIN Datetime d ON e.Datetime_FK = d.Datetime_PK
+WHERE e.Sample_FK = @SampleId
+ORDER BY 
+    {(experimentSortOrder == "Number" ? "e.Number ASC" :
+       experimentSortOrder == "DateTime" ? "strftime('%Y-%m-%d %H:%M:%S', d.Date || ' ' || d.Time) ASC" :
+        experimentSortOrder == "Error" ? "e.Error ASC" : "e.Error ASC")}"; // По умолчанию сортируем по ошибке
 
                 using (SQLiteCommand command = new SQLiteCommand(query, connection))
                 {
@@ -962,30 +971,28 @@ ORDER BY {(sampleSortOrder == "Note" ? "s.Note ASC" : "strftime('%Y-%m-%d %H:%M:
                             int numberError = reader.GetInt32(4);
                             string fullDate = $"{date} {time}";
 
-                            // Определяем состояние эксперимента
-                            string stateText;
+                            
                             Color stateColor;
 
-                            if (IsDataOfExpEmpty(experimentId, connection))
+                            if (numberError == 0)
                             {
-                                stateText = "0";
+                                
                                 stateColor = Color.Orange;
                             }
                             else if (numberError == 1)
                             {
-                                stateText = "1";
+                                
                                 stateColor = Color.Green;
                             }
                             else
                             {
-                                stateText = numberError.ToString();
+                                
                                 stateColor = Color.Red;
                             }
 
-                            // Создаем элемент списка
                             ListViewItem item = new ListViewItem(number.ToString());
                             item.SubItems.Add(fullDate);
-                            item.SubItems.Add(stateText);
+                            item.SubItems.Add(numberError.ToString());
                             item.BackColor = stateColor;
 
                             listViewExperiments.Items.Add(item);
@@ -994,6 +1001,7 @@ ORDER BY {(sampleSortOrder == "Note" ? "s.Note ASC" : "strftime('%Y-%m-%d %H:%M:
                 }
             }
         }
+
 
         private bool IsDataOfExpEmpty(int experimentId, SQLiteConnection connection)
         {
@@ -1164,7 +1172,7 @@ ORDER BY {(sampleSortOrder == "Note" ? "s.Note ASC" : "strftime('%Y-%m-%d %H:%M:
                         }
 
                         transaction.Commit();
-                        MessageBox.Show("Эксперимент и все связанные записи успешно удалены!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        
                     }
                     catch (Exception ex)
                     {
@@ -1176,6 +1184,33 @@ ORDER BY {(sampleSortOrder == "Note" ? "s.Note ASC" : "strftime('%Y-%m-%d %H:%M:
 
             // 🔹 Обновляем список экспериментов
             LoadExperimentsForSelectedSample();
+        }
+
+        private void listViewExperiments_SelectedIndexChanged(object sender, EventArgs e)
+        {
+        }
+        private void listViewExperiments_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            string columnName = listViewExperiments.Columns[e.Column].Text;
+
+            if (columnName == "№")
+            {
+                experimentSortOrder = "Number";
+            }
+            else if (columnName == "Дата регистрации")
+            {
+                experimentSortOrder = "DateTime";
+            }
+            else if (columnName == "Состояние")
+            {
+                experimentSortOrder = "Error";
+            }
+            else
+            {
+                return;
+            }
+
+            LoadExperimentsForSelectedSample(); // Перезагружаем список
         }
 
     }
