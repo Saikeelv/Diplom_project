@@ -41,6 +41,9 @@ namespace Diplom_project
             InitializeComponent();
             listViewClients.ColumnClick += listViewClients_ColumnClick;
             listViewSamples.ColumnClick += listViewSamples_ColumnClick;
+
+            
+
         }
 
         private void LoadDatabasePath()
@@ -215,14 +218,14 @@ namespace Diplom_project
         private void Main_Load(object sender, EventArgs e)
         {
             LoadDatabasePath();
-            listViewClients.Columns.Add("ФИО", 200);
-            listViewClients.Columns.Add("Телефон", 150);
+            listViewClients.Columns.Add("ФИО", 230);
+            listViewClients.Columns.Add("Телефон").Width = -2;
 
             listViewClients.View = View.Details;
             listViewClients.SelectedIndexChanged += listViewClients_SelectedIndexChanged;//обработчик событий
 
-            listViewSamples.Columns.Add("Note", 200);
-            listViewSamples.Columns.Add("Дата и время", 150);
+            listViewSamples.Columns.Add("Note", 230);
+            listViewSamples.Columns.Add("Дата и время").Width = -2;
 
             //Выбор первого элемента в списке
             SalectFirstsElement();
