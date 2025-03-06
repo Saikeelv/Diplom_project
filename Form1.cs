@@ -227,6 +227,12 @@ namespace Diplom_project
             listViewSamples.Columns.Add("Note", 230);
             listViewSamples.Columns.Add("Дата и время").Width = -2;
 
+            listViewExperiments.Columns.Clear();
+            listViewExperiments.Columns.Add("№", 100);
+            listViewExperiments.Columns.Add("Дата регистрации", 150);
+            listViewExperiments.Columns.Add("Состояние").Width = -2; // Автоматическая ширина
+
+
             //Выбор первого элемента в списке
             SalectFirstsElement();
         }
@@ -710,6 +716,9 @@ ORDER BY {(sampleSortOrder == "Note" ? "s.Note ASC" : "strftime('%Y-%m-%d %H:%M:
 
         private void listViewSamples_SelectedIndexChanged(object sender, EventArgs e)
         {
+            
+            LoadExperimentsForSelectedSample();
+            
             if (listViewSamples.SelectedItems.Count == 0)
                 return;
 
@@ -916,14 +925,258 @@ ORDER BY {(sampleSortOrder == "Note" ? "s.Note ASC" : "strftime('%Y-%m-%d %H:%M:
             }
         }
 
-        private void buttonMakeExp_Click(object sender, EventArgs e)
-        {
-
-        }
+        
 
         private void label1_Click_2(object sender, EventArgs e)
         {
 
         }
+        private void LoadExperimentsForSelectedSample()
+        {
+            int? selectedSampleId = GetSelectedSampleId();
+            if (selectedSampleId == null) return;
+
+            listViewExperiments.Items.Clear(); // Очищаем список перед загрузкой новых данных
+
+            using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
+            {
+                connection.Open();
+
+                string query = @"
+            SELECT e.Experiment_PK, e.Number, d.Date, d.Time, e.Error
+            FROM Experiment e
+            JOIN Datetime d ON e.Datetime_FK = d.Datetime_PK
+            WHERE e.Sample_FK = @SampleId";
+
+                using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@SampleId", selectedSampleId);
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            int experimentId = reader.GetInt32(0);
+                            int number = reader.GetInt32(1);
+                            string date = reader.GetString(2);
+                            string time = reader.GetString(3);
+                            int numberError = reader.GetInt32(4);
+                            string fullDate = $"{date} {time}";
+
+                            // Определяем состояние эксперимента
+                            string stateText;
+                            Color stateColor;
+
+                            if (IsDataOfExpEmpty(experimentId, connection))
+                            {
+                                stateText = "0";
+                                stateColor = Color.Orange;
+                            }
+                            else if (numberError == 1)
+                            {
+                                stateText = "1";
+                                stateColor = Color.Green;
+                            }
+                            else
+                            {
+                                stateText = numberError.ToString();
+                                stateColor = Color.Red;
+                            }
+
+                            // Создаем элемент списка
+                            ListViewItem item = new ListViewItem(number.ToString());
+                            item.SubItems.Add(fullDate);
+                            item.SubItems.Add(stateText);
+                            item.BackColor = stateColor;
+
+                            listViewExperiments.Items.Add(item);
+                        }
+                    }
+                }
+            }
+        }
+
+        private bool IsDataOfExpEmpty(int experimentId, SQLiteConnection connection)
+        {
+            string query = "SELECT COUNT(*) FROM Data_of_exp WHERE Experiment_FK = @ExperimentId";
+
+            using (SQLiteCommand command = new SQLiteCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@ExperimentId", experimentId);
+                int count = Convert.ToInt32(command.ExecuteScalar());
+                return count == 0;
+            }
+        }
+        private string ShowInputDialog(string text, string caption)
+        {
+            Form prompt = new Form()
+            {
+                Width = 300,
+                Height = 150,
+                Text = caption,
+                FormBorderStyle = FormBorderStyle.FixedDialog,
+                StartPosition = FormStartPosition.CenterScreen
+            };
+
+            Label label = new Label() { Left = 10, Top = 20, Text = text };
+            TextBox textBox = new TextBox() { Left = 10, Top = 50, Width = 260 };
+            Button confirmation = new Button() { Text = "OK", Left = 180, Width = 90, Top = 80, DialogResult = DialogResult.OK };
+
+            prompt.Controls.Add(label);
+            prompt.Controls.Add(textBox);
+            prompt.Controls.Add(confirmation);
+            prompt.AcceptButton = confirmation;
+
+            return prompt.ShowDialog() == DialogResult.OK ? textBox.Text : "";
+        }
+        //кнопка добавления эксперимента
+        private void buttonAddExp_Click(object sender, EventArgs e)
+        {
+            int? selectedSampleId = GetSelectedSampleId();
+            if (selectedSampleId == null)
+            {
+                MessageBox.Show("Выберите образец перед добавлением эксперимента!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Открываем диалог для ввода номера эксперимента
+            string input = ShowInputDialog("Введите номер эксперимента:", "Добавление эксперимента");
+
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                MessageBox.Show("Номер эксперимента не может быть пустым!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (!int.TryParse(input, out int experimentNumber))
+            {
+                MessageBox.Show("Введите корректное числовое значение!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
+            {
+                connection.Open();
+                using (SQLiteTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        // 🔹 1. Вставляем дату и время в таблицу Datetime
+                        string insertDatetimeQuery = "INSERT INTO Datetime (Date, Time) VALUES (DATE('now', 'localtime'), TIME('now', 'localtime'));";
+                        using (SQLiteCommand cmd = new SQLiteCommand(insertDatetimeQuery, connection, transaction))
+                        {
+                            cmd.ExecuteNonQuery();
+                        }
+
+                        // 🔹 2. Получаем ID добавленной даты/времени
+                        string getDatetimeIdQuery = "SELECT last_insert_rowid();";
+                        int datetimeId;
+                        using (SQLiteCommand cmd = new SQLiteCommand(getDatetimeIdQuery, connection, transaction))
+                        {
+                            datetimeId = Convert.ToInt32(cmd.ExecuteScalar());
+                        }
+
+                        // 🔹 3. Добавляем новый эксперимент
+                        string insertExperimentQuery = @"
+                    INSERT INTO Experiment (Number, Datetime_FK, Sample_FK, Error)
+                    VALUES (@Number, @DatetimeId, @SampleId, 0);";
+
+                        using (SQLiteCommand cmd = new SQLiteCommand(insertExperimentQuery, connection, transaction))
+                        {
+                            cmd.Parameters.AddWithValue("@Number", experimentNumber);
+                            cmd.Parameters.AddWithValue("@DatetimeId", datetimeId);
+                            cmd.Parameters.AddWithValue("@SampleId", selectedSampleId);
+                            cmd.ExecuteNonQuery();
+                        }
+
+                        transaction.Commit();
+                        
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        MessageBox.Show($"Ошибка при добавлении эксперимента: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+
+            // 🔹 Обновляем список экспериментов
+            LoadExperimentsForSelectedSample();
+        }
+        private int? GetSelectedExperimentId()
+        {
+            if (listViewExperiments.SelectedItems.Count == 0)
+                return null;
+
+            int selectedNumber = Convert.ToInt32(listViewExperiments.SelectedItems[0].Text);
+
+            using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
+            {
+                connection.Open();
+                string query = "SELECT Experiment_PK FROM Experiment WHERE Number = @Number";
+
+                using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Number", selectedNumber);
+                    object result = command.ExecuteScalar();
+                    return result != null ? Convert.ToInt32(result) : (int?)null;
+                }
+            }
+        }
+
+        private void buttonDelExp_Click(object sender, EventArgs e)
+        {
+            int? selectedExperimentId = GetSelectedExperimentId();
+            if (selectedExperimentId == null)
+            {
+                MessageBox.Show("Выберите эксперимент для удаления!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            DialogResult result = MessageBox.Show(
+                "Вы уверены, что хотите удалить этот эксперимент и все связанные с ним данные?",
+                "Подтверждение удаления",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning);
+
+            if (result == DialogResult.No) return;
+
+            using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
+            {
+                connection.Open();
+                using (SQLiteTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        // 🔹 Удаляем **все** записи в Data_of_exp, которые ссылаются на этот эксперимент
+                        string deleteDataOfExpQuery = "DELETE FROM Data_of_exp WHERE Experiment_FK = @ExperimentId";
+                        using (SQLiteCommand cmd = new SQLiteCommand(deleteDataOfExpQuery, connection, transaction))
+                        {
+                            cmd.Parameters.AddWithValue("@ExperimentId", selectedExperimentId);
+                            cmd.ExecuteNonQuery();
+                        }
+
+                        // 🔹 Теперь удаляем сам эксперимент
+                        string deleteExperimentQuery = "DELETE FROM Experiment WHERE Experiment_PK = @ExperimentId";
+                        using (SQLiteCommand cmd = new SQLiteCommand(deleteExperimentQuery, connection, transaction))
+                        {
+                            cmd.Parameters.AddWithValue("@ExperimentId", selectedExperimentId);
+                            cmd.ExecuteNonQuery();
+                        }
+
+                        transaction.Commit();
+                        MessageBox.Show("Эксперимент и все связанные записи успешно удалены!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        MessageBox.Show($"Ошибка при удалении эксперимента: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+
+            // 🔹 Обновляем список экспериментов
+            LoadExperimentsForSelectedSample();
+        }
+
     }
 }

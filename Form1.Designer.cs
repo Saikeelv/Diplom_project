@@ -72,7 +72,6 @@
             this.listViewClients = new System.Windows.Forms.ListView();
             this.listViewSamples = new System.Windows.Forms.ListView();
             this.listViewExperiments = new System.Windows.Forms.ListView();
-            this.buttonChangeExp = new System.Windows.Forms.Button();
             this.buttonDelExp = new System.Windows.Forms.Button();
             this.buttonAddExp = new System.Windows.Forms.Button();
             this.labelExperiments = new System.Windows.Forms.Label();
@@ -333,7 +332,7 @@
             this.settingsToolStripMenuItem});
             this.menuStrip2.Location = new System.Drawing.Point(0, 0);
             this.menuStrip2.Name = "menuStrip2";
-            this.menuStrip2.Size = new System.Drawing.Size(1926, 38);
+            this.menuStrip2.Size = new System.Drawing.Size(1541, 28);
             this.menuStrip2.TabIndex = 31;
             this.menuStrip2.Text = "menuStrip2";
             // 
@@ -345,7 +344,7 @@
             this.sortToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(76, 34);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(76, 24);
             this.settingsToolStripMenuItem.Text = "Settings";
             this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
             // 
@@ -478,38 +477,29 @@
             this.listViewExperiments.UseCompatibleStateImageBehavior = false;
             this.listViewExperiments.View = System.Windows.Forms.View.Details;
             // 
-            // buttonChangeExp
-            // 
-            this.buttonChangeExp.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonChangeExp.Location = new System.Drawing.Point(154, 754);
-            this.buttonChangeExp.Name = "buttonChangeExp";
-            this.buttonChangeExp.Size = new System.Drawing.Size(136, 39);
-            this.buttonChangeExp.TabIndex = 40;
-            this.buttonChangeExp.TabStop = false;
-            this.buttonChangeExp.Text = "CHANGE";
-            this.buttonChangeExp.UseVisualStyleBackColor = true;
-            // 
             // buttonDelExp
             // 
             this.buttonDelExp.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonDelExp.Location = new System.Drawing.Point(296, 754);
+            this.buttonDelExp.Location = new System.Drawing.Point(232, 754);
             this.buttonDelExp.Name = "buttonDelExp";
-            this.buttonDelExp.Size = new System.Drawing.Size(136, 39);
+            this.buttonDelExp.Size = new System.Drawing.Size(200, 39);
             this.buttonDelExp.TabIndex = 39;
             this.buttonDelExp.TabStop = false;
             this.buttonDelExp.Text = "DEL";
             this.buttonDelExp.UseVisualStyleBackColor = true;
+            this.buttonDelExp.Click += new System.EventHandler(this.buttonDelExp_Click);
             // 
             // buttonAddExp
             // 
             this.buttonAddExp.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.buttonAddExp.Location = new System.Drawing.Point(12, 754);
             this.buttonAddExp.Name = "buttonAddExp";
-            this.buttonAddExp.Size = new System.Drawing.Size(136, 39);
+            this.buttonAddExp.Size = new System.Drawing.Size(200, 39);
             this.buttonAddExp.TabIndex = 38;
             this.buttonAddExp.TabStop = false;
             this.buttonAddExp.Text = "ADD";
             this.buttonAddExp.UseVisualStyleBackColor = true;
+            this.buttonAddExp.Click += new System.EventHandler(this.buttonAddExp_Click);
             // 
             // labelExperiments
             // 
@@ -567,7 +557,7 @@
             this.label2.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label2.Location = new System.Drawing.Point(1019, 429);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(186, 33);
+            this.label2.Size = new System.Drawing.Size(149, 26);
             this.label2.TabIndex = 45;
             this.label2.Text = "Graph Settings";
             // 
@@ -580,7 +570,6 @@
             this.Controls.Add(this.buttonMakeExp);
             this.Controls.Add(this.chart1);
             this.Controls.Add(this.labelExperiments);
-            this.Controls.Add(this.buttonChangeExp);
             this.Controls.Add(this.buttonDelExp);
             this.Controls.Add(this.buttonAddExp);
             this.Controls.Add(this.listViewExperiments);
@@ -667,7 +656,6 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSortNote;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuSortDatetime;
         private System.Windows.Forms.ListView listViewExperiments;
-        private System.Windows.Forms.Button buttonChangeExp;
         private System.Windows.Forms.Button buttonDelExp;
         private System.Windows.Forms.Button buttonAddExp;
         private System.Windows.Forms.Label labelExperiments;
