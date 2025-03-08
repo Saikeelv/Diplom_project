@@ -307,6 +307,7 @@ namespace Diplom_project
         public void LoadClients()
         {
             listViewClients.Items.Clear();
+            
 
             try
             {
@@ -526,6 +527,7 @@ namespace Diplom_project
         {
             ClearSamples();
             listViewSamples.Items.Clear(); // Очищаем список
+            listViewExperiments.Items.Clear();
 
             int? clientId = GetSelectedClientId(); // Получаем ID клиента
             if (clientId == null) return;
@@ -712,10 +714,7 @@ ORDER BY {(sampleSortOrder == "Note" ? "s.Note ASC" : "strftime('%Y-%m-%d %H:%M:
             }
         }
 
-        private void buttonDataOfExp_Click(object sender, EventArgs e)
-        {
-
-        }
+       
 
         private void listViewSamples_SelectedIndexChanged(object sender, EventArgs e)
         {

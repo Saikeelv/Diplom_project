@@ -28,9 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.labelClients = new System.Windows.Forms.Label();
@@ -74,13 +71,14 @@
             this.listViewExperiments = new System.Windows.Forms.ListView();
             this.buttonDelExp = new System.Windows.Forms.Button();
             this.buttonAddExp = new System.Windows.Forms.Button();
-            this.labelExperiments = new System.Windows.Forms.Label();
-            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.buttonMakeExp = new System.Windows.Forms.Button();
+            this.buttonStartExp = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.buttonCheckInst = new System.Windows.Forms.Button();
+            this.buttonStopExp = new System.Windows.Forms.Button();
+            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.buttonDataExp = new System.Windows.Forms.Button();
             this.menuStrip2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
             // 
             // labelClients
@@ -502,44 +500,16 @@
             this.buttonAddExp.UseVisualStyleBackColor = true;
             this.buttonAddExp.Click += new System.EventHandler(this.buttonAddExp_Click);
             // 
-            // labelExperiments
+            // buttonStartExp
             // 
-            this.labelExperiments.AutoSize = true;
-            this.labelExperiments.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.labelExperiments.Location = new System.Drawing.Point(529, 429);
-            this.labelExperiments.Name = "labelExperiments";
-            this.labelExperiments.Size = new System.Drawing.Size(192, 26);
-            this.labelExperiments.TabIndex = 41;
-            this.labelExperiments.Text = "Data of Experiment";
-            // 
-            // chart1
-            // 
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.chart1.Legends.Add(legend1);
-            this.chart1.Location = new System.Drawing.Point(534, 458);
-            this.chart1.Name = "chart1";
-            this.chart1.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Excel;
-            series1.ChartArea = "ChartArea1";
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(420, 290);
-            this.chart1.TabIndex = 42;
-            this.chart1.TabStop = false;
-            this.chart1.Text = "chart1";
-            // 
-            // buttonMakeExp
-            // 
-            this.buttonMakeExp.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonMakeExp.Location = new System.Drawing.Point(534, 754);
-            this.buttonMakeExp.Name = "buttonMakeExp";
-            this.buttonMakeExp.Size = new System.Drawing.Size(420, 39);
-            this.buttonMakeExp.TabIndex = 43;
-            this.buttonMakeExp.TabStop = false;
-            this.buttonMakeExp.Text = "MAKE EXPERIMENT";
-            this.buttonMakeExp.UseVisualStyleBackColor = true;
+            this.buttonStartExp.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonStartExp.Location = new System.Drawing.Point(534, 524);
+            this.buttonStartExp.Name = "buttonStartExp";
+            this.buttonStartExp.Size = new System.Drawing.Size(420, 39);
+            this.buttonStartExp.TabIndex = 43;
+            this.buttonStartExp.TabStop = false;
+            this.buttonStartExp.Text = "START EXPERIMENT";
+            this.buttonStartExp.UseVisualStyleBackColor = true;
             // 
             // label1
             // 
@@ -552,25 +522,66 @@
             this.label1.Text = "Experiments";
             this.label1.Click += new System.EventHandler(this.label1_Click_2);
             // 
-            // label2
+            // buttonCheckInst
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label2.Location = new System.Drawing.Point(1019, 429);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(149, 26);
-            this.label2.TabIndex = 45;
-            this.label2.Text = "Graph Settings";
+            this.buttonCheckInst.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonCheckInst.Location = new System.Drawing.Point(534, 458);
+            this.buttonCheckInst.Name = "buttonCheckInst";
+            this.buttonCheckInst.Size = new System.Drawing.Size(420, 39);
+            this.buttonCheckInst.TabIndex = 45;
+            this.buttonCheckInst.TabStop = false;
+            this.buttonCheckInst.Text = "CHEKING INSTALATION";
+            this.buttonCheckInst.UseVisualStyleBackColor = true;
+            // 
+            // buttonStopExp
+            // 
+            this.buttonStopExp.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonStopExp.Location = new System.Drawing.Point(534, 588);
+            this.buttonStopExp.Name = "buttonStopExp";
+            this.buttonStopExp.Size = new System.Drawing.Size(420, 39);
+            this.buttonStopExp.TabIndex = 46;
+            this.buttonStopExp.TabStop = false;
+            this.buttonStopExp.Text = "STOP";
+            this.buttonStopExp.UseVisualStyleBackColor = true;
+            // 
+            // listBox1
+            // 
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.ItemHeight = 15;
+            this.listBox1.Location = new System.Drawing.Point(1024, 458);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(420, 289);
+            this.listBox1.TabIndex = 47;
+            // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(1025, 754);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(419, 39);
+            this.progressBar1.TabIndex = 48;
+            // 
+            // buttonDataExp
+            // 
+            this.buttonDataExp.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonDataExp.Location = new System.Drawing.Point(534, 668);
+            this.buttonDataExp.Name = "buttonDataExp";
+            this.buttonDataExp.Size = new System.Drawing.Size(420, 125);
+            this.buttonDataExp.TabIndex = 49;
+            this.buttonDataExp.TabStop = false;
+            this.buttonDataExp.Text = "DATA OF EXPERIMENT";
+            this.buttonDataExp.UseVisualStyleBackColor = true;
             // 
             // Main
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(1541, 823);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.buttonDataExp);
+            this.Controls.Add(this.progressBar1);
+            this.Controls.Add(this.listBox1);
+            this.Controls.Add(this.buttonStopExp);
+            this.Controls.Add(this.buttonCheckInst);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.buttonMakeExp);
-            this.Controls.Add(this.chart1);
-            this.Controls.Add(this.labelExperiments);
+            this.Controls.Add(this.buttonStartExp);
             this.Controls.Add(this.buttonDelExp);
             this.Controls.Add(this.buttonAddExp);
             this.Controls.Add(this.listViewExperiments);
@@ -610,7 +621,6 @@
             this.Load += new System.EventHandler(this.Main_Load);
             this.menuStrip2.ResumeLayout(false);
             this.menuStrip2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -659,11 +669,13 @@
         private System.Windows.Forms.ListView listViewExperiments;
         private System.Windows.Forms.Button buttonDelExp;
         private System.Windows.Forms.Button buttonAddExp;
-        private System.Windows.Forms.Label labelExperiments;
-        private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
-        private System.Windows.Forms.Button buttonMakeExp;
+        private System.Windows.Forms.Button buttonStartExp;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button buttonCheckInst;
+        private System.Windows.Forms.Button buttonStopExp;
+        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.Button buttonDataExp;
     }
 }
 
