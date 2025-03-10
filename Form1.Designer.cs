@@ -71,13 +71,8 @@
             this.listViewExperiments = new System.Windows.Forms.ListView();
             this.buttonDelExp = new System.Windows.Forms.Button();
             this.buttonAddExp = new System.Windows.Forms.Button();
-            this.buttonStartExp = new System.Windows.Forms.Button();
+            this.buttonStartExperiment = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.buttonCheckInst = new System.Windows.Forms.Button();
-            this.buttonStopExp = new System.Windows.Forms.Button();
-            this.listBox1 = new System.Windows.Forms.ListBox();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.buttonDataExp = new System.Windows.Forms.Button();
             this.menuStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -500,16 +495,17 @@
             this.buttonAddExp.UseVisualStyleBackColor = true;
             this.buttonAddExp.Click += new System.EventHandler(this.buttonAddExp_Click);
             // 
-            // buttonStartExp
+            // buttonStartExperiment
             // 
-            this.buttonStartExp.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonStartExp.Location = new System.Drawing.Point(534, 524);
-            this.buttonStartExp.Name = "buttonStartExp";
-            this.buttonStartExp.Size = new System.Drawing.Size(420, 39);
-            this.buttonStartExp.TabIndex = 43;
-            this.buttonStartExp.TabStop = false;
-            this.buttonStartExp.Text = "START EXPERIMENT";
-            this.buttonStartExp.UseVisualStyleBackColor = true;
+            this.buttonStartExperiment.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonStartExperiment.Location = new System.Drawing.Point(534, 458);
+            this.buttonStartExperiment.Name = "buttonStartExperiment";
+            this.buttonStartExperiment.Size = new System.Drawing.Size(420, 39);
+            this.buttonStartExperiment.TabIndex = 43;
+            this.buttonStartExperiment.TabStop = false;
+            this.buttonStartExperiment.Text = "START EXPERIMENT";
+            this.buttonStartExperiment.UseVisualStyleBackColor = true;
+            this.buttonStartExperiment.Click += new System.EventHandler(this.buttonStartExperiment_Click);
             // 
             // label1
             // 
@@ -522,66 +518,12 @@
             this.label1.Text = "Experiments";
             this.label1.Click += new System.EventHandler(this.label1_Click_2);
             // 
-            // buttonCheckInst
-            // 
-            this.buttonCheckInst.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonCheckInst.Location = new System.Drawing.Point(534, 458);
-            this.buttonCheckInst.Name = "buttonCheckInst";
-            this.buttonCheckInst.Size = new System.Drawing.Size(420, 39);
-            this.buttonCheckInst.TabIndex = 45;
-            this.buttonCheckInst.TabStop = false;
-            this.buttonCheckInst.Text = "CHEKING INSTALATION";
-            this.buttonCheckInst.UseVisualStyleBackColor = true;
-            // 
-            // buttonStopExp
-            // 
-            this.buttonStopExp.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonStopExp.Location = new System.Drawing.Point(534, 588);
-            this.buttonStopExp.Name = "buttonStopExp";
-            this.buttonStopExp.Size = new System.Drawing.Size(420, 39);
-            this.buttonStopExp.TabIndex = 46;
-            this.buttonStopExp.TabStop = false;
-            this.buttonStopExp.Text = "STOP";
-            this.buttonStopExp.UseVisualStyleBackColor = true;
-            // 
-            // listBox1
-            // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 15;
-            this.listBox1.Location = new System.Drawing.Point(1024, 458);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(420, 289);
-            this.listBox1.TabIndex = 47;
-            // 
-            // progressBar1
-            // 
-            this.progressBar1.Location = new System.Drawing.Point(1025, 754);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(419, 39);
-            this.progressBar1.TabIndex = 48;
-            // 
-            // buttonDataExp
-            // 
-            this.buttonDataExp.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonDataExp.Location = new System.Drawing.Point(534, 668);
-            this.buttonDataExp.Name = "buttonDataExp";
-            this.buttonDataExp.Size = new System.Drawing.Size(420, 125);
-            this.buttonDataExp.TabIndex = 49;
-            this.buttonDataExp.TabStop = false;
-            this.buttonDataExp.Text = "DATA OF EXPERIMENT";
-            this.buttonDataExp.UseVisualStyleBackColor = true;
-            // 
             // Main
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(1541, 823);
-            this.Controls.Add(this.buttonDataExp);
-            this.Controls.Add(this.progressBar1);
-            this.Controls.Add(this.listBox1);
-            this.Controls.Add(this.buttonStopExp);
-            this.Controls.Add(this.buttonCheckInst);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.buttonStartExp);
+            this.Controls.Add(this.buttonStartExperiment);
             this.Controls.Add(this.buttonDelExp);
             this.Controls.Add(this.buttonAddExp);
             this.Controls.Add(this.listViewExperiments);
@@ -669,13 +611,8 @@
         private System.Windows.Forms.ListView listViewExperiments;
         private System.Windows.Forms.Button buttonDelExp;
         private System.Windows.Forms.Button buttonAddExp;
-        private System.Windows.Forms.Button buttonStartExp;
+        private System.Windows.Forms.Button buttonStartExperiment;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button buttonCheckInst;
-        private System.Windows.Forms.Button buttonStopExp;
-        private System.Windows.Forms.ListBox listBox1;
-        private System.Windows.Forms.ProgressBar progressBar1;
-        private System.Windows.Forms.Button buttonDataExp;
     }
 }
 

@@ -254,6 +254,12 @@ namespace Diplom_project
                 listViewClients.Select();
                 listViewClients.Focus();
             }
+            if (listViewExperiments.Items.Count > 0)
+            {
+                listViewExperiments.Items[0].Selected = true;
+                listViewExperiments.Select();
+                listViewExperiments.Focus();
+            }
         }
 
         private void selectBDToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1210,6 +1216,18 @@ ORDER BY
             }
 
             LoadExperimentsForSelectedSample(); // Перезагружаем список
+        }
+
+        private void buttonStartExperiment_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(selectedPort))
+            {
+                MessageBox.Show("Выберите COM-порт перед началом эксперимента!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            Form6 experimentForm = new Form6(selectedPort); // Создаем новый экземпляр формы
+            experimentForm.Show();
         }
 
     }
