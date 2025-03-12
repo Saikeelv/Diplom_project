@@ -9,15 +9,21 @@ using System.Threading.Tasks;
 using System.IO.Ports;
 using System.Windows.Forms;
 using System.IO;
+using System.Net.NetworkInformation;
+using System.Data.SQLite;
 
 namespace Diplom_project
 {
     public partial class Form6: Form
     {
         private SerialPort serialPort;
-        public Form6(string portName)
+        private int experimentId;
+        private string connectionString = "";
+        public Form6(string portName, string dbPath, int ExperimentId)
         {
             InitializeComponent();
+            experimentId = ExperimentId;
+            connectionString = $"Data Source={dbPath};Version=3;";
             try
             {
                 serialPort = new SerialPort(portName, 115200);
@@ -43,6 +49,8 @@ namespace Diplom_project
         private string errorNumber = "0"; // Первое ненулевое значение ошибки (одно значение)
 
         private bool isExperimentRunning = false; // Флаг, идет ли эксперимент
+        private bool isTestMode = false; // Если true, данные в БД не записываются
+
 
 
 
@@ -54,6 +62,7 @@ namespace Diplom_project
 
         private void buttonCheckInst_Click(object sender, EventArgs e)
         {
+            isTestMode = true; // Включаем режим теста
             SendCommand("2");
         }
 
@@ -91,66 +100,7 @@ namespace Diplom_project
 
 
 
-        private void serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
-        {
-            try
-            {
-                string data = serialPort.ReadLine().Trim();
-
-                this.Invoke(new Action(() =>
-                {
-                    listBoxExp.Items.Add(data);
-                    listBoxExp.TopIndex = listBoxExp.Items.Count - 1;
-                }));
-
-                // Проверяем служебные коды завершения
-                if (data == "8888" || data == "9999" || data == "7777")
-                {
-                    isExperimentRunning = false;
-                    this.Invoke(new Action(() => ExperimentFinished()));
-                    return;
-                }
-
-                // Разбираем пакет данных
-                string[] values = data.Split(';');
-                if (values.Length != 7) return;
-
-                // Проверяем, идет ли эксперимент
-                if (!isExperimentRunning) return;
-
-                // Если начинается новое испытание, сохраняем предыдущее и очищаем данные
-                if (testNumber != "" && testNumber != values[5])
-                {
-                    SaveCurrentExperiment();
-                }
-
-                // Записываем номер испытания (если не задан)
-                testNumber = values[5];
-
-                // Записываем номер ошибки (первое ненулевое значение)
-                if (errorNumber == "0" && values[6] != "0")
-                {
-                    errorNumber = values[6];
-                }
-
-                // Записываем значения в списки
-                timeData.Add(values[1]);
-                temperatureData.Add(values[2]);
-                weightData.Add(values[3]);
-                rotationData.Add(values[4]);
-            }
-            catch (IOException ex)
-            {
-                this.Invoke(new Action(() =>
-                {
-                    MessageBox.Show($"Ошибка при чтении: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }));
-            }
-            catch (InvalidOperationException)
-            {
-                // Игнорируем ошибку, если порт закрыт
-            }
-        }
+        
         private void SaveCurrentExperiment()
         {
             if (string.IsNullOrEmpty(testNumber)) return;
@@ -175,31 +125,72 @@ namespace Diplom_project
             errorNumber = "0";
         }
 
-
-
-
-        private async void ExperimentFinished()
+        private void serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            await Task.Run(() =>
+            try
             {
-                SaveCurrentExperiment(); // Сохраняем последнее испытание
+                string data = serialPort.ReadLine().Trim();
 
-                List<string> fileData = new List<string>();
-                foreach (var experiment in allExperiments)
+                this.Invoke(new Action(() =>
                 {
-                    fileData.AddRange(experiment);
+                    listBoxExp.Items.Add(data);
+                    listBoxExp.TopIndex = listBoxExp.Items.Count - 1;
+                }));
+
+                // Проверяем, не в тестовом ли режиме мы находимся
+                if (isTestMode)
+                {
+                    if (data == "8888") // Завершение проверки
+                    {
+                        this.Invoke(new Action(() => ToggleButtons(false))); // Разблокируем кнопки
+                    }
+                    return; // Дальше ничего не делаем
                 }
 
-                File.WriteAllLines("experiment_result.txt", fileData); // Запись в файл в фоне
-            });
+                // Проверяем коды завершения эксперимента
+                if (data == "8888" || data == "9999" || data == "7777")
+                {
+                    isExperimentRunning = false; // Останавливаем сбор данных
+                    Task.Run(() => this.Invoke(new Action(() => ExperimentFinished()))); // Запускаем сохранение в БД
+                    return;
+                }
 
-            this.Invoke(new Action(() =>
+                // Разбираем пакет данных (если не тестовый режим)
+                string[] values = data.Split(';');
+                if (values.Length != 7) return;
+
+                if (!isExperimentRunning) return;
+
+                if (testNumber != "" && testNumber != values[5])
+                {
+                    SaveCurrentExperiment();
+                }
+
+                testNumber = values[5];
+
+                if (errorNumber == "0" && values[6] != "0")
+                {
+                    errorNumber = values[6];
+                }
+
+                timeData.Add(values[1]);
+                temperatureData.Add(values[2]);
+                weightData.Add(values[3]);
+                rotationData.Add(values[4]);
+            }
+            catch (IOException ex)
             {
-                MessageBox.Show("Эксперимент завершен. Данные сохранены в файл.", "Эксперимент завершен", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                ClosePort(); // Закрываем COM-порт в UI-потоке
-                this.Close(); // Закрываем форму
-            }));
+                this.Invoke(new Action(() =>
+                {
+                    MessageBox.Show($"Ошибка при чтении: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }));
+            }
+            catch (InvalidOperationException)
+            {
+                // Игнорируем ошибку, если порт закрыт
+            }
         }
+
 
 
         private void ClosePort()
@@ -238,6 +229,117 @@ namespace Diplom_project
             buttonCheckInst.Enabled = !isTransmitting;
             buttonStartExp.Enabled = !isTransmitting;
             buttonStopExp.Enabled = isTransmitting; // Кнопка "Стоп" активна только во время передачи
+        }
+
+        private void UpdateExperimentError(SQLiteConnection connection, SQLiteTransaction transaction)
+        {
+            string queryCount = "SELECT COUNT(*) FROM Data_of_exp WHERE Experiment_FK = @ExperimentId";
+            string queryErrors = "SELECT num_of_error FROM Data_of_exp WHERE Experiment_FK = @ExperimentId";
+
+            int totalTests = 0;
+            List<int> errors = new List<int>();
+
+            using (SQLiteCommand cmd = new SQLiteCommand(queryCount, connection, transaction))
+            {
+                cmd.Parameters.AddWithValue("@ExperimentId", experimentId);
+                totalTests = Convert.ToInt32(cmd.ExecuteScalar()); // Количество испытаний
+            }
+
+            using (SQLiteCommand cmd = new SQLiteCommand(queryErrors, connection, transaction))
+            {
+                cmd.Parameters.AddWithValue("@ExperimentId", experimentId);
+                using (SQLiteDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        errors.Add(reader.GetInt32(0)); // Список всех ошибок
+                    }
+                }
+            }
+
+            int finalError = 1; // По умолчанию, если все ошибки = 0 и >= 10 испытаний
+
+            // Проверяем наличие ненулевых ошибок
+            foreach (var err in errors)
+            {
+                if (err != 0)
+                {
+                    finalError = err; // Берем первое ненулевое значение ошибки
+                    break;
+                }
+            }
+
+            // Если ошибок не было, проверяем количество испытаний
+            if (finalError == 1 && totalTests < 10)
+            {
+                finalError = 777; // Если испытаний < 10 и ошибок нет, ставим 777
+            }
+
+            string updateQuery = "UPDATE Experiment SET Error = @Error WHERE Experiment_PK = @ExperimentId";
+
+            using (SQLiteCommand cmd = new SQLiteCommand(updateQuery, connection, transaction))
+            {
+                cmd.Parameters.AddWithValue("@Error", finalError);
+                cmd.Parameters.AddWithValue("@ExperimentId", experimentId);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+
+
+
+        private async void ExperimentFinished()
+        {
+            await Task.Run(() =>
+            {
+                SaveCurrentExperiment(); // Сохраняем последнее испытание
+
+                using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+                {
+                    connection.Open();
+
+                    using (SQLiteTransaction transaction = connection.BeginTransaction())
+                    {
+                        try
+                        {
+                            foreach (var experiment in allExperiments)
+                            {
+                                string query = @"
+                            INSERT INTO Data_of_exp (run_of_test, num_of_error, Time, Temp, Power, Speed, Experiment_FK) 
+                            VALUES (@run_of_test, @num_of_error, @Time, @Temp, @Power, @Speed, @ExperimentId)";
+
+                                using (SQLiteCommand cmd = new SQLiteCommand(query, connection, transaction))
+                                {
+                                    cmd.Parameters.AddWithValue("@run_of_test", experiment[0]); // Номер испытания
+                                    cmd.Parameters.AddWithValue("@num_of_error", experiment[1]); // Ошибка
+                                    cmd.Parameters.AddWithValue("@Time", experiment[2]); // Время
+                                    cmd.Parameters.AddWithValue("@Temp", experiment[3]); // Температура
+                                    cmd.Parameters.AddWithValue("@Power", experiment[4]); // Вес
+                                    cmd.Parameters.AddWithValue("@Speed", experiment[5]); // Скорость вращения
+                                    cmd.Parameters.AddWithValue("@ExperimentId", experimentId);
+                                    cmd.ExecuteNonQuery();
+                                }
+                            }
+
+                            UpdateExperimentError(connection, transaction); // Обновляем поле Error в Experiment
+
+                            transaction.Commit();
+                        }
+                        catch (Exception ex)
+                        {
+                            transaction.Rollback();
+                            MessageBox.Show($"Ошибка при записи в БД: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                }
+            });
+
+            this.Invoke(new Action(() =>
+            {
+                MessageBox.Show("Эксперимент завершен. Данные сохранены в БД.", "Эксперимент завершен", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                ClosePort();
+                this.Close();
+            }));
         }
 
 

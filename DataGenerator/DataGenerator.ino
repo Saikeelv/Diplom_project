@@ -5,18 +5,20 @@ int packetNumber = 0;          // Номер пакета данных
 bool isRunning = false;        // Флаг выполнения эксперимента
 bool isChecking = false;       // Флаг режима проверки
 const int MAX_EXPERIMENTS = 10; // Максимальное количество испытаний
+const int BUTTON_PIN = 4;      // Пин для кнопки (можно изменить)
 
 // Константы для расчётов
 const float MAX_FORCE = 10.0;      // Максимальная сила прижима
 const float MAX_SPEED = 3650.0;    // Максимальная скорость
 const float MIN_SPEED = 3000.0;    // Минимальная скорость
-const int EXPERIMENT_DURATION = 5;  // Длительность эксперимента в секундах (было 25)
+const int EXPERIMENT_DURATION = 5;  // Длительность эксперимента в секундах
 const int CHECK_DURATION = 5;      // Длительность проверки в секундах
 const int UPDATE_INTERVAL = 100;   // Интервал обновления в мс (10 раз в секунду)
 
 void setup() {
   Serial.begin(115200);  // Увеличиваем скорость порта
   randomSeed(analogRead(0));  // Инициализация генератора случайных чисел
+  pinMode(BUTTON_PIN, INPUT_PULLUP);  // Настраиваем пин кнопки с подтяжкой вверх
   Serial.println("Arduino ready");  // Сообщение о готовности
 }
 
@@ -24,8 +26,7 @@ void loop() {
   // Обработка входящих команд
   if (Serial.available() > 0) {
     char incomingChar = Serial.read();  // Читаем один символ
-    Serial.print("Received: ");
-    Serial.println(incomingChar);
+    
     
     if (incomingChar == '0') {  // Остановка
       isRunning = false;
@@ -53,6 +54,32 @@ void loop() {
       }
     }
   }
+
+  // Проверка состояния кнопки
+  static bool lastButtonState = HIGH;
+  bool buttonState = digitalRead(BUTTON_PIN);
+  if (buttonState == LOW && lastButtonState == HIGH && isRunning) {  // Нажатие кнопки
+    // Отправляем пакет с ошибкой 505
+    float currentTime = (millis() - startTime) / 1000.0;
+    Serial.print(packetNumber);
+    Serial.print(";");
+    Serial.print(currentTime, 2);
+    Serial.print(";");
+    Serial.print(0.0, 2);  // Температура
+    Serial.print(";");
+    Serial.print(0.0, 2);  // Сила
+    Serial.print(";");
+    Serial.print(0.0, 2);  // Скорость
+    Serial.print(";");
+    Serial.print(experimentNumber + 1);
+    Serial.print(";");
+    Serial.println("404");  // Код ошибки
+    
+    // Завершаем эксперимент
+    isRunning = false;
+    Serial.println("9999");
+  }
+  lastButtonState = buttonState;
 
   // Режим эксперимента (1)
   if (isRunning) {

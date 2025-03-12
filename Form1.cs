@@ -1008,17 +1008,7 @@ ORDER BY
         }
 
 
-        private bool IsDataOfExpEmpty(int experimentId, SQLiteConnection connection)
-        {
-            string query = "SELECT COUNT(*) FROM Data_of_exp WHERE Experiment_FK = @ExperimentId";
-
-            using (SQLiteCommand command = new SQLiteCommand(query, connection))
-            {
-                command.Parameters.AddWithValue("@ExperimentId", experimentId);
-                int count = Convert.ToInt32(command.ExecuteScalar());
-                return count == 0;
-            }
-        }
+        
         private string ShowInputDialog(string text, string caption)
         {
             Form prompt = new Form()
@@ -1226,7 +1216,17 @@ ORDER BY
                 return;
             }
 
-            Form6 experimentForm = new Form6(selectedPort); // Создаем новый экземпляр формы
+            int? experimentId = GetSelectedExperimentId(); // Получаем ID выделенного эксперимента
+            if (experimentId == null)
+            {
+                MessageBox.Show("Выберите эксперимент для проведения испытаний!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            Form6 experimentForm = new Form6(selectedPort, selectedFilePath, experimentId.Value);
+
+            // Подписываемся на закрытие формы, чтобы обновить список экспериментов
+            experimentForm.FormClosed += (s, args) => LoadExperimentsForSelectedSample();
             experimentForm.Show();
         }
 
