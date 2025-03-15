@@ -494,6 +494,8 @@ namespace Diplom_project
                 }
             }
         }
+
+        
         private void toolStripMenuSortDatetime_Click(object sender, EventArgs e)
         {
             int? selectedSampleId = GetSelectedSampleId(); // Запоминаем выделенный образец
@@ -527,8 +529,85 @@ namespace Diplom_project
         }
 
 
+        private void sortToolStripMenuItem_Click(object sender, EventArgs e) { }
+
+        private void clientsToolStripMenuItem_Click(object sender, EventArgs e) { }
+
+        private void sortByToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int? selectedExp = GetSelectedExperimentId();     
+            experimentSortOrder = "Number";
+           
+            LoadExperimentsForSelectedSample(); // Перезагружаем список
+
+            // 🔹 Восстанавливаем выделение после сортировки 
+            if (selectedExp != null)
+            {
+                foreach (ListViewItem item in listViewExperiments.Items)
+                {
+                    if (item.Tag is int expId && expId == selectedExp.Value)
+                    {
+                        item.Selected = true;
+                        listViewExperiments.Select();
+                        listViewExperiments.Focus();
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void sortByDateTimeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int? selectedExp = GetSelectedExperimentId();
+            
+            experimentSortOrder = "DateTime";
+           
+            LoadExperimentsForSelectedSample(); // Перезагружаем список
+
+            // 🔹 Восстанавливаем выделение после сортировки 
+            if (selectedExp != null)
+            {
+                foreach (ListViewItem item in listViewExperiments.Items)
+                {
+                    if (item.Tag is int expId && expId == selectedExp.Value)
+                    {
+                        item.Selected = true;
+                        listViewExperiments.Select();
+                        listViewExperiments.Focus();
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void sortByErrorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int? selectedExp = GetSelectedExperimentId();
+
+            experimentSortOrder = "Error";
+
+            LoadExperimentsForSelectedSample(); // Перезагружаем список
+
+            // 🔹 Восстанавливаем выделение после сортировки 
+            if (selectedExp != null)
+            {
+                foreach (ListViewItem item in listViewExperiments.Items)
+                {
+                    if (item.Tag is int expId && expId == selectedExp.Value)
+                    {
+                        item.Selected = true;
+                        listViewExperiments.Select();
+                        listViewExperiments.Focus();
+                        break;
+                    }
+                }
+            }
+        }
+
+
+
         // Метод для загрузки образцов в listViewSamples
-       
+
         private void LoadSamples(int? selectedSampleId = null)
         {
             ClearSamples();
@@ -584,6 +663,8 @@ ORDER BY {(sampleSortOrder == "Note" ? "s.Note ASC" : "strftime('%Y-%m-%d %H:%M:
                     }
                 }
             }
+
+            
         }
         public void ClearSamples()
         {
@@ -727,6 +808,7 @@ ORDER BY {(sampleSortOrder == "Note" ? "s.Note ASC" : "strftime('%Y-%m-%d %H:%M:
             
             LoadExperimentsForSelectedSample();
             
+
             if (listViewSamples.SelectedItems.Count == 0)
                 return;
 
@@ -771,6 +853,13 @@ ORDER BY {(sampleSortOrder == "Note" ? "s.Note ASC" : "strftime('%Y-%m-%d %H:%M:
                         }
                     }
                 }
+            }
+            // 🔹 Автоматически выбираем первый эксперимент после загрузки
+            if (listViewExperiments.Items.Count > 0)
+            {
+                listViewExperiments.Items[0].Selected = true;
+                listViewExperiments.Select();
+                listViewExperiments.Focus();
             }
         }
 
@@ -947,6 +1036,8 @@ ORDER BY {(sampleSortOrder == "Note" ? "s.Note ASC" : "strftime('%Y-%m-%d %H:%M:
 
             listViewExperiments.Items.Clear();
 
+            
+
             using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
             {
                 connection.Open();
@@ -999,16 +1090,19 @@ ORDER BY
                             item.SubItems.Add(fullDate);
                             item.SubItems.Add(numberError.ToString());
                             item.BackColor = stateColor;
-
+                            item.Tag = experimentId;  //  Сохраняем ID эксперимента в `Tag`
                             listViewExperiments.Items.Add(item);
                         }
                     }
                 }
             }
+            
+
+
         }
 
 
-        
+        //форма добавления эксперимента(маленькая форма)
         private string ShowInputDialog(string text, string caption)
         {
             Form prompt = new Form()
@@ -1056,6 +1150,8 @@ ORDER BY
                 return;
             }
 
+            int newExperimentId = 0;
+
             using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
             {
                 connection.Open();
@@ -1090,7 +1186,11 @@ ORDER BY
                             cmd.Parameters.AddWithValue("@SampleId", selectedSampleId);
                             cmd.ExecuteNonQuery();
                         }
-
+                        // 🔹 Получаем ID добавленного эксперимента
+                        using (SQLiteCommand cmd = new SQLiteCommand(getDatetimeIdQuery, connection, transaction))
+                        {
+                            newExperimentId = Convert.ToInt32(cmd.ExecuteScalar());
+                        }
                         transaction.Commit();
                         
                     }
@@ -1104,6 +1204,18 @@ ORDER BY
 
             // 🔹 Обновляем список экспериментов
             LoadExperimentsForSelectedSample();
+
+            // 🔹 Автоматически выделяем добавленный эксперимент
+            foreach (ListViewItem item in listViewExperiments.Items)
+            {
+                if (item.Tag != null && Convert.ToInt32(item.Tag) == newExperimentId)
+                {
+                    item.Selected = true;
+                    listViewExperiments.Select();
+                    listViewExperiments.Focus();
+                    return; // Останавливаем поиск после выделения
+                }
+            }
         }
         private int? GetSelectedExperimentId()
         {
@@ -1143,6 +1255,12 @@ ORDER BY
 
             if (result == DialogResult.No) return;
 
+            // 🔹 Запоминаем индекс выделенного элемента перед удалением
+            int selectedIndex = listViewExperiments.SelectedIndices[0];
+
+            
+
+
             using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
             {
                 connection.Open();
@@ -1179,6 +1297,19 @@ ORDER BY
 
             // 🔹 Обновляем список экспериментов
             LoadExperimentsForSelectedSample();
+
+            // 🔹 Восстанавливаем выделение на строку выше
+            if (listViewExperiments.Items.Count > 0)
+            {
+                if (selectedIndex > 0)
+                {
+                    selectedIndex--; // Перемещаем выделение вверх
+                }
+
+                listViewExperiments.Items[selectedIndex].Selected = true;
+                listViewExperiments.Select();
+                listViewExperiments.Focus();
+            }
         }
 
         private void listViewExperiments_SelectedIndexChanged(object sender, EventArgs e)
@@ -1186,6 +1317,7 @@ ORDER BY
         }
         private void listViewExperiments_ColumnClick(object sender, ColumnClickEventArgs e)
         {
+            int? selectedExp = GetSelectedExperimentId();
             string columnName = listViewExperiments.Columns[e.Column].Text;
 
             if (columnName == "№")
@@ -1206,6 +1338,21 @@ ORDER BY
             }
 
             LoadExperimentsForSelectedSample(); // Перезагружаем список
+
+            // 🔹 Восстанавливаем выделение после сортировки 
+            if (selectedExp != null)
+            {
+                foreach (ListViewItem item in listViewExperiments.Items)
+                {
+                    if (item.Tag is int expId && expId == selectedExp.Value)
+                    {
+                        item.Selected = true;
+                        listViewExperiments.Select();
+                        listViewExperiments.Focus();
+                        break;
+                    }
+                }
+            }
         }
 
         private void buttonStartExperiment_Click(object sender, EventArgs e)
@@ -1215,7 +1362,13 @@ ORDER BY
                 MessageBox.Show("Выберите COM-порт перед началом эксперимента!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
+            // 🔹 Проверяем, доступен ли COM-порт
+            string[] availablePorts = SerialPort.GetPortNames();
+            if (!availablePorts.Contains(selectedPort))
+            {
+                MessageBox.Show($"COM-порт {selectedPort} не найден! Подключите устройство или выберите другой порт.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // ❌ Не открываем `Form6`, если порта нет
+            }
             int? experimentId = GetSelectedExperimentId(); // Получаем ID выделенного эксперимента
             if (experimentId == null)
             {
@@ -1230,5 +1383,7 @@ ORDER BY
             experimentForm.Show();
         }
 
+        
+        
     }
 }
