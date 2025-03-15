@@ -50,6 +50,8 @@ namespace Diplom_project
 
         private bool isExperimentRunning = false; // Флаг, идет ли эксперимент
         private bool isTestMode = false; // Если true, данные в БД не записываются
+        private bool isSaving = false; // ✅ Флаг для защиты от двойного сохранения
+
 
 
 
@@ -75,9 +77,11 @@ namespace Diplom_project
 
         private void buttonStopExp_Click(object sender, EventArgs e)
         {
-            SendCommand("0");
-            ToggleButtons(false); // Разблокировка кнопок
-            ExperimentFinished();  // Записываем данные и закрываем форму
+            
+                SendCommand("0");
+                ToggleButtons(false); // Разблокировка кнопок
+                ExperimentFinished();  // Записываем данные и закрываем форму
+            
         }
 
 
@@ -140,7 +144,7 @@ namespace Diplom_project
                 // Проверяем, не в тестовом ли режиме мы находимся
                 if (isTestMode)
                 {
-                    if (data == "8888") // Завершение проверки
+                    if (data == "8888" || data == "7777") // Завершение проверки
                     {
                         this.Invoke(new Action(() => ToggleButtons(false))); // Разблокируем кнопки
                     }
@@ -148,10 +152,15 @@ namespace Diplom_project
                 }
 
                 // Проверяем коды завершения эксперимента
-                if (data == "8888" || data == "9999" || data == "7777")
+                if ( data == "9999")
                 {
-                    isExperimentRunning = false; // Останавливаем сбор данных
-                    Task.Run(() => this.Invoke(new Action(() => ExperimentFinished()))); // Запускаем сохранение в БД
+                    isExperimentRunning = false;
+
+                    // ✅ Проверяем, не идет ли уже сохранение
+                    if (!isSaving)
+                    {
+                        this.Invoke(new Action(() => ExperimentFinished()));
+                    }
                     return;
                 }
 
@@ -161,7 +170,7 @@ namespace Diplom_project
 
                 if (!isExperimentRunning) return;
 
-                if (testNumber != "" && testNumber != values[5])
+                if (testNumber != "" && testNumber != values[5] && !isSaving)
                 {
                     SaveCurrentExperiment();
                 }
@@ -214,13 +223,6 @@ namespace Diplom_project
                 }
             }
         }
-
-
-
-
-
-
-
 
 
 
@@ -290,6 +292,13 @@ namespace Diplom_project
 
         private async void ExperimentFinished()
         {
+            if (isTestMode)
+            {
+                isTestMode = false;
+                return;
+            }
+            if (isSaving) return; // ✅ Если уже идет сохранение, пропускаем
+            isSaving = true; // ✅ Устанавливаем флаг, чтобы избежать дублирования
             await Task.Run(() =>
             {
                 SaveCurrentExperiment(); // Сохраняем последнее испытание
@@ -339,6 +348,7 @@ namespace Diplom_project
                 MessageBox.Show("Эксперимент завершен. Данные сохранены в БД.", "Эксперимент завершен", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 ClosePort();
                 this.Close();
+                isSaving = false; // ✅ Сбрасываем флаг после завершения
             }));
         }
 

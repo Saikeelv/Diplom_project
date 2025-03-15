@@ -1377,10 +1377,16 @@ ORDER BY
             }
 
             Form6 experimentForm = new Form6(selectedPort, selectedFilePath, experimentId.Value);
-
+           
             // Подписываемся на закрытие формы, чтобы обновить список экспериментов
             experimentForm.FormClosed += (s, args) => LoadExperimentsForSelectedSample();
-            experimentForm.Show();
+
+
+            
+
+            experimentForm.ShowDialog();
+            
+
         }
 
         
