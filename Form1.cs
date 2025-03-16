@@ -25,8 +25,6 @@ namespace Diplom_project
         private string sampleSortOrder = "Note"; // По умолчанию сортируем по Note
         private string experimentSortOrder = "Number"; // По умолчанию сортируем по номеру эксперимента
 
-
-
         public string SortOrder
         {
             get { return sortOrder; }
@@ -91,7 +89,6 @@ namespace Diplom_project
             }
         }
 
-
         private void label1_Click(object sender, EventArgs e) { }
 
         private void button1_Click(object sender, EventArgs e)
@@ -118,7 +115,6 @@ namespace Diplom_project
                 }
             }
         }
-
 
         private void label1_Click_1(object sender, EventArgs e) { }
 
@@ -217,7 +213,6 @@ namespace Diplom_project
             }
         }
 
-
         private void Main_Load(object sender, EventArgs e)
         {
             LoadDatabasePath();
@@ -239,6 +234,7 @@ namespace Diplom_project
             //Выбор первого элемента в списке
             SalectFirstsElement();
         }
+
         private void SalectFirstsElement()
         {
             if (listViewSamples.Items.Count > 0)
@@ -297,6 +293,7 @@ namespace Diplom_project
             }
             SalectFirstsElement();
         }
+
         private void SaveConfigFile()
         {
             string[] lines = new string[2];
@@ -346,7 +343,6 @@ namespace Diplom_project
             
         }
 
-
         //должен быть установлен драйвер для ардуино 
         private void selectCOMPortToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -392,7 +388,6 @@ namespace Diplom_project
             comPortForm.Controls.Add(buttonOK);
             comPortForm.ShowDialog();
         }
-
 
         private void buttonChangeDataClient_Click(object sender, EventArgs e)
         {
@@ -476,6 +471,7 @@ namespace Diplom_project
                 }
             }
         }
+
         private void toolStripMenuItemSortNote_Click(object sender, EventArgs e)
         {
             int? selectedSampleId = GetSelectedSampleId(); // Запоминаем выделенный образец
@@ -495,7 +491,6 @@ namespace Diplom_project
             }
         }
 
-        
         private void toolStripMenuSortDatetime_Click(object sender, EventArgs e)
         {
             int? selectedSampleId = GetSelectedSampleId(); // Запоминаем выделенный образец
@@ -514,6 +509,7 @@ namespace Diplom_project
                 }
             }
         }
+
         private void listViewClients_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (listViewClients.SelectedItems.Count > 0) // Проверяем, есть ли выделенный элемент
@@ -527,7 +523,6 @@ namespace Diplom_project
                 }
             }
         }
-
 
         private void sortToolStripMenuItem_Click(object sender, EventArgs e) { }
 
@@ -604,10 +599,7 @@ namespace Diplom_project
             }
         }
 
-
-
-        // Метод для загрузки образцов в listViewSamples
-
+        // Метод для загрузки образцов в listViewSample
         private void LoadSamples(int? selectedSampleId = null)
         {
             ClearSamples();
@@ -666,6 +658,7 @@ ORDER BY {(sampleSortOrder == "Note" ? "s.Note ASC" : "strftime('%Y-%m-%d %H:%M:
 
             
         }
+
         public void ClearSamples()
         {
             textBoxNote.Text = null;
@@ -764,8 +757,6 @@ ORDER BY {(sampleSortOrder == "Note" ? "s.Note ASC" : "strftime('%Y-%m-%d %H:%M:
             }
         }
 
-
-
         private void listViewClients_ColumnClick(object sender, ColumnClickEventArgs e)
         {
             int? selectedClientId = GetSelectedClientId();
@@ -800,8 +791,6 @@ ORDER BY {(sampleSortOrder == "Note" ? "s.Note ASC" : "strftime('%Y-%m-%d %H:%M:
                 }
             }
         }
-
-       
 
         private void listViewSamples_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -1022,12 +1011,11 @@ ORDER BY {(sampleSortOrder == "Note" ? "s.Note ASC" : "strftime('%Y-%m-%d %H:%M:
             }
         }
 
-        
-
         private void label1_Click_2(object sender, EventArgs e)
         {
 
-        }
+        }\
+
         //загрузка экспериментов для выбранного образца
         private void LoadExperimentsForSelectedSample()
         {
@@ -1101,7 +1089,6 @@ ORDER BY
 
         }
 
-
         //форма добавления эксперимента(маленькая форма)
         private string ShowInputDialog(string text, string caption)
         {
@@ -1148,6 +1135,24 @@ ORDER BY
             {
                 MessageBox.Show("Введите корректное числовое значение!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
+            }
+
+            // 🔹 Проверяем, существует ли уже такой номер
+            using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
+            {
+                connection.Open();
+                string checkQuery = "SELECT COUNT(*) FROM Experiment WHERE Number = @Number";
+                using (SQLiteCommand cmd = new SQLiteCommand(checkQuery, connection))
+                {
+                    cmd.Parameters.AddWithValue("@Number", experimentNumber);
+                    int count = Convert.ToInt32(cmd.ExecuteScalar());
+
+                    if (count > 0)
+                    {
+                        MessageBox.Show($"Эксперимент с номером {experimentNumber} уже существует!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return; // ❌ Не добавляем дубликат
+                    }
+                }
             }
 
             int newExperimentId = 0;
@@ -1217,6 +1222,7 @@ ORDER BY
                 }
             }
         }
+
         private int? GetSelectedExperimentId()
         {
             if (listViewExperiments.SelectedItems.Count == 0)
@@ -1315,6 +1321,7 @@ ORDER BY
         private void listViewExperiments_SelectedIndexChanged(object sender, EventArgs e)
         {
         }
+
         private void listViewExperiments_ColumnClick(object sender, ColumnClickEventArgs e)
         {
             int? selectedExp = GetSelectedExperimentId();
@@ -1415,7 +1422,6 @@ ORDER BY
 
         }
 
-
         private string DecodeError(int errorCode)
         {
             switch (errorCode)
@@ -1441,9 +1447,6 @@ ORDER BY
             }
         }
 
-    
-    
-    
     
     
     
