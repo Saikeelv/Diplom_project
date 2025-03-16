@@ -1014,7 +1014,7 @@ ORDER BY {(sampleSortOrder == "Note" ? "s.Note ASC" : "strftime('%Y-%m-%d %H:%M:
         private void label1_Click_2(object sender, EventArgs e)
         {
 
-        }\
+        }
 
         //загрузка экспериментов для выбранного образца
         private void LoadExperimentsForSelectedSample()
@@ -1412,6 +1412,7 @@ ORDER BY
 
                 // Подписываемся на закрытие формы, чтобы обновить список экспериментов
                 experimentForm.FormClosed += (s, args) => LoadExperimentsForSelectedSample();
+                experimentForm.FormClosed += (s, args) => HighlightExperiment(experimentId.Value);
                 experimentForm.ShowDialog();
             }
             catch (Exception ex)
@@ -1447,9 +1448,22 @@ ORDER BY
             }
         }
 
-    
-    
-    
+        public void HighlightExperiment(int experimentId)
+        {
+            foreach (ListViewItem item in listViewExperiments.Items)
+            {
+                if (item.Tag != null && Convert.ToInt32(item.Tag) == experimentId)
+                {
+                    item.Selected = true;
+                    listViewExperiments.Select();
+                    listViewExperiments.Focus();
+                    break;
+                }
+            }
+        }
+
+
+
     }
 
 }

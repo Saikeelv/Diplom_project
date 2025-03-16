@@ -77,10 +77,12 @@ namespace Diplom_project
 
         private void buttonStopExp_Click(object sender, EventArgs e)
         {
-            
+            if (isExperimentRunning || isTestMode)
+            {
                 SendCommand("0");
                 ToggleButtons(false); // Разблокировка кнопок
                 ExperimentFinished();  // Записываем данные и закрываем форму
+            }
             
         }
 
