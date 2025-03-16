@@ -1376,20 +1376,78 @@ ORDER BY
                 return;
             }
 
-            Form6 experimentForm = new Form6(selectedPort, selectedFilePath, experimentId.Value);
-           
-            // Подписываемся на закрытие формы, чтобы обновить список экспериментов
-            experimentForm.FormClosed += (s, args) => LoadExperimentsForSelectedSample();
 
 
-            
+            // 🔹 Проверяем, проводился ли уже этот эксперимент
+            using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
+            {
+                connection.Open();
+                string query = "SELECT Error FROM Experiment WHERE Experiment_PK = @ExperimentId";
+                using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@ExperimentId", experimentId);
+                    object result = command.ExecuteScalar();
 
-            experimentForm.ShowDialog();
-            
+                    if (result != null && int.TryParse(result.ToString(), out int errorCode) && errorCode != 0)
+                    {
+                        string errorDescription = DecodeError(errorCode);
+                        MessageBox.Show($"Эксперимент уже проведен: {errorCode} - {errorDescription}",
+                                        "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return; // ❌ Не запускаем эксперимент, если уже есть данные
+                    }
+                }
+            }
+
+            // 🔹 Если ошибки нет, запускаем эксперимент
+            try
+            {
+                Form6 experimentForm = new Form6(selectedPort, selectedFilePath, experimentId.Value);
+
+                // Подписываемся на закрытие формы, чтобы обновить список экспериментов
+                experimentForm.FormClosed += (s, args) => LoadExperimentsForSelectedSample();
+                experimentForm.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при открытии окна эксперимента: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
 
         }
 
-        
-        
+
+        private string DecodeError(int errorCode)
+        {
+            switch (errorCode)
+            {
+                case 1: return "Эксперимент проведен успешно.";
+                case 777: return "Эксперимент Остановлен пользователем.";
+                case 11: return "Датчик температуры не отвечает.";
+                case 12: return "Датчик температуры выдает неверные показания.";
+                case 13: return "Перегрев масла.";
+                case 21: return "Датчик веса не отвечает.";
+                case 22: return "Датчик веса выдает неверные показания.";
+                case 23: return "Обрыв стягивающего механизма.";
+                case 31: return "Датчик скорости не отвечает.";
+                case 32: return "Датчик скорости выдает неверные показания.";
+                case 33: return "Засор в датчике скорости.";
+                case 41: return "Датчик силы тока мотора не отвечает.";
+                case 42: return "Датчик силы тока мотора выдает неверные показания.";
+                case 43: return "Перегрузка по току мотора.";
+                case 51: return "Датчик силы тока прижимного механизма не отвечает.";
+                case 52: return "Датчик силы тока прижимного механизма выдает неверные значения.";
+                case 53: return "Перегрузка по току прижимного механизма.";
+                default: return "Неизвестная ошибка.";
+            }
+        }
+
+    
+    
+    
+    
+    
+    
     }
+
 }
+
