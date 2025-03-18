@@ -73,7 +73,7 @@ void loop() {
     Serial.print(";");
     Serial.print(experimentNumber + 1);
     Serial.print(";");
-    Serial.println("404");  // Код ошибки
+    Serial.println("43");  // Код ошибки
     
     // Завершаем эксперимент
     isRunning = false;

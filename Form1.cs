@@ -1448,6 +1448,7 @@ ORDER BY
             }
         }
 
+        //выделение после завкрытия формы6
         public void HighlightExperiment(int experimentId)
         {
             foreach (ListViewItem item in listViewExperiments.Items)
@@ -1462,8 +1463,19 @@ ORDER BY
             }
         }
 
+        private void buttonDataExp_Click(object sender, EventArgs e)
+        {
+            int? experimentId = GetSelectedExperimentId();
+            if (experimentId == null)
+            {
+                MessageBox.Show("Выберите эксперимент!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
-
+            // Открываем `Form7`, передавая `experimentId`
+            Form7 graphForm = new Form7(experimentId.Value, ConnectionString);
+            graphForm.ShowDialog();
+        }
     }
 
 }

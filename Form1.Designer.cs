@@ -64,6 +64,10 @@
             this.samplesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSortNote = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuSortDatetime = new System.Windows.Forms.ToolStripMenuItem();
+            this.experimentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sortByToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sortByDateTimeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sortByErrorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonChangeDataClient = new System.Windows.Forms.Button();
             this.listViewClients = new System.Windows.Forms.ListView();
@@ -73,10 +77,7 @@
             this.buttonAddExp = new System.Windows.Forms.Button();
             this.buttonStartExperiment = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.experimentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.sortByToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.sortByDateTimeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.sortByErrorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.buttonDataExp = new System.Windows.Forms.Button();
             this.menuStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -329,7 +330,7 @@
             this.settingsToolStripMenuItem});
             this.menuStrip2.Location = new System.Drawing.Point(0, 0);
             this.menuStrip2.Name = "menuStrip2";
-            this.menuStrip2.Size = new System.Drawing.Size(1541, 28);
+            this.menuStrip2.Size = new System.Drawing.Size(1926, 38);
             this.menuStrip2.TabIndex = 31;
             this.menuStrip2.Text = "menuStrip2";
             // 
@@ -341,21 +342,21 @@
             this.sortToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(76, 24);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(76, 34);
             this.settingsToolStripMenuItem.Text = "Settings";
             this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
             // 
             // selectBDToolStripMenuItem
             // 
             this.selectBDToolStripMenuItem.Name = "selectBDToolStripMenuItem";
-            this.selectBDToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.selectBDToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
             this.selectBDToolStripMenuItem.Text = "Select BD";
             this.selectBDToolStripMenuItem.Click += new System.EventHandler(this.selectBDToolStripMenuItem_Click);
             // 
             // selectCOMPortToolStripMenuItem
             // 
             this.selectCOMPortToolStripMenuItem.Name = "selectCOMPortToolStripMenuItem";
-            this.selectCOMPortToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.selectCOMPortToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
             this.selectCOMPortToolStripMenuItem.Text = "Select COM port";
             this.selectCOMPortToolStripMenuItem.Click += new System.EventHandler(this.selectCOMPortToolStripMenuItem_Click);
             // 
@@ -366,7 +367,7 @@
             this.samplesToolStripMenuItem,
             this.experimentsToolStripMenuItem});
             this.sortToolStripMenuItem.Name = "sortToolStripMenuItem";
-            this.sortToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.sortToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
             this.sortToolStripMenuItem.Text = "Sort";
             this.sortToolStripMenuItem.Click += new System.EventHandler(this.sortToolStripMenuItem_Click);
             // 
@@ -376,7 +377,7 @@
             this.sortedByFIOToolStripMenuItem,
             this.sortedByPhoneNumToolStripMenuItem});
             this.clientsToolStripMenuItem.Name = "clientsToolStripMenuItem";
-            this.clientsToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.clientsToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
             this.clientsToolStripMenuItem.Text = "Clients";
             this.clientsToolStripMenuItem.Click += new System.EventHandler(this.clientsToolStripMenuItem_Click);
             // 
@@ -400,27 +401,58 @@
             this.toolStripMenuItemSortNote,
             this.toolStripMenuSortDatetime});
             this.samplesToolStripMenuItem.Name = "samplesToolStripMenuItem";
-            this.samplesToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.samplesToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
             this.samplesToolStripMenuItem.Text = "Samples";
             // 
             // toolStripMenuItemSortNote
             // 
             this.toolStripMenuItemSortNote.Name = "toolStripMenuItemSortNote";
-            this.toolStripMenuItemSortNote.Size = new System.Drawing.Size(224, 26);
+            this.toolStripMenuItemSortNote.Size = new System.Drawing.Size(214, 26);
             this.toolStripMenuItemSortNote.Text = "Sort by Note";
             this.toolStripMenuItemSortNote.Click += new System.EventHandler(this.toolStripMenuItemSortNote_Click);
             // 
             // toolStripMenuSortDatetime
             // 
             this.toolStripMenuSortDatetime.Name = "toolStripMenuSortDatetime";
-            this.toolStripMenuSortDatetime.Size = new System.Drawing.Size(224, 26);
+            this.toolStripMenuSortDatetime.Size = new System.Drawing.Size(214, 26);
             this.toolStripMenuSortDatetime.Text = "Sort by Date/Time";
             this.toolStripMenuSortDatetime.Click += new System.EventHandler(this.toolStripMenuSortDatetime_Click);
+            // 
+            // experimentsToolStripMenuItem
+            // 
+            this.experimentsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.sortByToolStripMenuItem,
+            this.sortByDateTimeToolStripMenuItem,
+            this.sortByErrorToolStripMenuItem});
+            this.experimentsToolStripMenuItem.Name = "experimentsToolStripMenuItem";
+            this.experimentsToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
+            this.experimentsToolStripMenuItem.Text = "Experiments";
+            // 
+            // sortByToolStripMenuItem
+            // 
+            this.sortByToolStripMenuItem.Name = "sortByToolStripMenuItem";
+            this.sortByToolStripMenuItem.Size = new System.Drawing.Size(214, 26);
+            this.sortByToolStripMenuItem.Text = "Sort by Num. Exp";
+            this.sortByToolStripMenuItem.Click += new System.EventHandler(this.sortByToolStripMenuItem_Click);
+            // 
+            // sortByDateTimeToolStripMenuItem
+            // 
+            this.sortByDateTimeToolStripMenuItem.Name = "sortByDateTimeToolStripMenuItem";
+            this.sortByDateTimeToolStripMenuItem.Size = new System.Drawing.Size(214, 26);
+            this.sortByDateTimeToolStripMenuItem.Text = "Sort by Date/Time";
+            this.sortByDateTimeToolStripMenuItem.Click += new System.EventHandler(this.sortByDateTimeToolStripMenuItem_Click);
+            // 
+            // sortByErrorToolStripMenuItem
+            // 
+            this.sortByErrorToolStripMenuItem.Name = "sortByErrorToolStripMenuItem";
+            this.sortByErrorToolStripMenuItem.Size = new System.Drawing.Size(214, 26);
+            this.sortByErrorToolStripMenuItem.Text = "Sort by Error";
+            this.sortByErrorToolStripMenuItem.Click += new System.EventHandler(this.sortByErrorToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -525,41 +557,23 @@
             this.label1.Text = "Experiments";
             this.label1.Click += new System.EventHandler(this.label1_Click_2);
             // 
-            // experimentsToolStripMenuItem
+            // buttonDataExp
             // 
-            this.experimentsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.sortByToolStripMenuItem,
-            this.sortByDateTimeToolStripMenuItem,
-            this.sortByErrorToolStripMenuItem});
-            this.experimentsToolStripMenuItem.Name = "experimentsToolStripMenuItem";
-            this.experimentsToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.experimentsToolStripMenuItem.Text = "Experiments";
-            // 
-            // sortByToolStripMenuItem
-            // 
-            this.sortByToolStripMenuItem.Name = "sortByToolStripMenuItem";
-            this.sortByToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.sortByToolStripMenuItem.Text = "Sort by Num. Exp";
-            this.sortByToolStripMenuItem.Click += new System.EventHandler(this.sortByToolStripMenuItem_Click);
-            // 
-            // sortByDateTimeToolStripMenuItem
-            // 
-            this.sortByDateTimeToolStripMenuItem.Name = "sortByDateTimeToolStripMenuItem";
-            this.sortByDateTimeToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.sortByDateTimeToolStripMenuItem.Text = "Sort by Date/Time";
-            this.sortByDateTimeToolStripMenuItem.Click += new System.EventHandler(this.sortByDateTimeToolStripMenuItem_Click);
-            // 
-            // sortByErrorToolStripMenuItem
-            // 
-            this.sortByErrorToolStripMenuItem.Name = "sortByErrorToolStripMenuItem";
-            this.sortByErrorToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.sortByErrorToolStripMenuItem.Text = "Sort by Error";
-            this.sortByErrorToolStripMenuItem.Click += new System.EventHandler(this.sortByErrorToolStripMenuItem_Click);
+            this.buttonDataExp.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonDataExp.Location = new System.Drawing.Point(534, 523);
+            this.buttonDataExp.Name = "buttonDataExp";
+            this.buttonDataExp.Size = new System.Drawing.Size(420, 39);
+            this.buttonDataExp.TabIndex = 45;
+            this.buttonDataExp.TabStop = false;
+            this.buttonDataExp.Text = "EXP DATA";
+            this.buttonDataExp.UseVisualStyleBackColor = true;
+            this.buttonDataExp.Click += new System.EventHandler(this.buttonDataExp_Click);
             // 
             // Main
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(1541, 823);
+            this.Controls.Add(this.buttonDataExp);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.buttonStartExperiment);
             this.Controls.Add(this.buttonDelExp);
@@ -655,6 +669,7 @@
         private System.Windows.Forms.ToolStripMenuItem sortByToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sortByDateTimeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sortByErrorToolStripMenuItem;
+        private System.Windows.Forms.Button buttonDataExp;
     }
 }
 
