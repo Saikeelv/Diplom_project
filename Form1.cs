@@ -1474,7 +1474,7 @@ ORDER BY
 
             // Открываем `Form7`, передавая `experimentId`
             Form7 graphForm = new Form7(experimentId.Value, ConnectionString);
-            graphForm.ShowDialog();
+            graphForm.Show();
         }
     }
 

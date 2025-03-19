@@ -36,8 +36,8 @@
             this.labelX = new System.Windows.Forms.Label();
             this.labelY = new System.Windows.Forms.Label();
             this.buttonMake = new System.Windows.Forms.Button();
-            this.chartGraph = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            ((System.ComponentModel.ISupportInitialize)(this.chartGraph)).BeginInit();
+            this.chartExp = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            ((System.ComponentModel.ISupportInitialize)(this.chartExp)).BeginInit();
             this.SuspendLayout();
             // 
             // comboBoxX
@@ -90,28 +90,28 @@
             this.buttonMake.UseVisualStyleBackColor = true;
             this.buttonMake.Click += new System.EventHandler(this.buttonMake_Click);
             // 
-            // chartGraph
+            // chartExp
             // 
             chartArea1.Name = "ChartArea1";
-            this.chartGraph.ChartAreas.Add(chartArea1);
+            this.chartExp.ChartAreas.Add(chartArea1);
             legend1.Name = "Legend1";
-            this.chartGraph.Legends.Add(legend1);
-            this.chartGraph.Location = new System.Drawing.Point(26, 145);
-            this.chartGraph.Name = "chartGraph";
+            this.chartExp.Legends.Add(legend1);
+            this.chartExp.Location = new System.Drawing.Point(26, 103);
+            this.chartExp.Name = "chartExp";
             series1.ChartArea = "ChartArea1";
             series1.Legend = "Legend1";
             series1.Name = "Series1";
-            this.chartGraph.Series.Add(series1);
-            this.chartGraph.Size = new System.Drawing.Size(550, 409);
-            this.chartGraph.TabIndex = 5;
-            this.chartGraph.Text = "chart1";
+            this.chartExp.Series.Add(series1);
+            this.chartExp.Size = new System.Drawing.Size(1176, 559);
+            this.chartExp.TabIndex = 5;
+            this.chartExp.Text = "chart1";
             // 
             // Form7
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1240, 684);
-            this.Controls.Add(this.chartGraph);
+            this.Controls.Add(this.chartExp);
             this.Controls.Add(this.buttonMake);
             this.Controls.Add(this.labelY);
             this.Controls.Add(this.labelX);
@@ -120,7 +120,7 @@
             this.Name = "Form7";
             this.Text = "Graph";
             this.Load += new System.EventHandler(this.Form7_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.chartGraph)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartExp)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -133,6 +133,6 @@
         private System.Windows.Forms.Label labelX;
         private System.Windows.Forms.Label labelY;
         private System.Windows.Forms.Button buttonMake;
-        private System.Windows.Forms.DataVisualization.Charting.Chart chartGraph;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chartExp;
     }
 }

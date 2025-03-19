@@ -15,6 +15,7 @@ using System.Windows.Forms.DataVisualization.Charting;
 
 
 
+
 namespace Diplom_project
 {
     public partial class Form7: Form
@@ -44,7 +45,7 @@ namespace Diplom_project
         }
 
 
-
+        /*
         private void buttonMake_Click(object sender, EventArgs e)
         {
             if (comboBoxX.SelectedItem == null || comboBoxY.SelectedItem == null)
@@ -123,6 +124,114 @@ namespace Diplom_project
 
             MessageBox.Show($"Файл успешно сохранен на рабочем столе!\n{filePath}", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
             this.Close();
+        }
+        */
+        private void PlotGraph(Dictionary<int, List<(double, double)>> experimentsData, string axisX, string axisY)
+        {
+            chartExp.Series.Clear();
+            chartExp.ChartAreas.Clear();
+
+            // Добавляем область графика
+            ChartArea chartArea = new ChartArea("MainArea");
+            chartExp.ChartAreas.Add(chartArea);
+
+            // Массив цветов (чтобы испытания различались)
+            Color[] colors = { Color.Red, Color.Blue, Color.Green, Color.Orange, Color.Purple,
+                       Color.Cyan, Color.Magenta, Color.Brown, Color.DarkBlue, Color.DarkGreen };
+
+            int colorIndex = 0;
+
+            foreach (var experiment in experimentsData)
+            {
+                string seriesName = $"Испытание {experiment.Key}";
+                Series series = new Series(seriesName)
+                {
+                    ChartType = SeriesChartType.Point, // Точки, без соединения линиями
+                    MarkerStyle = MarkerStyle.Circle,
+                    MarkerSize = 7,
+                    Color = colors[colorIndex % colors.Length] // Назначаем цвет
+                };
+
+                foreach (var (x, y) in experiment.Value)
+                {
+                    series.Points.AddXY(x, y);
+                }
+
+                chartExp.Series.Add(series);
+
+                colorIndex++; // Меняем цвет для следующего испытания
+            }
+
+            // Настраиваем оси
+            chartExp.ChartAreas["MainArea"].AxisX.Title = axisX;
+            chartExp.ChartAreas["MainArea"].AxisY.Title = axisY;
+            chartExp.ChartAreas["MainArea"].AxisX.MajorGrid.LineDashStyle = ChartDashStyle.Dash;
+            chartExp.ChartAreas["MainArea"].AxisY.MajorGrid.LineDashStyle = ChartDashStyle.Dash;
+        }
+
+
+
+        private void buttonMake_Click(object sender, EventArgs e)
+        {
+            if (comboBoxX.SelectedItem == null || comboBoxY.SelectedItem == null)
+            {
+                MessageBox.Show("Выберите обе оси!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string columnX = comboBoxX.SelectedItem.ToString();
+            string columnY = comboBoxY.SelectedItem.ToString();
+
+            Dictionary<int, List<(double, double)>> experimentsData = new Dictionary<int, List<(double, double)>>();
+
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+                string query = $@"SELECT run_of_test, {columnX}, {columnY} FROM Data_of_exp WHERE Experiment_FK = @ExperimentId ORDER BY run_of_test";
+
+                using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@ExperimentId", experimentId);
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            int runOfTest = reader.GetInt32(0);
+
+                            string rawX = reader.IsDBNull(1) ? "" : reader.GetString(1).Replace(',', '.');
+                            string rawY = reader.IsDBNull(2) ? "" : reader.GetString(2).Replace(',', '.');
+
+                            string[] valuesX = rawX.Split(';');
+                            string[] valuesY = rawY.Split(';');
+
+                            int minLength = Math.Min(valuesX.Length, valuesY.Length);
+
+                            if (!experimentsData.ContainsKey(runOfTest))
+                            {
+                                experimentsData[runOfTest] = new List<(double, double)>();
+                            }
+
+                            for (int i = 0; i < minLength; i++)
+                            {
+                                if (double.TryParse(valuesX[i], NumberStyles.Any, CultureInfo.InvariantCulture, out double x) &&
+                                    double.TryParse(valuesY[i], NumberStyles.Any, CultureInfo.InvariantCulture, out double y))
+                                {
+                                    experimentsData[runOfTest].Add((x, y));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (experimentsData.Count == 0)
+            {
+                MessageBox.Show("Нет данных для построения!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Отображаем график с разными цветами для каждого испытания
+            PlotGraph(experimentsData, columnX, columnY);
         }
 
 
