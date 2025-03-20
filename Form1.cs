@@ -69,12 +69,12 @@ namespace Diplom_project
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Ошибка подключения: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($"Connection error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Файл конфигурации найден, но путь к базе данных неверен.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("The config file was not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
 
                 // Загружаем последний выбранный COM-порт, если он есть
@@ -85,7 +85,7 @@ namespace Diplom_project
             }
             else
             {
-                MessageBox.Show("Файл конфигурации не найден. Выберите базу данных.", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("The config file was not found. Choose a database.", "Attation", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
@@ -130,13 +130,13 @@ namespace Diplom_project
             int? clientId = GetSelectedClientId();
             if (clientId == null)
             {
-                MessageBox.Show("Выберите клиента для удаления!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Select the client to delete!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             DialogResult result = MessageBox.Show(
-                "Вы уверены, что хотите удалить клиента и все связанные с ним данные?",
-                "Подтверждение удаления",
+                "Are you sure you want to delete the client and all related data?",
+                "Confirmation of deletion",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Warning);
 
@@ -207,7 +207,7 @@ namespace Diplom_project
                     catch (Exception ex)
                     {
                         transaction.Rollback();
-                        MessageBox.Show($"Ошибка при удалении клиента: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($"Error when deleting a client: {ex.Message}", "Erorr", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
@@ -216,19 +216,19 @@ namespace Diplom_project
         private void Main_Load(object sender, EventArgs e)
         {
             LoadDatabasePath();
-            listViewClients.Columns.Add("ФИО", 230);
-            listViewClients.Columns.Add("Телефон").Width = -2;
+            listViewClients.Columns.Add("FIO", 230);
+            listViewClients.Columns.Add("Phone number").Width = -2;
 
             listViewClients.View = View.Details;
             listViewClients.SelectedIndexChanged += listViewClients_SelectedIndexChanged;//обработчик событий
 
             listViewSamples.Columns.Add("Note", 230);
-            listViewSamples.Columns.Add("Дата и время").Width = -2;
+            listViewSamples.Columns.Add("Date time").Width = -2;
 
             listViewExperiments.Columns.Clear();
             listViewExperiments.Columns.Add("№", 100);
-            listViewExperiments.Columns.Add("Дата регистрации", 150);
-            listViewExperiments.Columns.Add("Состояние").Width = -2; // Автоматическая ширина
+            listViewExperiments.Columns.Add("Registration date", 150);
+            listViewExperiments.Columns.Add("Condition").Width = -2; // Автоматическая ширина
 
 
             //Выбор первого элемента в списке
@@ -264,7 +264,7 @@ namespace Diplom_project
             listViewSamples.Items.Clear(); 
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
-                openFileDialog.Title = "Выберите файл базы данных";
+                openFileDialog.Title = "Select the database file";
                 openFileDialog.Filter = "SQLite Database (*.db;*.sqlite)|*.db;*.sqlite|All files (*.*)|*.*";
                 openFileDialog.RestoreDirectory = true;
 
@@ -287,7 +287,7 @@ namespace Diplom_project
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Ошибка подключения: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($"Connection error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
@@ -338,7 +338,7 @@ namespace Diplom_project
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка загрузки клиентов: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error loading clients: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             
         }
@@ -350,13 +350,13 @@ namespace Diplom_project
 
             if (ports.Length == 0)
             {
-                MessageBox.Show("Нет доступных COM-портов.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("There are no COM ports available.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             Form comPortForm = new Form
             {
-                Text = "Выбор COM-порта",
+                Text = "Choosing a COM port",
                 Size = new System.Drawing.Size(300, 150),
                 FormBorderStyle = FormBorderStyle.FixedDialog,
                 StartPosition = FormStartPosition.CenterScreen
@@ -370,14 +370,14 @@ namespace Diplom_project
 
             Button buttonOK = new Button
             {
-                Text = "Выбрать",
+                Text = "Accept",
                 Dock = DockStyle.Bottom
             };
 
             buttonOK.Click += (s, args) =>
             {
                 selectedPort = comboBoxPorts.SelectedItem.ToString();
-                MessageBox.Show($"Выбранный COM-порт: {selectedPort}", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"Selected COM port: {selectedPort}", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 comPortForm.Close();
 
                 // Сохраняем COM-порт во вторую строку файла конфигурации
@@ -393,7 +393,7 @@ namespace Diplom_project
         {
             if (listViewClients.SelectedItems.Count == 0) // Проверяем, есть ли выделенный элемент
             {
-                MessageBox.Show("Выберите клиента для изменения!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Select the client to change!!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -732,7 +732,7 @@ ORDER BY {(sampleSortOrder == "Note" ? "s.Note ASC" : "strftime('%Y-%m-%d %H:%M:
             {
                 sampleSortOrder = "Note"; // Сортируем по названию образца
             }
-            else if (columnName == "Дата и время")
+            else if (columnName == "Date time")
             {
                 sampleSortOrder = "DateTime"; // Сортируем по дате и времени
             }
@@ -764,12 +764,12 @@ ORDER BY {(sampleSortOrder == "Note" ? "s.Note ASC" : "strftime('%Y-%m-%d %H:%M:
             string columnName = listViewClients.Columns[e.Column].Text;
 
             //сортруем в зависимости от выбранной колонки            
-            if (columnName == "ФИО")
+            if (columnName == "FIO")
             {
                 SortOrder = "FIO"; // Меняем сортировку на ФИО
                 
             }
-            if (columnName == "Телефон")
+            if (columnName == "Phone number")
             {
                 SortOrder = "Phone_num"; // Меняем сортировку на телефон
                 
@@ -857,7 +857,7 @@ ORDER BY {(sampleSortOrder == "Note" ? "s.Note ASC" : "strftime('%Y-%m-%d %H:%M:
             int? clientId = GetSelectedClientId();
             if (clientId == null)
             {
-                MessageBox.Show("Выберите клиента перед добавлением образца!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Select the client before adding the sample!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             AddSample addSampleForm = new AddSample(selectedFilePath, this);
@@ -888,15 +888,15 @@ ORDER BY {(sampleSortOrder == "Note" ? "s.Note ASC" : "strftime('%Y-%m-%d %H:%M:
             int? sampleId = GetSelectedSampleId();
             if (sampleId == null)
             {
-                MessageBox.Show("Выберите образец для удаления!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Select a sample to delete!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
            
 
             DialogResult result = MessageBox.Show(
-                "Вы уверены, что хотите удалить этот образец и все связанные с ним данные?",
-                "Подтверждение удаления",
+                "Are you sure you want to delete this sample and all related data??",
+                "Confirmation of deletion",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Warning);
 
@@ -954,7 +954,7 @@ ORDER BY {(sampleSortOrder == "Note" ? "s.Note ASC" : "strftime('%Y-%m-%d %H:%M:
                         }
                         else
                         {
-                            MessageBox.Show("Ошибка: образец не найден!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("Error: Sample not found!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                 }
@@ -965,7 +965,7 @@ ORDER BY {(sampleSortOrder == "Note" ? "s.Note ASC" : "strftime('%Y-%m-%d %H:%M:
 
             catch (Exception ex)
             {
-                MessageBox.Show("Ошибка при удалении: " + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error when deleting: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             // 🔹 Выбираем элемент выше удаленного (если он есть)
             if (listViewSamples.Items.Count > 0)
@@ -982,7 +982,7 @@ ORDER BY {(sampleSortOrder == "Note" ? "s.Note ASC" : "strftime('%Y-%m-%d %H:%M:
             int? selectedSampleId = GetSelectedSampleId();
             if (listViewSamples.SelectedItems.Count == 0)
             {
-                MessageBox.Show("Выберите образец для изменения!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Select a sample to change!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -990,7 +990,7 @@ ORDER BY {(sampleSortOrder == "Note" ? "s.Note ASC" : "strftime('%Y-%m-%d %H:%M:
             int? sampleId = GetSelectedSampleId();
             if (sampleId == null)
             {
-                MessageBox.Show("Ошибка: Не удалось получить ID образца.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error: Couldn't get sample ID.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -1118,22 +1118,22 @@ ORDER BY
             int? selectedSampleId = GetSelectedSampleId();
             if (selectedSampleId == null)
             {
-                MessageBox.Show("Выберите образец перед добавлением эксперимента!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Select a sample before adding an experiment!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             // Открываем диалог для ввода номера эксперимента
-            string input = ShowInputDialog("Введите номер эксперимента:", "Добавление эксперимента");
+            string input = ShowInputDialog("Enter the experiment number:", "Adding an experiment");
 
             if (string.IsNullOrWhiteSpace(input))
             {
-                MessageBox.Show("Номер эксперимента не может быть пустым!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("The experiment number cannot be empty!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (!int.TryParse(input, out int experimentNumber))
             {
-                MessageBox.Show("Введите корректное числовое значение!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Enter the correct numeric value!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -1149,7 +1149,7 @@ ORDER BY
 
                     if (count > 0)
                     {
-                        MessageBox.Show($"Эксперимент с номером {experimentNumber} уже существует!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($"The experiment with the {experimentNumber} already exists!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return; // ❌ Не добавляем дубликат
                     }
                 }
@@ -1202,7 +1202,7 @@ ORDER BY
                     catch (Exception ex)
                     {
                         transaction.Rollback();
-                        MessageBox.Show($"Ошибка при добавлении эксперимента: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($"Error when adding an experiment: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
@@ -1249,13 +1249,13 @@ ORDER BY
             int? selectedExperimentId = GetSelectedExperimentId();
             if (selectedExperimentId == null)
             {
-                MessageBox.Show("Выберите эксперимент для удаления!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Select an experiment to delete!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             DialogResult result = MessageBox.Show(
-                "Вы уверены, что хотите удалить этот эксперимент и все связанные с ним данные?",
-                "Подтверждение удаления",
+                "Are you sure you want to delete this experiment and all related data??",
+                "Confirmation of deletion",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Warning);
 
@@ -1296,7 +1296,7 @@ ORDER BY
                     catch (Exception ex)
                     {
                         transaction.Rollback();
-                        MessageBox.Show($"Ошибка при удалении эксперимента: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($"Error deleting an experiment: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
@@ -1331,11 +1331,11 @@ ORDER BY
             {
                 experimentSortOrder = "Number";
             }
-            else if (columnName == "Дата регистрации")
+            else if (columnName == "Registration date")
             {
                 experimentSortOrder = "DateTime";
             }
-            else if (columnName == "Состояние")
+            else if (columnName == "Condition")
             {
                 experimentSortOrder = "Error";
             }
@@ -1366,20 +1366,20 @@ ORDER BY
         {
             if (string.IsNullOrEmpty(selectedPort))
             {
-                MessageBox.Show("Выберите COM-порт перед началом эксперимента!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Select the COM port before starting the experiment!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             // 🔹 Проверяем, доступен ли COM-порт
             string[] availablePorts = SerialPort.GetPortNames();
             if (!availablePorts.Contains(selectedPort))
             {
-                MessageBox.Show($"COM-порт {selectedPort} не найден! Подключите устройство или выберите другой порт.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"The COM port {selectedPort} was not found! Connect the device or select another port.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return; // ❌ Не открываем `Form6`, если порта нет
             }
             int? experimentId = GetSelectedExperimentId(); // Получаем ID выделенного эксперимента
             if (experimentId == null)
             {
-                MessageBox.Show("Выберите эксперимент для проведения испытаний!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Select an experiment to test!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -1398,8 +1398,8 @@ ORDER BY
                     if (result != null && int.TryParse(result.ToString(), out int errorCode) && errorCode != 0)
                     {
                         string errorDescription = DecodeError(errorCode);
-                        MessageBox.Show($"Эксперимент уже проведен: {errorCode} - {errorDescription}",
-                                        "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show($"The experiment has already been conducted: {errorCode} - {errorDescription}",
+                                        "Attation", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return; // ❌ Не запускаем эксперимент, если уже есть данные
                     }
                 }
@@ -1417,7 +1417,7 @@ ORDER BY
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка при открытии окна эксперимента: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error when opening the experiment window: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
 
@@ -1427,24 +1427,24 @@ ORDER BY
         {
             switch (errorCode)
             {
-                case 1: return "Эксперимент проведен успешно.";
-                case 777: return "Эксперимент Остановлен пользователем.";
-                case 11: return "Датчик температуры не отвечает.";
-                case 12: return "Датчик температуры выдает неверные показания.";
-                case 13: return "Перегрев масла.";
-                case 21: return "Датчик веса не отвечает.";
-                case 22: return "Датчик веса выдает неверные показания.";
-                case 23: return "Обрыв стягивающего механизма.";
-                case 31: return "Датчик скорости не отвечает.";
-                case 32: return "Датчик скорости выдает неверные показания.";
-                case 33: return "Засор в датчике скорости.";
-                case 41: return "Датчик силы тока мотора не отвечает.";
-                case 42: return "Датчик силы тока мотора выдает неверные показания.";
-                case 43: return "Перегрузка по току мотора.";
-                case 51: return "Датчик силы тока прижимного механизма не отвечает.";
-                case 52: return "Датчик силы тока прижимного механизма выдает неверные значения.";
-                case 53: return "Перегрузка по току прижимного механизма.";
-                default: return "Неизвестная ошибка.";
+                case 1: return "The experiment was carried out successfully.";
+                case 777: return "The experiment Was Stopped by the user.";
+                case 11: return "The temperature sensor is not responding.";
+                case 12: return "The temperature sensor gives incorrect readings.";
+                case 13: return "Overheating of the oil.";
+                case 21: return "The weight sensor is not responding.";
+                case 22: return "The weight sensor gives incorrect readings.";
+                case 23: return "Breakage of the tightening mechanism.";
+                case 31: return "The speed sensor is not responding.";
+                case 32: return "The speed sensor gives incorrect readings.";
+                case 33: return "The gap in the speed sensor.";
+                case 41: return "The motor current sensor is not responding.";
+                case 42: return "The motor current sensor gives incorrect readings.";
+                case 43: return "Overcurrent of the motor.";
+                case 51: return "The current sensor of the clamping mechanism is not responding.";
+                case 52: return "The current sensor of the clamping mechanism outputs incorrect values.";
+                case 53: return "Overcurrent of the clamping mechanism.";
+                default: return "Unknown error.";
             }
         }
 
@@ -1468,7 +1468,7 @@ ORDER BY
             int? experimentId = GetSelectedExperimentId();
             if (experimentId == null)
             {
-                MessageBox.Show("Выберите эксперимент!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Choose an experiment!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 

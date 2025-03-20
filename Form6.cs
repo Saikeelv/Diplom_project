@@ -33,7 +33,7 @@ namespace Diplom_project
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка открытия порта: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Port opening error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 this.Close();
             }
         }
@@ -98,7 +98,7 @@ namespace Diplom_project
             }
             else
             {
-                MessageBox.Show("Порт закрыт. Проверьте соединение.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("The port is closed. Check the connection.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -193,7 +193,7 @@ namespace Diplom_project
             {
                 this.Invoke(new Action(() =>
                 {
-                    MessageBox.Show($"Ошибка при чтении: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show($"Error in reading: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }));
             }
             catch (InvalidOperationException)
@@ -221,7 +221,7 @@ namespace Diplom_project
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Ошибка при закрытии порта: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show($"Error closing the port: {ex.Message}", "Erorr", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
         }
@@ -339,7 +339,7 @@ namespace Diplom_project
                         catch (Exception ex)
                         {
                             transaction.Rollback();
-                            MessageBox.Show($"Ошибка при записи в БД: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show($"Error when writing to the database: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                 }
@@ -347,7 +347,7 @@ namespace Diplom_project
 
             this.Invoke(new Action(() =>
             {
-                MessageBox.Show("Эксперимент завершен. Данные сохранены в БД.", "Эксперимент завершен", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("The experiment is completed. The data is saved in the database.", "The experiment is completed", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 ClosePort();
                 this.Close();
                 isSaving = false; // ✅ Сбрасываем флаг после завершения

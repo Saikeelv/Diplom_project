@@ -49,56 +49,58 @@
             // 
             // comboBoxEngineChange
             // 
-            this.comboBoxEngineChange.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.comboBoxEngineChange.Font = new System.Drawing.Font("Arial Narrow", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.comboBoxEngineChange.FormattingEnabled = true;
             this.comboBoxEngineChange.Location = new System.Drawing.Point(207, 117);
             this.comboBoxEngineChange.Name = "comboBoxEngineChange";
-            this.comboBoxEngineChange.Size = new System.Drawing.Size(220, 25);
+            this.comboBoxEngineChange.Size = new System.Drawing.Size(220, 28);
             this.comboBoxEngineChange.TabIndex = 58;
             // 
             // comboBoxChangeGuide2
             // 
-            this.comboBoxChangeGuide2.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.comboBoxChangeGuide2.Font = new System.Drawing.Font("Arial Narrow", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.comboBoxChangeGuide2.FormattingEnabled = true;
             this.comboBoxChangeGuide2.Location = new System.Drawing.Point(313, 285);
             this.comboBoxChangeGuide2.Name = "comboBoxChangeGuide2";
-            this.comboBoxChangeGuide2.Size = new System.Drawing.Size(114, 25);
+            this.comboBoxChangeGuide2.Size = new System.Drawing.Size(114, 28);
             this.comboBoxChangeGuide2.TabIndex = 57;
             // 
             // comboBoxChangeGuide1
             // 
-            this.comboBoxChangeGuide1.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.comboBoxChangeGuide1.Font = new System.Drawing.Font("Arial Narrow", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.comboBoxChangeGuide1.FormattingEnabled = true;
             this.comboBoxChangeGuide1.Location = new System.Drawing.Point(313, 244);
             this.comboBoxChangeGuide1.Name = "comboBoxChangeGuide1";
-            this.comboBoxChangeGuide1.Size = new System.Drawing.Size(114, 25);
+            this.comboBoxChangeGuide1.Size = new System.Drawing.Size(114, 28);
             this.comboBoxChangeGuide1.TabIndex = 56;
             // 
             // ApplyChange
             // 
-            this.ApplyChange.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ApplyChange.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ApplyChange.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.ApplyChange.Location = new System.Drawing.Point(169, 336);
             this.ApplyChange.Name = "ApplyChange";
             this.ApplyChange.Size = new System.Drawing.Size(126, 36);
             this.ApplyChange.TabIndex = 55;
-            this.ApplyChange.Text = "Применить";
+            this.ApplyChange.Text = "ACCEPT";
             this.ApplyChange.UseVisualStyleBackColor = true;
             this.ApplyChange.Click += new System.EventHandler(this.ApplyChange_Click);
             // 
             // ESC
             // 
-            this.ESC.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ESC.Location = new System.Drawing.Point(301, 335);
+            this.ESC.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ESC.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ESC.Location = new System.Drawing.Point(301, 336);
             this.ESC.Name = "ESC";
             this.ESC.Size = new System.Drawing.Size(126, 36);
             this.ESC.TabIndex = 54;
-            this.ESC.Text = "Отмена";
+            this.ESC.Text = "ESC";
             this.ESC.UseVisualStyleBackColor = true;
             this.ESC.Click += new System.EventHandler(this.ESC_Click);
             // 
             // textBoxOilMileageChange
             // 
-            this.textBoxOilMileageChange.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBoxOilMileageChange.Font = new System.Drawing.Font("Arial Narrow", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.textBoxOilMileageChange.Location = new System.Drawing.Point(207, 286);
             this.textBoxOilMileageChange.Name = "textBoxOilMileageChange";
             this.textBoxOilMileageChange.Size = new System.Drawing.Size(100, 25);
@@ -106,7 +108,7 @@
             // 
             // textBoxEngineMileageChange
             // 
-            this.textBoxEngineMileageChange.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBoxEngineMileageChange.Font = new System.Drawing.Font("Arial Narrow", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.textBoxEngineMileageChange.Location = new System.Drawing.Point(207, 244);
             this.textBoxEngineMileageChange.Name = "textBoxEngineMileageChange";
             this.textBoxEngineMileageChange.Size = new System.Drawing.Size(100, 25);
@@ -114,7 +116,7 @@
             // 
             // textBoxEngineNomberChange
             // 
-            this.textBoxEngineNomberChange.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBoxEngineNomberChange.Font = new System.Drawing.Font("Arial Narrow", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.textBoxEngineNomberChange.Location = new System.Drawing.Point(207, 202);
             this.textBoxEngineNomberChange.Name = "textBoxEngineNomberChange";
             this.textBoxEngineNomberChange.Size = new System.Drawing.Size(220, 25);
@@ -122,7 +124,7 @@
             // 
             // textBoxEhgineBrandChange
             // 
-            this.textBoxEhgineBrandChange.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBoxEhgineBrandChange.Font = new System.Drawing.Font("Arial Narrow", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.textBoxEhgineBrandChange.Location = new System.Drawing.Point(207, 159);
             this.textBoxEhgineBrandChange.Name = "textBoxEhgineBrandChange";
             this.textBoxEhgineBrandChange.Size = new System.Drawing.Size(220, 25);
@@ -130,7 +132,7 @@
             // 
             // textBoxNoteChange
             // 
-            this.textBoxNoteChange.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBoxNoteChange.Font = new System.Drawing.Font("Arial Narrow", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.textBoxNoteChange.Location = new System.Drawing.Point(207, 79);
             this.textBoxNoteChange.Name = "textBoxNoteChange";
             this.textBoxNoteChange.Size = new System.Drawing.Size(220, 25);
@@ -139,72 +141,72 @@
             // OilMileage
             // 
             this.OilMileage.AutoSize = true;
-            this.OilMileage.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.OilMileage.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.OilMileage.Location = new System.Drawing.Point(32, 285);
             this.OilMileage.Name = "OilMileage";
-            this.OilMileage.Size = new System.Drawing.Size(112, 22);
+            this.OilMileage.Size = new System.Drawing.Size(120, 30);
             this.OilMileage.TabIndex = 48;
             this.OilMileage.Text = "Oil Mileage:";
             // 
             // EngineMileage
             // 
             this.EngineMileage.AutoSize = true;
-            this.EngineMileage.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.EngineMileage.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.EngineMileage.Location = new System.Drawing.Point(30, 243);
             this.EngineMileage.Name = "EngineMileage";
-            this.EngineMileage.Size = new System.Drawing.Size(140, 22);
+            this.EngineMileage.Size = new System.Drawing.Size(159, 30);
             this.EngineMileage.TabIndex = 47;
             this.EngineMileage.Text = "Engine Mileage:";
             // 
             // EngineNomber
             // 
             this.EngineNomber.AutoSize = true;
-            this.EngineNomber.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.EngineNomber.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.EngineNomber.Location = new System.Drawing.Point(31, 201);
             this.EngineNomber.Name = "EngineNomber";
-            this.EngineNomber.Size = new System.Drawing.Size(139, 22);
+            this.EngineNomber.Size = new System.Drawing.Size(161, 30);
             this.EngineNomber.TabIndex = 46;
             this.EngineNomber.Text = "Engine Nomber:";
             // 
             // EngineBrand
             // 
             this.EngineBrand.AutoSize = true;
-            this.EngineBrand.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.EngineBrand.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.EngineBrand.Location = new System.Drawing.Point(30, 159);
             this.EngineBrand.Name = "EngineBrand";
-            this.EngineBrand.Size = new System.Drawing.Size(123, 22);
+            this.EngineBrand.Size = new System.Drawing.Size(141, 30);
             this.EngineBrand.TabIndex = 45;
             this.EngineBrand.Text = "Engine Brand:";
             // 
             // EngineType
             // 
             this.EngineType.AutoSize = true;
-            this.EngineType.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.EngineType.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.EngineType.Location = new System.Drawing.Point(30, 117);
             this.EngineType.Name = "EngineType";
-            this.EngineType.Size = new System.Drawing.Size(114, 22);
+            this.EngineType.Size = new System.Drawing.Size(134, 30);
             this.EngineType.TabIndex = 44;
             this.EngineType.Text = "Engine Type:";
             // 
             // Note
             // 
             this.Note.AutoSize = true;
-            this.Note.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Note.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Note.Location = new System.Drawing.Point(30, 79);
             this.Note.Name = "Note";
-            this.Note.Size = new System.Drawing.Size(54, 22);
+            this.Note.Size = new System.Drawing.Size(63, 30);
             this.Note.TabIndex = 43;
             this.Note.Text = "Note:";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label1.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label1.Location = new System.Drawing.Point(30, 36);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(249, 22);
+            this.label1.Size = new System.Drawing.Size(244, 30);
             this.label1.TabIndex = 42;
-            this.label1.Text = "Изменить данные образеца:";
+            this.label1.Text = "Change the sample data:";
             this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // ChangeSample

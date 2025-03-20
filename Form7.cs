@@ -143,7 +143,7 @@ namespace Diplom_project
 
             foreach (var experiment in experimentsData)
             {
-                string seriesName = $"Испытание {experiment.Key}";
+                string seriesName = $"Test {experiment.Key}";
                 Series series = new Series(seriesName)
                 {
                     ChartType = SeriesChartType.Point, // Точки, без соединения линиями
@@ -175,7 +175,7 @@ namespace Diplom_project
         {
             if (comboBoxX.SelectedItem == null || comboBoxY.SelectedItem == null)
             {
-                MessageBox.Show("Выберите обе оси!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Select both axes!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -226,7 +226,7 @@ namespace Diplom_project
 
             if (experimentsData.Count == 0)
             {
-                MessageBox.Show("Нет данных для построения!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("There is no data to build!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 

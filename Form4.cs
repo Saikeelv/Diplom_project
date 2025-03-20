@@ -38,7 +38,7 @@ namespace Diplom_project
         {
             if (mainForm.GetSelectedClientId() == null)
             {
-                MessageBox.Show("Выберите клиента!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Select a client!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 this.Close();
                 
             }
@@ -138,7 +138,7 @@ namespace Diplom_project
         comboBoxAddGuide2.SelectedIndex == -1 ||
         comboBoxAddGuide2.SelectedValue == null)
             {
-                MessageBox.Show("Заполните все поля перед добавлением!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Fill in all fields before adding!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -163,7 +163,7 @@ namespace Diplom_project
                         // 2. Проверяем, что выбраны значения в comboBoxAddEngineType
                         if (comboBoxAddEngineType.SelectedIndex == -1 || comboBoxAddEngineType.SelectedValue == null)
                         {
-                            MessageBox.Show("Выберите тип двигателя!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            MessageBox.Show("Select the engine type!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             return;
                         }
 
@@ -173,7 +173,7 @@ namespace Diplom_project
                         string engineMarka = textBoxEhgineBrandAdd.Text.Trim();
                         if (string.IsNullOrEmpty(engineMarka))
                         {
-                            throw new Exception("Введите марку двигателя!");
+                            throw new Exception("Enter the engine brand!");
                         }
 
                         // 4. Проверяем существование Engine
@@ -205,7 +205,7 @@ namespace Diplom_project
                         string engineNumber = textBoxEngineNomberAdd.Text.Trim();
                         if (string.IsNullOrEmpty(engineNumber))
                         {
-                            throw new Exception("Введите номер двигателя!");
+                            throw new Exception("Enter the engine number!");
                         }
 
                         int engineNumberId;
@@ -234,13 +234,13 @@ namespace Diplom_project
                         // 6. Проверяем, что Guide выбраны корректно
                         if (comboBoxAddGuide1.SelectedIndex == -1 || comboBoxAddGuide1.SelectedValue == null)
                         {
-                            MessageBox.Show("Выберите единицу измерения для пробега двигателя!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            MessageBox.Show("Select the unit of measurement for the engine mileage!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             return;
                         }
 
                         if (comboBoxAddGuide2.SelectedIndex == -1 || comboBoxAddGuide2.SelectedValue == null)
                         {
-                            MessageBox.Show("Выберите единицу измерения для пробега масла!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            MessageBox.Show("Select the unit of measurement for the oil mileage!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             return;
                         }
 
@@ -252,7 +252,7 @@ namespace Diplom_project
                         double engineMileage;
                         if (!double.TryParse(textBoxEngineMileageAdd.Text, out engineMileage))
                         {
-                            throw new Exception("Введите корректный пробег двигателя!");
+                            throw new Exception("Enter the correct engine mileage!");
                         }
 
                         int engineMileageId;
@@ -269,7 +269,7 @@ namespace Diplom_project
                         double oilMileage;
                         if (!double.TryParse(textBoxOilMileageAdd.Text, out oilMileage))
                         {
-                            throw new Exception("Введите корректный пробег масла!");
+                            throw new Exception("Enter the correct oil mileage!");
                         }
 
                         int oilMileageId;
@@ -286,7 +286,7 @@ namespace Diplom_project
                         int? clientId = mainForm.GetSelectedClientId();
                         if (clientId == null)
                         {
-                            MessageBox.Show("Выберите клиента для удаления!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            MessageBox.Show("Select the client to delete!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             return;
                         }
 
@@ -312,7 +312,7 @@ namespace Diplom_project
                     catch (Exception ex)
                     {
                         transaction.Rollback();
-                        MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }

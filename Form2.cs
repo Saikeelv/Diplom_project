@@ -57,7 +57,7 @@ namespace Diplom_project
 
             if (string.IsNullOrWhiteSpace(fio) || string.IsNullOrWhiteSpace(phone))
             {
-                MessageBox.Show("Пожалуйста, заполните все поля!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please fill in all fields!", "Eror", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -86,7 +86,7 @@ namespace Diplom_project
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка добавления клиента: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error adding a client: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
         }

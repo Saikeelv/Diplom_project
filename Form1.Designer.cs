@@ -84,18 +84,19 @@
             // labelClients
             // 
             this.labelClients.AutoSize = true;
-            this.labelClients.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.labelClients.Font = new System.Drawing.Font("Arial Narrow", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.labelClients.Location = new System.Drawing.Point(12, 39);
             this.labelClients.Name = "labelClients";
-            this.labelClients.Size = new System.Drawing.Size(76, 26);
+            this.labelClients.Size = new System.Drawing.Size(85, 34);
             this.labelClients.TabIndex = 3;
             this.labelClients.Text = "Clients";
             this.labelClients.Click += new System.EventHandler(this.label1_Click);
             // 
             // buttonAddClient
             // 
-            this.buttonAddClient.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonAddClient.Location = new System.Drawing.Point(12, 364);
+            this.buttonAddClient.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonAddClient.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonAddClient.Location = new System.Drawing.Point(12, 745);
             this.buttonAddClient.Name = "buttonAddClient";
             this.buttonAddClient.Size = new System.Drawing.Size(136, 39);
             this.buttonAddClient.TabIndex = 4;
@@ -106,8 +107,9 @@
             // 
             // buttonDellClient
             // 
-            this.buttonDellClient.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonDellClient.Location = new System.Drawing.Point(296, 364);
+            this.buttonDellClient.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonDellClient.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonDellClient.Location = new System.Drawing.Point(296, 744);
             this.buttonDellClient.Name = "buttonDellClient";
             this.buttonDellClient.Size = new System.Drawing.Size(136, 39);
             this.buttonDellClient.TabIndex = 5;
@@ -119,17 +121,18 @@
             // labelSamples
             // 
             this.labelSamples.AutoSize = true;
-            this.labelSamples.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.labelSamples.Location = new System.Drawing.Point(529, 39);
+            this.labelSamples.Font = new System.Drawing.Font("Arial Narrow", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.labelSamples.Location = new System.Drawing.Point(448, 39);
             this.labelSamples.Name = "labelSamples";
-            this.labelSamples.Size = new System.Drawing.Size(90, 26);
+            this.labelSamples.Size = new System.Drawing.Size(105, 34);
             this.labelSamples.TabIndex = 7;
             this.labelSamples.Text = "Samples";
             // 
             // buttonAddSamples
             // 
-            this.buttonAddSamples.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonAddSamples.Location = new System.Drawing.Point(534, 364);
+            this.buttonAddSamples.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonAddSamples.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonAddSamples.Location = new System.Drawing.Point(453, 364);
             this.buttonAddSamples.Name = "buttonAddSamples";
             this.buttonAddSamples.Size = new System.Drawing.Size(136, 39);
             this.buttonAddSamples.TabIndex = 9;
@@ -140,8 +143,10 @@
             // 
             // buttonDellSamples
             // 
-            this.buttonDellSamples.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonDellSamples.Location = new System.Drawing.Point(818, 364);
+            this.buttonDellSamples.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.buttonDellSamples.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonDellSamples.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonDellSamples.Location = new System.Drawing.Point(737, 364);
             this.buttonDellSamples.Name = "buttonDellSamples";
             this.buttonDellSamples.Size = new System.Drawing.Size(136, 39);
             this.buttonDellSamples.TabIndex = 10;
@@ -152,8 +157,9 @@
             // 
             // buttonChangeSamples
             // 
-            this.buttonChangeSamples.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonChangeSamples.Location = new System.Drawing.Point(676, 364);
+            this.buttonChangeSamples.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonChangeSamples.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonChangeSamples.Location = new System.Drawing.Point(595, 364);
             this.buttonChangeSamples.Name = "buttonChangeSamples";
             this.buttonChangeSamples.Size = new System.Drawing.Size(136, 39);
             this.buttonChangeSamples.TabIndex = 11;
@@ -165,10 +171,10 @@
             // Note
             // 
             this.Note.AutoSize = true;
-            this.Note.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Note.Location = new System.Drawing.Point(1017, 68);
+            this.Note.Font = new System.Drawing.Font("Arial Narrow", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Note.Location = new System.Drawing.Point(909, 68);
             this.Note.Name = "Note";
-            this.Note.Size = new System.Drawing.Size(62, 26);
+            this.Note.Size = new System.Drawing.Size(56, 27);
             this.Note.TabIndex = 12;
             this.Note.Text = "Note:";
             this.Note.Click += new System.EventHandler(this.label1_Click_1);
@@ -176,67 +182,67 @@
             // Date
             // 
             this.Date.AutoSize = true;
-            this.Date.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Date.Location = new System.Drawing.Point(1018, 110);
+            this.Date.Font = new System.Drawing.Font("Arial Narrow", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Date.Location = new System.Drawing.Point(909, 141);
             this.Date.Name = "Date";
-            this.Date.Size = new System.Drawing.Size(60, 26);
+            this.Date.Size = new System.Drawing.Size(205, 27);
             this.Date.TabIndex = 13;
-            this.Date.Text = "Date:";
+            this.Date.Text = "Date of register sample:";
             // 
             // EngineType
             // 
             this.EngineType.AutoSize = true;
-            this.EngineType.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.EngineType.Location = new System.Drawing.Point(1017, 152);
+            this.EngineType.Font = new System.Drawing.Font("Arial Narrow", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.EngineType.Location = new System.Drawing.Point(909, 213);
             this.EngineType.Name = "EngineType";
-            this.EngineType.Size = new System.Drawing.Size(133, 26);
+            this.EngineType.Size = new System.Drawing.Size(120, 27);
             this.EngineType.TabIndex = 14;
             this.EngineType.Text = "Engine Type:";
             // 
             // EngineBrand
             // 
             this.EngineBrand.AutoSize = true;
-            this.EngineBrand.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.EngineBrand.Location = new System.Drawing.Point(1017, 194);
+            this.EngineBrand.Font = new System.Drawing.Font("Arial Narrow", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.EngineBrand.Location = new System.Drawing.Point(912, 291);
             this.EngineBrand.Name = "EngineBrand";
-            this.EngineBrand.Size = new System.Drawing.Size(144, 26);
+            this.EngineBrand.Size = new System.Drawing.Size(160, 34);
             this.EngineBrand.TabIndex = 15;
             this.EngineBrand.Text = "Engine Brand:";
             // 
             // EngineNomber
             // 
             this.EngineNomber.AutoSize = true;
-            this.EngineNomber.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.EngineNomber.Location = new System.Drawing.Point(1018, 236);
+            this.EngineNomber.Font = new System.Drawing.Font("Arial Narrow", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.EngineNomber.Location = new System.Drawing.Point(913, 376);
             this.EngineNomber.Name = "EngineNomber";
-            this.EngineNomber.Size = new System.Drawing.Size(164, 26);
+            this.EngineNomber.Size = new System.Drawing.Size(145, 27);
             this.EngineNomber.TabIndex = 16;
             this.EngineNomber.Text = "Engine Nomber:";
             // 
             // EngineMileage
             // 
             this.EngineMileage.AutoSize = true;
-            this.EngineMileage.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.EngineMileage.Location = new System.Drawing.Point(1017, 278);
+            this.EngineMileage.Font = new System.Drawing.Font("Arial Narrow", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.EngineMileage.Location = new System.Drawing.Point(913, 448);
             this.EngineMileage.Name = "EngineMileage";
-            this.EngineMileage.Size = new System.Drawing.Size(160, 26);
+            this.EngineMileage.Size = new System.Drawing.Size(144, 27);
             this.EngineMileage.TabIndex = 17;
             this.EngineMileage.Text = "Engine Mileage:";
             // 
             // OilMileage
             // 
             this.OilMileage.AutoSize = true;
-            this.OilMileage.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.OilMileage.Location = new System.Drawing.Point(1019, 320);
+            this.OilMileage.Font = new System.Drawing.Font("Arial Narrow", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.OilMileage.Location = new System.Drawing.Point(913, 525);
             this.OilMileage.Name = "OilMileage";
-            this.OilMileage.Size = new System.Drawing.Size(125, 26);
+            this.OilMileage.Size = new System.Drawing.Size(110, 27);
             this.OilMileage.TabIndex = 18;
             this.OilMileage.Text = "Oil Mileage:";
             // 
             // textBoxNote
             // 
-            this.textBoxNote.Font = new System.Drawing.Font("Times New Roman", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBoxNote.Location = new System.Drawing.Point(1221, 68);
+            this.textBoxNote.Font = new System.Drawing.Font("Arial Narrow", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBoxNote.Location = new System.Drawing.Point(915, 97);
             this.textBoxNote.Name = "textBoxNote";
             this.textBoxNote.ReadOnly = true;
             this.textBoxNote.Size = new System.Drawing.Size(282, 27);
@@ -245,8 +251,8 @@
             // 
             // textBoxData
             // 
-            this.textBoxData.Font = new System.Drawing.Font("Times New Roman", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBoxData.Location = new System.Drawing.Point(1221, 110);
+            this.textBoxData.Font = new System.Drawing.Font("Arial Narrow", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBoxData.Location = new System.Drawing.Point(915, 171);
             this.textBoxData.Name = "textBoxData";
             this.textBoxData.ReadOnly = true;
             this.textBoxData.Size = new System.Drawing.Size(282, 27);
@@ -255,8 +261,8 @@
             // 
             // textBoxEngineType
             // 
-            this.textBoxEngineType.Font = new System.Drawing.Font("Times New Roman", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBoxEngineType.Location = new System.Drawing.Point(1221, 152);
+            this.textBoxEngineType.Font = new System.Drawing.Font("Arial Narrow", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBoxEngineType.Location = new System.Drawing.Point(914, 243);
             this.textBoxEngineType.Name = "textBoxEngineType";
             this.textBoxEngineType.ReadOnly = true;
             this.textBoxEngineType.Size = new System.Drawing.Size(282, 27);
@@ -265,8 +271,8 @@
             // 
             // textBoxEhgineBrand
             // 
-            this.textBoxEhgineBrand.Font = new System.Drawing.Font("Times New Roman", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBoxEhgineBrand.Location = new System.Drawing.Point(1221, 193);
+            this.textBoxEhgineBrand.Font = new System.Drawing.Font("Arial Narrow", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBoxEhgineBrand.Location = new System.Drawing.Point(917, 320);
             this.textBoxEhgineBrand.Name = "textBoxEhgineBrand";
             this.textBoxEhgineBrand.ReadOnly = true;
             this.textBoxEhgineBrand.Size = new System.Drawing.Size(282, 27);
@@ -276,7 +282,7 @@
             // textBoxEngineNomber
             // 
             this.textBoxEngineNomber.Font = new System.Drawing.Font("Times New Roman", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBoxEngineNomber.Location = new System.Drawing.Point(1221, 236);
+            this.textBoxEngineNomber.Location = new System.Drawing.Point(918, 406);
             this.textBoxEngineNomber.Name = "textBoxEngineNomber";
             this.textBoxEngineNomber.ReadOnly = true;
             this.textBoxEngineNomber.Size = new System.Drawing.Size(282, 27);
@@ -285,8 +291,8 @@
             // 
             // textBoxEngineMileage
             // 
-            this.textBoxEngineMileage.Font = new System.Drawing.Font("Times New Roman", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBoxEngineMileage.Location = new System.Drawing.Point(1221, 278);
+            this.textBoxEngineMileage.Font = new System.Drawing.Font("Arial Narrow", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBoxEngineMileage.Location = new System.Drawing.Point(918, 480);
             this.textBoxEngineMileage.Name = "textBoxEngineMileage";
             this.textBoxEngineMileage.ReadOnly = true;
             this.textBoxEngineMileage.Size = new System.Drawing.Size(169, 27);
@@ -295,8 +301,8 @@
             // 
             // textBoxOilMileage
             // 
-            this.textBoxOilMileage.Font = new System.Drawing.Font("Times New Roman", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBoxOilMileage.Location = new System.Drawing.Point(1221, 320);
+            this.textBoxOilMileage.Font = new System.Drawing.Font("Arial Narrow", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBoxOilMileage.Location = new System.Drawing.Point(918, 555);
             this.textBoxOilMileage.Name = "textBoxOilMileage";
             this.textBoxOilMileage.ReadOnly = true;
             this.textBoxOilMileage.Size = new System.Drawing.Size(169, 27);
@@ -305,8 +311,8 @@
             // 
             // textBoxEngineDictionary
             // 
-            this.textBoxEngineDictionary.Font = new System.Drawing.Font("Times New Roman", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBoxEngineDictionary.Location = new System.Drawing.Point(1409, 277);
+            this.textBoxEngineDictionary.Font = new System.Drawing.Font("Arial Narrow", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBoxEngineDictionary.Location = new System.Drawing.Point(1106, 480);
             this.textBoxEngineDictionary.Name = "textBoxEngineDictionary";
             this.textBoxEngineDictionary.ReadOnly = true;
             this.textBoxEngineDictionary.Size = new System.Drawing.Size(94, 27);
@@ -315,8 +321,8 @@
             // 
             // textBoxOilDictionary
             // 
-            this.textBoxOilDictionary.Font = new System.Drawing.Font("Times New Roman", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBoxOilDictionary.Location = new System.Drawing.Point(1409, 319);
+            this.textBoxOilDictionary.Font = new System.Drawing.Font("Arial Narrow", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBoxOilDictionary.Location = new System.Drawing.Point(1106, 555);
             this.textBoxOilDictionary.Name = "textBoxOilDictionary";
             this.textBoxOilDictionary.ReadOnly = true;
             this.textBoxOilDictionary.Size = new System.Drawing.Size(94, 27);
@@ -330,7 +336,7 @@
             this.settingsToolStripMenuItem});
             this.menuStrip2.Location = new System.Drawing.Point(0, 0);
             this.menuStrip2.Name = "menuStrip2";
-            this.menuStrip2.Size = new System.Drawing.Size(1541, 28);
+            this.menuStrip2.Size = new System.Drawing.Size(1286, 28);
             this.menuStrip2.TabIndex = 31;
             this.menuStrip2.Text = "menuStrip2";
             // 
@@ -349,14 +355,14 @@
             // selectBDToolStripMenuItem
             // 
             this.selectBDToolStripMenuItem.Name = "selectBDToolStripMenuItem";
-            this.selectBDToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
+            this.selectBDToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.selectBDToolStripMenuItem.Text = "Select BD";
             this.selectBDToolStripMenuItem.Click += new System.EventHandler(this.selectBDToolStripMenuItem_Click);
             // 
             // selectCOMPortToolStripMenuItem
             // 
             this.selectCOMPortToolStripMenuItem.Name = "selectCOMPortToolStripMenuItem";
-            this.selectCOMPortToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
+            this.selectCOMPortToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.selectCOMPortToolStripMenuItem.Text = "Select COM port";
             this.selectCOMPortToolStripMenuItem.Click += new System.EventHandler(this.selectCOMPortToolStripMenuItem_Click);
             // 
@@ -367,7 +373,7 @@
             this.samplesToolStripMenuItem,
             this.experimentsToolStripMenuItem});
             this.sortToolStripMenuItem.Name = "sortToolStripMenuItem";
-            this.sortToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
+            this.sortToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.sortToolStripMenuItem.Text = "Sort";
             this.sortToolStripMenuItem.Click += new System.EventHandler(this.sortToolStripMenuItem_Click);
             // 
@@ -452,14 +458,15 @@
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // buttonChangeDataClient
             // 
-            this.buttonChangeDataClient.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonChangeDataClient.Location = new System.Drawing.Point(154, 364);
+            this.buttonChangeDataClient.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonChangeDataClient.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonChangeDataClient.Location = new System.Drawing.Point(154, 744);
             this.buttonChangeDataClient.Name = "buttonChangeDataClient";
             this.buttonChangeDataClient.Size = new System.Drawing.Size(136, 39);
             this.buttonChangeDataClient.TabIndex = 34;
@@ -470,13 +477,13 @@
             // 
             // listViewClients
             // 
-            this.listViewClients.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.listViewClients.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.listViewClients.FullRowSelect = true;
             this.listViewClients.GridLines = true;
             this.listViewClients.HideSelection = false;
             this.listViewClients.Location = new System.Drawing.Point(12, 68);
             this.listViewClients.Name = "listViewClients";
-            this.listViewClients.Size = new System.Drawing.Size(420, 290);
+            this.listViewClients.Size = new System.Drawing.Size(420, 670);
             this.listViewClients.TabIndex = 35;
             this.listViewClients.UseCompatibleStateImageBehavior = false;
             this.listViewClients.View = System.Windows.Forms.View.Details;
@@ -484,11 +491,11 @@
             // 
             // listViewSamples
             // 
-            this.listViewSamples.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.listViewSamples.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.listViewSamples.FullRowSelect = true;
             this.listViewSamples.GridLines = true;
             this.listViewSamples.HideSelection = false;
-            this.listViewSamples.Location = new System.Drawing.Point(534, 68);
+            this.listViewSamples.Location = new System.Drawing.Point(453, 68);
             this.listViewSamples.Name = "listViewSamples";
             this.listViewSamples.Size = new System.Drawing.Size(420, 290);
             this.listViewSamples.TabIndex = 36;
@@ -498,11 +505,11 @@
             // 
             // listViewExperiments
             // 
-            this.listViewExperiments.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.listViewExperiments.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.listViewExperiments.FullRowSelect = true;
             this.listViewExperiments.GridLines = true;
             this.listViewExperiments.HideSelection = false;
-            this.listViewExperiments.Location = new System.Drawing.Point(12, 458);
+            this.listViewExperiments.Location = new System.Drawing.Point(453, 448);
             this.listViewExperiments.Name = "listViewExperiments";
             this.listViewExperiments.Size = new System.Drawing.Size(420, 290);
             this.listViewExperiments.TabIndex = 37;
@@ -512,10 +519,11 @@
             // 
             // buttonDelExp
             // 
-            this.buttonDelExp.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonDelExp.Location = new System.Drawing.Point(232, 754);
+            this.buttonDelExp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonDelExp.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonDelExp.Location = new System.Drawing.Point(664, 744);
             this.buttonDelExp.Name = "buttonDelExp";
-            this.buttonDelExp.Size = new System.Drawing.Size(200, 39);
+            this.buttonDelExp.Size = new System.Drawing.Size(209, 39);
             this.buttonDelExp.TabIndex = 39;
             this.buttonDelExp.TabStop = false;
             this.buttonDelExp.Text = "DEL";
@@ -524,10 +532,11 @@
             // 
             // buttonAddExp
             // 
-            this.buttonAddExp.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonAddExp.Location = new System.Drawing.Point(12, 754);
+            this.buttonAddExp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonAddExp.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonAddExp.Location = new System.Drawing.Point(453, 744);
             this.buttonAddExp.Name = "buttonAddExp";
-            this.buttonAddExp.Size = new System.Drawing.Size(200, 39);
+            this.buttonAddExp.Size = new System.Drawing.Size(205, 39);
             this.buttonAddExp.TabIndex = 38;
             this.buttonAddExp.TabStop = false;
             this.buttonAddExp.Text = "ADD";
@@ -536,10 +545,11 @@
             // 
             // buttonStartExperiment
             // 
-            this.buttonStartExperiment.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonStartExperiment.Location = new System.Drawing.Point(534, 458);
+            this.buttonStartExperiment.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonStartExperiment.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonStartExperiment.Location = new System.Drawing.Point(914, 676);
             this.buttonStartExperiment.Name = "buttonStartExperiment";
-            this.buttonStartExperiment.Size = new System.Drawing.Size(420, 39);
+            this.buttonStartExperiment.Size = new System.Drawing.Size(286, 45);
             this.buttonStartExperiment.TabIndex = 43;
             this.buttonStartExperiment.TabStop = false;
             this.buttonStartExperiment.Text = "START EXPERIMENT";
@@ -549,20 +559,21 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label1.Location = new System.Drawing.Point(7, 429);
+            this.label1.Font = new System.Drawing.Font("Arial Narrow", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label1.Location = new System.Drawing.Point(448, 411);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(127, 26);
+            this.label1.Size = new System.Drawing.Size(114, 27);
             this.label1.TabIndex = 44;
             this.label1.Text = "Experiments";
             this.label1.Click += new System.EventHandler(this.label1_Click_2);
             // 
             // buttonDataExp
             // 
-            this.buttonDataExp.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonDataExp.Location = new System.Drawing.Point(534, 523);
+            this.buttonDataExp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonDataExp.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonDataExp.Location = new System.Drawing.Point(914, 744);
             this.buttonDataExp.Name = "buttonDataExp";
-            this.buttonDataExp.Size = new System.Drawing.Size(420, 39);
+            this.buttonDataExp.Size = new System.Drawing.Size(286, 39);
             this.buttonDataExp.TabIndex = 45;
             this.buttonDataExp.TabStop = false;
             this.buttonDataExp.Text = "EXP DATA";
@@ -572,7 +583,7 @@
             // Main
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(1541, 823);
+            this.ClientSize = new System.Drawing.Size(1286, 819);
             this.Controls.Add(this.buttonDataExp);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.buttonStartExperiment);
@@ -611,7 +622,6 @@
             this.Name = "Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Project";
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.Main_Load);
             this.menuStrip2.ResumeLayout(false);
             this.menuStrip2.PerformLayout();

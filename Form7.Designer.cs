@@ -42,51 +42,52 @@
             // 
             // comboBoxX
             // 
-            this.comboBoxX.Font = new System.Drawing.Font("Times New Roman", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.comboBoxX.Font = new System.Drawing.Font("Arial Narrow", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.comboBoxX.FormattingEnabled = true;
             this.comboBoxX.Location = new System.Drawing.Point(61, 19);
             this.comboBoxX.Name = "comboBoxX";
-            this.comboBoxX.Size = new System.Drawing.Size(121, 27);
+            this.comboBoxX.Size = new System.Drawing.Size(121, 30);
             this.comboBoxX.TabIndex = 0;
             // 
             // comboBoxY
             // 
-            this.comboBoxY.Font = new System.Drawing.Font("Times New Roman", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.comboBoxY.Font = new System.Drawing.Font("Arial Narrow", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.comboBoxY.FormattingEnabled = true;
             this.comboBoxY.Location = new System.Drawing.Point(240, 18);
             this.comboBoxY.Name = "comboBoxY";
-            this.comboBoxY.Size = new System.Drawing.Size(121, 27);
+            this.comboBoxY.Size = new System.Drawing.Size(121, 30);
             this.comboBoxY.TabIndex = 1;
             // 
             // labelX
             // 
             this.labelX.AutoSize = true;
-            this.labelX.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.labelX.Font = new System.Drawing.Font("Arial Narrow", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.labelX.Location = new System.Drawing.Point(21, 20);
             this.labelX.Name = "labelX";
-            this.labelX.Size = new System.Drawing.Size(34, 26);
+            this.labelX.Size = new System.Drawing.Size(38, 34);
             this.labelX.TabIndex = 2;
             this.labelX.Text = "X:";
             // 
             // labelY
             // 
             this.labelY.AutoSize = true;
-            this.labelY.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.labelY.Font = new System.Drawing.Font("Arial Narrow", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.labelY.Location = new System.Drawing.Point(202, 19);
             this.labelY.Name = "labelY";
-            this.labelY.Size = new System.Drawing.Size(32, 26);
+            this.labelY.Size = new System.Drawing.Size(38, 34);
             this.labelY.TabIndex = 3;
             this.labelY.Text = "Y:";
             this.labelY.Click += new System.EventHandler(this.label1_Click);
             // 
             // buttonMake
             // 
-            this.buttonMake.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonMake.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonMake.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.buttonMake.Location = new System.Drawing.Point(26, 52);
             this.buttonMake.Name = "buttonMake";
             this.buttonMake.Size = new System.Drawing.Size(335, 45);
             this.buttonMake.TabIndex = 4;
-            this.buttonMake.Text = "Построить";
+            this.buttonMake.Text = "MAKE GRAPH";
             this.buttonMake.UseVisualStyleBackColor = true;
             this.buttonMake.Click += new System.EventHandler(this.buttonMake_Click);
             // 

@@ -116,7 +116,7 @@ WHERE s.Sample_PK = @SampleId;";
                 comboBoxChangeGuide1.SelectedItem == null ||
                 comboBoxChangeGuide2.SelectedItem == null)
             {
-                MessageBox.Show("Заполните все поля!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Fill in all fields!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -137,7 +137,7 @@ WHERE s.Sample_PK = @SampleId;";
                             object result = cmd.ExecuteScalar();
                             if (result == null)
                             {
-                                MessageBox.Show("Ошибка: не удалось найти номер двигателя!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                MessageBox.Show("Error: engine number could not be found!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                 return;
                             }
                             numberEngFK = Convert.ToInt32(result);
@@ -152,7 +152,7 @@ WHERE s.Sample_PK = @SampleId;";
                             object result = cmd.ExecuteScalar();
                             if (result == null)
                             {
-                                MessageBox.Show("Ошибка: не удалось найти двигатель!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                MessageBox.Show("Error: couldn't find the engine!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                 return;
                             }
                             engineFK = Convert.ToInt32(result);
@@ -231,7 +231,7 @@ WHERE s.Sample_PK = @SampleId;";
                     catch (Exception ex)
                     {
                         transaction.Rollback();
-                        MessageBox.Show($"Ошибка при изменении образца: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($"Error when changing the sample: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
