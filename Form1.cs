@@ -1476,6 +1476,193 @@ ORDER BY
             Form7 graphForm = new Form7(experimentId.Value, ConnectionString);
             graphForm.Show();
         }
+
+        private void creatNewDBToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                Filter = "Data Base SQLite (*.db)|*.db",
+                Title = "Create new DB"
+            };
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string dbPath = saveFileDialog.FileName;
+
+                try
+                {
+                    SQLiteConnection.CreateFile(dbPath);
+                    string connectionString = $"Data Source={dbPath};Version=3;";
+
+                    using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+                    {
+                        connection.Open();
+
+                        // Создаем таблицы
+                        string createScript = GetCreateDatabaseScript();
+                        using (SQLiteCommand command = new SQLiteCommand(createScript, connection))
+                        {
+                            command.ExecuteNonQuery();
+                        }
+
+                        // Заполняем справочники
+                        string insertGuide = @"
+INSERT INTO Guide (Unit_of_measure) VALUES 
+('Km'),
+('Ml'),
+('MCh');";
+
+                        string insertEngineTypes = @"
+INSERT INTO Type_engine (Type_eng) VALUES 
+('gasoline'),
+('diesel');";
+
+                        using (SQLiteCommand command = new SQLiteCommand(insertGuide, connection))
+                        {
+                            command.ExecuteNonQuery();
+                        }
+
+                        using (SQLiteCommand command = new SQLiteCommand(insertEngineTypes, connection))
+                        {
+                            command.ExecuteNonQuery();
+                        }
+                    }
+
+                    // Сохраняем путь в конфиг
+                    // Сохраняем или создаём файл конфигурации
+                    if (!File.Exists(configFilePath))
+                    {
+                        // Создаем новый файл с одной строкой — путь к БД
+                        File.WriteAllLines(configFilePath, new[] { dbPath });
+                    }
+                    else
+                    {
+                        // Файл есть — читаем все строки
+                        var lines = File.ReadAllLines(configFilePath).ToList();
+
+                        if (lines.Count == 0)
+                        {
+                            lines.Add(dbPath);
+                        }
+                        else
+                        {
+                            lines[0] = dbPath; // Заменяем первую строку
+                        }
+
+                        File.WriteAllLines(configFilePath, lines);
+                    }
+
+
+
+                    // Обновляем активный путь и подключение в приложении
+                    selectedFilePath = dbPath;
+                    ConnectionString = $"Data Source={selectedFilePath};Version=3;";
+                    LoadClients(); // загружаем сразу клиентов
+
+                    MessageBox.Show("New database successfully created!", "Successfull", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error creating db: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+
+
+        private string GetCreateDatabaseScript()
+        {
+            return @"
+CREATE TABLE Client (
+    Client_PK INTEGER PRIMARY KEY AUTOINCREMENT,
+    FIO TEXT,
+    Phone_num TEXT UNIQUE
+);
+
+CREATE TABLE Datetime (
+    Datetime_PK INTEGER PRIMARY KEY AUTOINCREMENT,
+    Time TEXT,
+    Date TEXT
+);
+
+CREATE TABLE Type_engine (
+    Type_eng_PK INTEGER PRIMARY KEY AUTOINCREMENT,
+    Type_eng TEXT UNIQUE
+);
+
+CREATE TABLE Engine (
+    Engine_PK INTEGER PRIMARY KEY AUTOINCREMENT,
+    Marka TEXT,
+    Type_eng_FK INTEGER,
+    FOREIGN KEY (Type_eng_FK) REFERENCES Type_engine(Type_eng_PK)
+);
+
+CREATE TABLE Number_engine (
+    Number_eng_PK INTEGER PRIMARY KEY AUTOINCREMENT,
+    Number_eng TEXT UNIQUE,
+    Engine_FK INTEGER,
+    FOREIGN KEY (Engine_FK) REFERENCES Engine(Engine_PK)
+);
+
+CREATE TABLE Guide (
+    Guide_PK INTEGER PRIMARY KEY AUTOINCREMENT,
+    Unit_of_measure TEXT UNIQUE
+);
+
+CREATE TABLE Engine_mileage (
+    Engine_mileage_PK INTEGER PRIMARY KEY AUTOINCREMENT,
+    Engine_mil REAL,
+    Guide_FK INTEGER,
+    FOREIGN KEY (Guide_FK) REFERENCES Guide(Guide_PK)
+);
+
+CREATE TABLE Oil_mileage (
+    Oil_mileage_PK INTEGER PRIMARY KEY AUTOINCREMENT,
+    Oil_mil REAL,
+    Guide_FK INTEGER,
+    FOREIGN KEY (Guide_FK) REFERENCES Guide(Guide_PK)
+);
+
+CREATE TABLE Sample (
+    Sample_PK INTEGER PRIMARY KEY AUTOINCREMENT,
+    Note TEXT,
+    Datetime_FK INTEGER,
+    Number_eng_FK INTEGER,
+    Engine_mileage_FK INTEGER,
+    Oil_mileage_FK INTEGER,
+    Client_FK INTEGER,
+    FOREIGN KEY (Datetime_FK) REFERENCES Datetime(Datetime_PK),
+    FOREIGN KEY (Number_eng_FK) REFERENCES Number_engine(Number_eng_PK),
+    FOREIGN KEY (Engine_mileage_FK) REFERENCES Engine_mileage(Engine_mileage_PK),
+    FOREIGN KEY (Oil_mileage_FK) REFERENCES Oil_mileage(Oil_mileage_PK),
+    FOREIGN KEY (Client_FK) REFERENCES Client(Client_PK)
+);
+
+CREATE TABLE Experiment (
+    Experiment_PK INTEGER PRIMARY KEY AUTOINCREMENT,
+    Number INTEGER,
+    Error INTEGER,
+    Sample_FK INTEGER,
+    Datetime_FK INTEGER,
+    FOREIGN KEY (Sample_FK) REFERENCES Sample(Sample_PK),
+    FOREIGN KEY (Datetime_FK) REFERENCES Datetime(Datetime_PK)
+);
+
+CREATE TABLE Data_of_exp (
+    Data_of_exp_PK INTEGER PRIMARY KEY AUTOINCREMENT,
+    run_of_test INTEGER,
+    num_of_error INTEGER,
+    Time TEXT,
+    Temp REAL,
+    Power REAL,
+    Speed REAL,
+    Experiment_FK INTEGER,
+    FOREIGN KEY (Experiment_FK) REFERENCES Experiment(Experiment_PK)
+);
+";
+        }
+
+
     }
 
 }

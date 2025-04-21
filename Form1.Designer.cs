@@ -78,6 +78,7 @@
             this.buttonStartExperiment = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.buttonDataExp = new System.Windows.Forms.Button();
+            this.creatNewDBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -87,7 +88,7 @@
             this.labelClients.Font = new System.Drawing.Font("Arial Narrow", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.labelClients.Location = new System.Drawing.Point(12, 39);
             this.labelClients.Name = "labelClients";
-            this.labelClients.Size = new System.Drawing.Size(85, 34);
+            this.labelClients.Size = new System.Drawing.Size(68, 27);
             this.labelClients.TabIndex = 3;
             this.labelClients.Text = "Clients";
             this.labelClients.Click += new System.EventHandler(this.label1_Click);
@@ -124,7 +125,7 @@
             this.labelSamples.Font = new System.Drawing.Font("Arial Narrow", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.labelSamples.Location = new System.Drawing.Point(448, 39);
             this.labelSamples.Name = "labelSamples";
-            this.labelSamples.Size = new System.Drawing.Size(105, 34);
+            this.labelSamples.Size = new System.Drawing.Size(84, 27);
             this.labelSamples.TabIndex = 7;
             this.labelSamples.Text = "Samples";
             // 
@@ -205,7 +206,7 @@
             this.EngineBrand.Font = new System.Drawing.Font("Arial Narrow", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.EngineBrand.Location = new System.Drawing.Point(912, 291);
             this.EngineBrand.Name = "EngineBrand";
-            this.EngineBrand.Size = new System.Drawing.Size(160, 34);
+            this.EngineBrand.Size = new System.Drawing.Size(128, 27);
             this.EngineBrand.TabIndex = 15;
             this.EngineBrand.Text = "Engine Brand:";
             // 
@@ -343,6 +344,7 @@
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.creatNewDBToolStripMenuItem,
             this.selectBDToolStripMenuItem,
             this.selectCOMPortToolStripMenuItem,
             this.sortToolStripMenuItem,
@@ -580,6 +582,13 @@
             this.buttonDataExp.UseVisualStyleBackColor = true;
             this.buttonDataExp.Click += new System.EventHandler(this.buttonDataExp_Click);
             // 
+            // creatNewDBToolStripMenuItem
+            // 
+            this.creatNewDBToolStripMenuItem.Name = "creatNewDBToolStripMenuItem";
+            this.creatNewDBToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.creatNewDBToolStripMenuItem.Text = "Create new DB";
+            this.creatNewDBToolStripMenuItem.Click += new System.EventHandler(this.creatNewDBToolStripMenuItem_Click);
+            // 
             // Main
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -680,6 +689,7 @@
         private System.Windows.Forms.ToolStripMenuItem sortByDateTimeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sortByErrorToolStripMenuItem;
         private System.Windows.Forms.Button buttonDataExp;
+        private System.Windows.Forms.ToolStripMenuItem creatNewDBToolStripMenuItem;
     }
 }
 
