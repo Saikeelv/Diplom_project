@@ -243,5 +243,71 @@ namespace Diplom_project
         {
             
         }
+
+        private void buttonSaveData_Click(object sender, EventArgs e)
+        {
+            if (comboBoxX.SelectedItem == null || comboBoxY.SelectedItem == null)
+            {
+                MessageBox.Show("Выберите обе оси для сохранения!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string columnX = comboBoxX.SelectedItem.ToString();
+            string columnY = comboBoxY.SelectedItem.ToString();
+
+            SaveFileDialog saveDialog = new SaveFileDialog
+            {
+                Filter = "Text file (*.txt)|*.txt",
+                Title = "Save data experiment"
+            };
+
+            if (saveDialog.ShowDialog() != DialogResult.OK) return;
+
+            using (StreamWriter writer = new StreamWriter(saveDialog.FileName, false, Encoding.UTF8))
+            {
+                using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+                {
+                    connection.Open();
+
+                    string query = $@"
+                SELECT run_of_test, {columnX}, {columnY} 
+                FROM Data_of_exp 
+                WHERE Experiment_FK = @ExperimentId 
+                ORDER BY run_of_test";
+
+                    using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@ExperimentId", experimentId);
+
+                        using (SQLiteDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                int runOfTest = reader.GetInt32(0);
+                                string rawX = reader.IsDBNull(1) ? "" : reader.GetString(1).Replace(',', '.');
+                                string rawY = reader.IsDBNull(2) ? "" : reader.GetString(2).Replace(',', '.');
+
+                                string[] valuesX = rawX.Split(';');
+                                string[] valuesY = rawY.Split(';');
+                                int count = Math.Min(valuesX.Length, valuesY.Length);
+
+                                writer.WriteLine($"Run {runOfTest}");
+                                writer.WriteLine($"{columnX};{columnY}");
+
+                                for (int i = 0; i < count; i++)
+                                {
+                                    writer.WriteLine($"{valuesX[i]};{valuesY[i]}");
+                                }
+
+                                writer.WriteLine(); // пустая строка между испытаниями
+                            }
+                        }
+                    }
+                }
+            }
+
+            MessageBox.Show("File saved successfully!", "Successfull", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+        }
     }
 }
