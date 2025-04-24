@@ -1,201 +1,333 @@
 #include <HX711.h>
 
-// === Пины ===
-#define HX711_DT 3
-#define HX711_SCK 2
-#define ENCODER_PIN 4
-#define TEMP_PIN A2
-#define CURRENT_MOTOR_PIN A0
-#define CURRENT_PRESS_PIN A1
-#define DIR_MOTOR 7
-#define PWM_MOTOR 9
-#define DIR_PRESS 8
-#define PWM_PRESS 10
+// --- Определение пинов ---
+#define SENSOR_SPEED_PIN 2    // Пин для ИК-датчика скорости (энкодера)
+#define CURRENT_SENSOR1  A0   // Пин для датчика тока двигателя
+#define CURRENT_SENSOR2  A1   // Пин для датчика тока прижимного механизма
+#define TEMP_SENSOR      A2   // Пин для датчика температуры
+#define HX711_DT         A3   // Пин данных для тензодатчика HX711
+#define HX711_SCK        A4   // Пин синхронизации для HX711
+#define MOTOR_PWM        3    // Пин ШИМ для двигателя
+#define PRESS_PWM        9    // Пин ШИМ для прижимного механизма
+#define RELAY_UP         5    // Пин реле для подъема прижимного механизма
+#define RELAY_DOWN       6    // Пин реле для опускания прижимного механизма
 
-// === Датчики и переменные ===
-HX711 scale;
-unsigned long lastMeasureTime = 0;
-unsigned long startTime;
-unsigned long packetTimer = 0;
-float currentTime = 0.0;
-float speed = 0.0;
-float temperature = 0.0;
-float force = 0.0;
-float currentMotor = 0.0;
-float currentPress = 0.0;
-int packetNumber = 0;
-int experimentNumber = 0;
-int ticks = 0;
-bool encoderState = false;
-bool experimentRunning = false;
-bool loadDetected = false;
+// --- Опция инверсии логики реле (раскомментировать, если реле активны на LOW) ---
+// #define RELAY_ACTIVE_LOW
 
-// === Константы ===
-const float WEIGHT_THRESHOLD = 100.0;
-const float SPEED_THRESHOLD = 3.0;
-const int NUM_EXPERIMENTS = 10;
-const int MEASURE_INTERVAL = 100; // мс
-const int MOTOR_PWM = 200;
-const int PRESS_PWM_HIGH = 200;
-const int PRESS_PWM_LOW = 80;
-const float TEMP_OVERHEAT = 60.0; // °C
-const float CURRENT_OVERLOAD = 10.0; // ампер
-const float VCC = 5.0;
-const float ACS_FACTOR = 0.04; // 20 мВ/А
+#ifdef RELAY_ACTIVE_LOW
+  #define RELAY_ON  LOW
+  #define RELAY_OFF HIGH
+#else
+  #define RELAY_ON  HIGH
+  #define RELAY_OFF LOW
+#endif
+
+// --- Константы ---
+const float VCC = 5.0;                 // Напряжение питания (5В)
+const float CURRENT_FACTOR = 0.04;     // Коэффициент преобразования для датчиков тока
+const int SPEED_THRESHOLD = 3000;      // Порог скорости (импульсы/с)
+const int MAX_TRIALS = 10;             // Максимальное количество испытаний
+const float WEIGHT_THRESHOLD = 50.0;   // Порог веса для уменьшения мощности прижима (в граммах)
+const int LIFT_DURATION = 1000;        // Время подъема прижимного механизма (1 секунда)
+const float TEMP_MIN = 0.0;            // Минимальная допустимая температура (°C)
+const float TEMP_MAX = 100.0;          // Максимальная допустимая температура
+const float CURRENT_MAX = 50.0;        // Максимальный допустимый ток
+const float WEIGHT_MIN = -1000.0;      // Минимальный допустимый вес
+const float WEIGHT_MAX = 1000.0;       // Максимальный допустимый вес
+const float SPEED_MAX = 10000.0;       // Максимальная допустимая скорость
+
+// --- Калибровка HX711 ---
+HX711 scale;                           // Объект для работы с тензодатчиком
+float calibration_factor = -0.381;     // Коэффициент калибровки тензодатчика
+
+// --- Переменные состояния ---
+bool experimentRunning = false;        // Флаг выполнения эксперимента
+bool testMode = false;                 // Флаг тестового режима (для проверки)
+bool checking = false;                 // Флаг выполнения проверочной процедуры
+int trialCounter = 0;                  // Счетчик испытаний
+int packetCounter = 0;                 // Счетчик пакетов данных
+volatile unsigned long pulseCount = 0; // Счетчик импульсов от ИК-датчика (volatile для прерываний)
+unsigned long lastSpeedTime = 0;       // Время последнего измерения скорости
+unsigned long lastDataTime = 0;        // Время последней отправки данных
+int currentError = 0;                  // Код текущей ошибки
+unsigned long checkStartTime = 0;      // Время начала проверочной процедуры
+bool checkPressed = false;             // Флаг нажатия в проверочной процедуре
+unsigned long pressStartTime = 0;      // Время начала работы прижима
+bool pressActive = false;              // Флаг активности прижимного механизма
+bool lifting = false;                  // Флаг подъема прижимного механизма
+
+// --- Обработчик прерывания для датчика скорости ---
+void speedSensorISR() {
+  pulseCount++;                        // Увеличение счетчика импульсов
+}
 
 void setup() {
-  Serial.begin(9600);
-  pinMode(ENCODER_PIN, INPUT);
-  pinMode(DIR_MOTOR, OUTPUT);
-  pinMode(PWM_MOTOR, OUTPUT);
-  pinMode(DIR_PRESS, OUTPUT);
-  pinMode(PWM_PRESS, OUTPUT);
+  Serial.begin(115200);                // Инициализация последовательного порта
+  
+  // Инициализация пинов
+  pinMode(SENSOR_SPEED_PIN, INPUT);    // ИК-датчик как вход
+  pinMode(MOTOR_PWM, OUTPUT);          // ШИМ двигателя как выход
+  pinMode(PRESS_PWM, OUTPUT);          // ШИМ прижима как выход
+  pinMode(RELAY_UP, OUTPUT);           // Реле подъема как выход
+  pinMode(RELAY_DOWN, OUTPUT);         // Реле опускания как выход
+  digitalWrite(RELAY_UP, RELAY_OFF);   // Начальное состояние: реле выключены
+  digitalWrite(RELAY_DOWN, RELAY_OFF);
 
-  scale.begin(HX711_DT, HX711_SCK);
-  scale.set_scale(110.0);
-  scale.tare();
+  // Настройка прерывания для датчика скорости
+  attachInterrupt(digitalPinToInterrupt(SENSOR_SPEED_PIN), speedSensorISR, RISING); // Прерывание на переход LOW->HIGH
 
-  Serial.println("WAITING FOR START");
+  // Инициализация HX711
+  scale.begin(HX711_DT, HX711_SCK);    // Запуск модуля HX711
+  scale.set_scale();                   // Установка масштаба
+  scale.tare();                        // Сбрасываем значения веса в 0
+  scale.set_scale(calibration_factor); // Установка коэффициента калибровки
+
+  Serial.println("READY");             // Сообщение о готовности
 }
 
 void loop() {
+  handleSerial();                      // Обработка команд с последовательного порта
+
+  if ((experimentRunning || checking) && !lifting) { // Если идет эксперимент или проверка
+    // Чтение веса один раз за цикл для оптимизации
+    float units = scale.get_units(5);  // Усреднение 5 измерений для ускорения
+    float weight = units * 0.035274 / 10; // Перевод в граммы
+    adjustPressPower(weight);          // Регулировка мощности прижима
+    if (checking) {
+      handleCheckRoutine(weight);      // Обработка проверочной процедуры
+    }
+    if (millis() - lastDataTime >= 100) { // Отправка данных каждые 100 мс
+      lastDataTime = millis();
+      readAndSendData(weight);
+    }
+  }
+}
+
+void handleSerial() {
+  // Обработка входящих команд
   if (Serial.available()) {
-    String cmd = Serial.readStringUntil('\n');
-    cmd.trim();
-    if (cmd == "start") {
-      experimentRunning = true;
-      experimentNumber = 0;
-      packetNumber = 0;
-      startTime = millis();
+    char cmd = Serial.read();
+    if (cmd == '1') {                  // Команда запуска эксперимента
+      startExperiment();
+    } else if (cmd == '0') {           // Команда остановки
+      if (experimentRunning) {
+        float units = scale.get_units(5); // Чтение веса для последнего пакета
+        float weight = units * 0.035274 / 10;
+        readAndSendData(weight);       // Отправка последнего пакета
+        Serial.println("9999");        // Код завершения
+        stopAll(true);
+      } else if (checking) {
+        float units = scale.get_units(5); // Чтение веса для последнего пакета
+        float weight = units * 0.035274 / 10;
+        readAndSendData(weight);       // Отправка последнего пакета
+        Serial.println("8888");        // Код завершения проверки
+        stopAll(true);
+      }
+    } else if (cmd == '2') {           // Команда запуска проверки
+      Serial.println("2222");          // Подтверждение запуска проверки
+      startCheck();
     }
   }
+}
 
-  if (experimentRunning && experimentNumber < NUM_EXPERIMENTS) {
-    runExperiment();
+void startExperiment() {
+  // Запуск эксперимента
+  experimentRunning = true;
+  trialCounter = 0;                    // Сброс счетчика испытаний
+  packetCounter = 0;                   // Сброс счетчика пакетов
+  pulseCount = 0;                      // Сброс счетчика импульсов
+  lastSpeedTime = millis();            // Запись времени
+  lastDataTime = millis();             // Сброс времени отправки данных
+  currentError = 0;                    // Сброс ошибок
+  lifting = false;                     // Сброс флага подъема
+  Serial.println("1111");              // Подтверждение запуска
+  startTrial();                        // Запуск первого испытания
+}
+
+void startTrial() {
+  // Запуск одного испытания
+  if (trialCounter >= MAX_TRIALS) {    // Если достигнуто максимум испытаний
+    currentError = 1;                  // Успешное завершение
+    float units = scale.get_units(5);  // Чтение веса для последнего пакета
+    float weight = units * 0.035274 / 10;
+    readAndSendData(weight);           // Отправка последнего пакета с кодом ошибки
+    Serial.println("9999");            // Код завершения
+    stopAll(true);
+    return;
+  }
+  trialCounter++;                      // Увеличение счетчика испытаний
+  analogWrite(MOTOR_PWM, 255);         // Полная мощность двигателя
+  analogWrite(PRESS_PWM, 128);         // Половина мощности прижима
+  digitalWrite(RELAY_DOWN, RELAY_ON);  // Опускание прижимного механизма
+  pressStartTime = millis();           // Запись времени начала
+  pressActive = true;                  // Активация прижима
+}
+
+void stopAll(bool lift) {
+  // Остановка всех механизмов
+  analogWrite(MOTOR_PWM, 0);           // Отключение двигателя
+  analogWrite(PRESS_PWM, 0);           // Отключение прижима
+  digitalWrite(RELAY_DOWN, RELAY_OFF); // Отключение реле опускания
+
+  if (lift) {                          // Если требуется подъем
+    digitalWrite(RELAY_UP, RELAY_ON);  // Включение реле подъема
+    delay(LIFT_DURATION);              // Ожидание 1 секунды
+    digitalWrite(RELAY_UP, RELAY_OFF); // Отключение реле подъема
+  }
+
+  // Сброс флагов состояния
+  experimentRunning = false;
+  testMode = false;
+  checking = false;
+  lifting = false;
+  trialCounter = 0;
+}
+
+void readAndSendData(float weight) {
+  // Чтение и отправка данных
+  packetCounter++;                     // Увеличение счетчика пакетов
+
+  // Расчет скорости (импульсы/с)
+  unsigned long currentTime = millis();
+  float elapsedTime = (currentTime - lastSpeedTime) / 1000.0; // Время в секундах
+  float speed = (elapsedTime > 0) ? pulseCount / elapsedTime : 0; // Импульсы/с
+  pulseCount = 0;                      // Сброс счетчика импульсов
+  lastSpeedTime = currentTime;         // Обновление времени
+
+  // Чтение датчиков
+  float current1 = readCurrent(CURRENT_SENSOR1); // Ток двигателя
+  float current2 = readCurrent(CURRENT_SENSOR2); // Ток прижима
+  float temp = analogRead(TEMP_SENSOR) * VCC / 1023.0 * 100.0; // Температура
+
+  // Проверка ошибок (только для эксперимента, не для проверки)
+  if (experimentRunning && checkErrors(temp, weight, speed, current1, current2)) {
+    // Отправка пакета с кодом ошибки
+    Serial.print(packetCounter); Serial.print(";");
+    Serial.print(current1); Serial.print(";");
+    Serial.print(current2); Serial.print(";");
+    Serial.print(speed); Serial.print(";");
+    Serial.print(temp); Serial.print(";");
+    Serial.print(weight); Serial.print(";");
+    Serial.println(currentError);
+    Serial.println("9999");            // Код завершения при ошибке
+    stopAll(true);                     // Остановка эксперимента
+    return;
+  }
+
+  // Отправка данных
+  Serial.print(packetCounter); Serial.print(";");
+  Serial.print(current1); Serial.print(";");
+  Serial.print(current2); Serial.print(";");
+  Serial.print(speed); Serial.print(";");
+  Serial.print(temp); Serial.print(";");
+  Serial.print(weight); Serial.print(";");
+  Serial.println(currentError);
+}
+
+float readCurrent(int pin) {
+  // Чтение тока с датчика ACS758
+  float voltage = analogRead(pin) * VCC / 1023.0; // Преобразование в напряжение
+  voltage -= (VCC / 2.0 - 0.007);                 // Учет смещения
+  return voltage / CURRENT_FACTOR;                // Преобразование в ток
+}
+
+bool checkErrors(float temp, float weight, float speed, float current1, float current2) {
+  // Проверка ошибок датчиков
+  // Температура
+  if (temp < TEMP_MIN || temp > TEMP_MAX) {
+    currentError = 12; // Некорректные показания температуры
+    return true;
+  }
+  if (temp > 80.0) {
+    currentError = 13; // Перегрев масла
+    return true;
+  }
+
+  // Вес
+  if (!scale.is_ready()) {
+    currentError = 21; // Датчик веса не отвечает
+    return true;
+  }
+  if (weight < WEIGHT_MIN || weight > WEIGHT_MAX) {
+    currentError = 22; // Некорректные показания веса
+    return true;
+  }
+  if (pressActive && abs(weight) < 10.0 && millis() - pressStartTime > 1000) {
+    currentError = 23; // Поломка прижимного механизма
+    return true;
+  }
+
+  // Скорость
+  if (speed > SPEED_MAX) {
+    currentError = 32; // Некорректные показания скорости
+    return true;
+  }
+  if (speed == 0 && pressActive && millis() - pressStartTime > 2000) {
+    currentError = 33; // Зазор в датчике скорости
+    return true;
+  }
+
+  // Ток двигателя
+  if (current1 < -CURRENT_MAX || current1 > CURRENT_MAX) {
+    currentError = 42; // Некорректные показания тока двигателя
+    return true;
+  }
+  if (current1 > 30.0) {
+    currentError = 43; // Перегрузка тока двигателя
+    return true;
+  }
+
+  // Ток прижимного механизма
+  if (current2 < -CURRENT_MAX || current2 > CURRENT_MAX) {
+    currentError = 52; // Некорректные показания тока прижима
+    return true;
+  }
+  if (current2 > 30.0) {
+    currentError = 53; // Перегрузка тока прижима
+    return true;
+  }
+
+  return false; // Ошибок нет
+}
+
+void adjustPressPower(float weight) {
+  // Регулировка мощности прижимного механизма
+  if (abs(weight) > WEIGHT_THRESHOLD) {
+    analogWrite(PRESS_PWM, 64);        // Уменьшение до 25% мощности
+  } else {
+    analogWrite(PRESS_PWM, 128);       // Половина мощности
   }
 }
 
-void runExperiment() {
-  startMotors();
+void startCheck() {
+  // Запуск проверочной процедуры
+  checking = true;                     // Установка флага проверки
+  testMode = true;                     // Включение тестового режима
+  checkStartTime = millis();           // Запись времени
+  checkPressed = false;                // Сброс флага нажатия
+  currentError = 0;                    // Сброс ошибки
+  packetCounter = 0;                   // Сброс счетчика пакетов
+  pulseCount = 0;                      // Сброс счетчика импульсов
+  lastSpeedTime = millis();            // Запись времени
+  lastDataTime = millis();             // Сброс времени отправки данных
 
-  unsigned long experimentStart = millis();
-  packetTimer = experimentStart;
-  loadDetected = false;
-  ticks = 0;
-  bool testComplete = false;
+  analogWrite(MOTOR_PWM, 255);         // Полная мощность двигателя
+  analogWrite(PRESS_PWM, 128);         // Половина мощности прижима
+  digitalWrite(RELAY_DOWN, RELAY_ON);  // Опускание прижимного механизма
+  pressActive = true;                  // Активация прижима
+}
 
-  while (!testComplete) {
-    readEncoder();
-
-    if (millis() - packetTimer >= MEASURE_INTERVAL) {
-      currentTime = (millis() - startTime) / 1000.0;
-      force = scale.is_ready() ? scale.get_units() : -999;
-
-      // Температура — аналоговая шкала 0–1023, масштаб на 100 °C
-      temperature = analogRead(TEMP_PIN) * (VCC / 1023.0) * 100.0;
-
-      // Ток — по формуле из твоего кода
-      currentMotor = calculateCurrent(CURRENT_MOTOR_PIN);
-      currentPress = calculateCurrent(CURRENT_PRESS_PIN);
-
-      speed = ticks * (1000.0 / MEASURE_INTERVAL); // об/сек
-      ticks = 0;
-      packetTimer = millis();
-
-      int errorCode = checkErrors();
-
-      sendPacket(errorCode);
-
-      if (force < WEIGHT_THRESHOLD) {
-        setPressDirection(true);
-        analogWrite(PWM_PRESS, PRESS_PWM_HIGH);
-      } else {
-        loadDetected = true;
-        analogWrite(PWM_PRESS, PRESS_PWM_LOW);
-      }
-
-      if (speed < SPEED_THRESHOLD) {
-        testComplete = true;
-      }
-    }
+void handleCheckRoutine(float weight) {
+  // Обработка проверочной процедуры
+  if (!checkPressed && abs(weight) > 50 && millis() - checkStartTime > 2000) { // Проверка веса после 2 секунд
+    checkPressed = true;               // Установка флага нажатия
+    analogWrite(MOTOR_PWM, 0);         // Остановка мотора
+    digitalWrite(RELAY_DOWN, RELAY_OFF); // Отключение опускания
+    digitalWrite(RELAY_UP, RELAY_ON);  // Включение подъема
+    delay(LIFT_DURATION);              // Ожидание 1 секунды
+    digitalWrite(RELAY_UP, RELAY_OFF); // Отключение подъема
+    Serial.println("8888");            // Сообщение о завершении
+    stopAll(false);                    // Остановка без дополнительного подъема
   }
-
-  retractPress();
-  stopMotors();
-  experimentNumber++;
-}
-
-void readEncoder() {
-  if (digitalRead(ENCODER_PIN) == LOW && !encoderState) {
-    encoderState = true;
-    ticks++;
-  }
-  if (digitalRead(ENCODER_PIN) == HIGH) {
-    encoderState = false;
-  }
-}
-
-void startMotors() {
-  digitalWrite(DIR_MOTOR, HIGH);
-  analogWrite(PWM_MOTOR, MOTOR_PWM);
-
-  setPressDirection(true);
-  analogWrite(PWM_PRESS, PRESS_PWM_HIGH);
-}
-
-void stopMotors() {
-  analogWrite(PWM_MOTOR, 0);
-  analogWrite(PWM_PRESS, 0);
-}
-
-void setPressDirection(bool down) {
-  digitalWrite(DIR_PRESS, down ? HIGH : LOW);
-}
-
-void retractPress() {
-  setPressDirection(false);
-  analogWrite(PWM_PRESS, PRESS_PWM_HIGH);
-  unsigned long tStart = millis();
-  while (scale.get_units() >= WEIGHT_THRESHOLD && millis() - tStart < 5000) {
-    delay(50);
-  }
-  delay(200);
-  analogWrite(PWM_PRESS, 0);
-}
-
-float calculateCurrent(int pin) {
-  float voltage = (VCC / 1023.0) * analogRead(pin);
-  voltage = voltage - (VCC * 0.5) + 0.007;
-  return voltage / ACS_FACTOR;
-}
-
-void sendPacket(int errorCode) {
-  packetNumber++;
-  Serial.print(packetNumber);
-  Serial.print(";");
-  Serial.print(currentTime, 2);
-  Serial.print(";");
-  Serial.print(temperature, 2);
-  Serial.print(";");
-  Serial.print(force, 2);
-  Serial.print(";");
-  Serial.print(speed, 2);
-  Serial.print(";");
-  Serial.print(experimentNumber + 1);
-  Serial.print(";");
-  Serial.println(errorCode);
-}
-
-int checkErrors() {
-  if (!scale.is_ready()) return 21;
-  if (force < -50 || force > 20000) return 22;
-
-  if (temperature > TEMP_OVERHEAT) return 13;
-
-  if (speed < 0 || speed > 1000) return 32;
-
-  if (currentMotor > CURRENT_OVERLOAD) return 43;
-  if (currentPress > CURRENT_OVERLOAD) return 53;
-
-  return 0;
 }

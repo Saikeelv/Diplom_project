@@ -193,7 +193,7 @@ namespace Diplom_project
             {
                 this.Invoke(new Action(() =>
                 {
-                    MessageBox.Show($"Error in reading: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                   MessageBox.Show($"Error in reading: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }));
             }
             catch (InvalidOperationException)
