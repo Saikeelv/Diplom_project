@@ -7,10 +7,12 @@
 #define TEMP_SENSOR      A2   // Пин для датчика температуры
 #define HX711_DT         A3   // Пин данных для тензодатчика HX711
 #define HX711_SCK        A4   // Пин синхронизации для HX711
-#define MOTOR_PWM        3    // Пин ШИМ для двигателя
-#define PRESS_PWM        9    // Пин ШИМ для прижимного механизма
+#define MOTOR_PWM        6    // Пин ШИМ для двигателя
+#define MOTOR_DIR        7    // Направление двигателя (H-мост DIR, фиксированное)
+#define PRESS_PWM        3    // Пин ШИМ для прижимного механизма
+#define PRESS_DIR        8    // Направление прижима (H-мост DIR, фиксированное)
 #define RELAY_UP         5    // Пин реле для подъема прижимного механизма
-#define RELAY_DOWN       6    // Пин реле для опускания прижимного механизма
+#define RELAY_DOWN       10    // Пин реле для опускания прижимного механизма
 
 // --- Опция инверсии логики реле (раскомментировать, если реле активны на LOW) ---
 // #define RELAY_ACTIVE_LOW
@@ -68,11 +70,17 @@ void setup() {
   // Инициализация пинов
   pinMode(SENSOR_SPEED_PIN, INPUT);    // ИК-датчик как вход
   pinMode(MOTOR_PWM, OUTPUT);          // ШИМ двигателя как выход
+  pinMode(MOTOR_DIR, OUTPUT);          // Направление двигателя
   pinMode(PRESS_PWM, OUTPUT);          // ШИМ прижима как выход
+  pinMode(PRESS_DIR, OUTPUT);          // Направление прижима
   pinMode(RELAY_UP, OUTPUT);           // Реле подъема как выход
   pinMode(RELAY_DOWN, OUTPUT);         // Реле опускания как выход
+  digitalWrite(MOTOR_DIR, HIGH);       // Мотор вперед
+  digitalWrite(PRESS_DIR, HIGH);       // Прижим фиксированное направление
   digitalWrite(RELAY_UP, RELAY_OFF);   // Начальное состояние: реле выключены
   digitalWrite(RELAY_DOWN, RELAY_OFF);
+  analogWrite(MOTOR_PWM, 0);           // Мотор выключен
+  analogWrite(PRESS_PWM, 0);           // Прижим выключен
 
   // Настройка прерывания для датчика скорости
   attachInterrupt(digitalPinToInterrupt(SENSOR_SPEED_PIN), speedSensorISR, RISING); // Прерывание на переход LOW->HIGH
@@ -108,6 +116,10 @@ void handleSerial() {
   // Обработка входящих команд
   if (Serial.available()) {
     char cmd = Serial.read();
+    // Очистка буфера для предотвращения лишних пакетов
+    while (Serial.available() > 0) {
+      Serial.read();
+    }
     if (cmd == '1') {                  // Команда запуска эксперимента
       startExperiment();
     } else if (cmd == '0') {           // Команда остановки
@@ -151,15 +163,18 @@ void startTrial() {
     currentError = 1;                  // Успешное завершение
     float units = scale.get_units(5);  // Чтение веса для последнего пакета
     float weight = units * 0.035274 / 10;
-    readAndSendData(weight);           // Отправка последнего пакета с кодом ошибки
+    readAndSendData(weight);           // Отправка последнего пакета
     Serial.println("9999");            // Код завершения
     stopAll(true);
     return;
   }
   trialCounter++;                      // Увеличение счетчика испытаний
+  digitalWrite(MOTOR_DIR, HIGH);       // Мотор вперед
+  digitalWrite(PRESS_DIR, HIGH);       // Прижим фиксированное направление
   analogWrite(MOTOR_PWM, 255);         // Полная мощность двигателя
   analogWrite(PRESS_PWM, 128);         // Половина мощности прижима
   digitalWrite(RELAY_DOWN, RELAY_ON);  // Опускание прижимного механизма
+  digitalWrite(RELAY_UP, RELAY_OFF);
   pressStartTime = millis();           // Запись времени начала
   pressActive = true;                  // Активация прижима
 }
@@ -169,9 +184,12 @@ void stopAll(bool lift) {
   analogWrite(MOTOR_PWM, 0);           // Отключение двигателя
   analogWrite(PRESS_PWM, 0);           // Отключение прижима
   digitalWrite(RELAY_DOWN, RELAY_OFF); // Отключение реле опускания
+  digitalWrite(MOTOR_DIR, HIGH);       // Сохраняем направление
+  digitalWrite(PRESS_DIR, HIGH);       // Сохраняем направление
 
   if (lift) {                          // Если требуется подъем
     digitalWrite(RELAY_UP, RELAY_ON);  // Включение реле подъема
+    digitalWrite(RELAY_DOWN, RELAY_OFF);
     delay(LIFT_DURATION);              // Ожидание 1 секунды
     digitalWrite(RELAY_UP, RELAY_OFF); // Отключение реле подъема
   }
@@ -312,9 +330,12 @@ void startCheck() {
   lastSpeedTime = millis();            // Запись времени
   lastDataTime = millis();             // Сброс времени отправки данных
 
+  digitalWrite(MOTOR_DIR, HIGH);       // Мотор вперед
+  digitalWrite(PRESS_DIR, HIGH);       // Прижим фиксированное направление
   analogWrite(MOTOR_PWM, 255);         // Полная мощность двигателя
   analogWrite(PRESS_PWM, 128);         // Половина мощности прижима
   digitalWrite(RELAY_DOWN, RELAY_ON);  // Опускание прижимного механизма
+  digitalWrite(RELAY_UP, RELAY_OFF);
   pressActive = true;                  // Активация прижима
 }
 
@@ -325,6 +346,7 @@ void handleCheckRoutine(float weight) {
     analogWrite(MOTOR_PWM, 0);         // Остановка мотора
     digitalWrite(RELAY_DOWN, RELAY_OFF); // Отключение опускания
     digitalWrite(RELAY_UP, RELAY_ON);  // Включение подъема
+    digitalWrite(PRESS_DIR, HIGH);     // Сохраняем направление
     delay(LIFT_DURATION);              // Ожидание 1 секунды
     digitalWrite(RELAY_UP, RELAY_OFF); // Отключение подъема
     Serial.println("8888");            // Сообщение о завершении

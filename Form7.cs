@@ -248,7 +248,7 @@ namespace Diplom_project
         {
             if (comboBoxX.SelectedItem == null || comboBoxY.SelectedItem == null)
             {
-                MessageBox.Show("Выберите обе оси для сохранения!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Choise both axes!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 

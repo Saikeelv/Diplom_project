@@ -189,12 +189,15 @@ namespace Diplom_project
                 weightData.Add(values[3]);
                 rotationData.Add(values[4]);
             }
-            catch (IOException ex)
+            //catch (IOException ex)
+            catch (IOException)
             {
+                /*из за этого падает в ошибку
                 this.Invoke(new Action(() =>
                 {
                    MessageBox.Show($"Error in reading: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }));
+                */
             }
             catch (InvalidOperationException)
             {
