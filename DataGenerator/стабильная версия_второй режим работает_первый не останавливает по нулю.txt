@@ -118,12 +118,12 @@ void loop() {
     digitalWrite(RELAY_UP, RELAY_OFF); // Отключение реле подъема
     analogWrite(PRESS_PWM, 0);         // Отключение прижима
     lifting = false;                   // Сброс флага подъема
-    // Serial.print("Lift ended, experimentRunning="); Serial.print(experimentRunning);
-    // Serial.print(", trialCounter="); Serial.println(trialCounter);
+    Serial.print("Lift ended, experimentRunning="); Serial.print(experimentRunning);
+    Serial.print(", trialCounter="); Serial.println(trialCounter);
     if (experimentRunning && trialCounter < MAX_TRIALS) {
       Serial.println("1111");          // Вывод 1111 после каждого испытания (кроме последнего)
       startTrial();                    // Запустить следующее испытание
-      // Serial.print("Starting trial: "); Serial.println(trialCounter);
+      Serial.print("Starting trial: "); Serial.println(trialCounter);
     } else if (experimentRunning) {
       Serial.println("9999");          // Вывод 9999 после 10-го испытания
       Serial.flush();
@@ -165,7 +165,6 @@ void handleSerial() {
         readAndSendData(weight);       // Последний пакет
         Serial.println("9999");        // Код завершения
         Serial.flush();
-        experimentRunning = false;      // Завершение эксперимента
         stopAll(true);                 // Остановка с подъемом
       } else if (checking) {
         float units = scale.get_units(5);
@@ -173,7 +172,6 @@ void handleSerial() {
         readAndSendData(weight);       // Последний пакет
         Serial.println("8888");        // Код завершения проверки
         Serial.flush();
-        checking = false;              // Завершение проверки
         stopAll(true);                 // Остановка с подъемом
       }
     } else if (cmd == '2') {           // Команда запуска проверки
@@ -197,7 +195,7 @@ void startExperiment() {
   checking = false;                    // Сброс проверки
   Serial.println("1111");              // Подтверждение запуска
   startTrial();                        // Запуск первого испытания
-  // Serial.print("Experiment started, trial: "); Serial.println(trialCounter);
+  Serial.print("Experiment started, trial: "); Serial.println(trialCounter);
 }
 
 void startTrial() {
@@ -206,7 +204,6 @@ void startTrial() {
     return;                            // Завершение обрабатывается в loop
   }
   trialCounter++;                      // Увеличение счетчика испытаний
-  packetCounter = 0;                   // Сброс счетчика пакетов для нового испытания
   digitalWrite(MOTOR_DIR, HIGH);       // Мотор вперед
   digitalWrite(PRESS_DIR, HIGH);       // Прижим фиксированное направление
   analogWrite(MOTOR_PWM, 255);         // Полная мощность двигателя
@@ -215,7 +212,7 @@ void startTrial() {
   digitalWrite(RELAY_UP, RELAY_OFF);
   pressStartTime = millis();           // Запись времени начала
   pressActive = true;                  // Активация прижима
-  // Serial.print("Trial started: "); Serial.println(trialCounter);
+  Serial.print("Trial started: "); Serial.println(trialCounter);
 }
 
 void stopAll(bool lift) {
@@ -249,11 +246,11 @@ void readAndSendData(float weight) {
   unsigned long currentTime = millis();
   float elapsedTime = (currentTime - lastSpeedTime) / 1000.0; // Время в секундах
   float speed = (elapsedTime > 0) ? pulseCount * 60.0 / elapsedTime : 0; // Импульсы/мин
-  // Serial.print("PulseCount="); Serial.println(pulseCount); // Отладка до сброса
+  Serial.print("PulseCount="); Serial.println(pulseCount); // Отладка до сброса
   pulseCount = 0;                      // Сброс счетчика импульсов
   lastSpeedTime = currentTime;         // Обновление времени
-  // Serial.print("Speed="); Serial.println(speed);
-  // Serial.print("TrialTime="); Serial.println(millis() - pressStartTime); // Время с начала испытания
+  Serial.print("Speed="); Serial.println(speed);
+  Serial.print("TrialTime="); Serial.println(millis() - pressStartTime); // Время с начала испытания
 
   // Чтение датчиков
   float current1 = readCurrent(CURRENT_SENSOR1); // Ток двигателя
@@ -280,7 +277,7 @@ void readAndSendData(float weight) {
   if (experimentRunning && speed <= SPEED_THRESHOLD && pressActive && millis() - pressStartTime >= SPIN_UP_DELAY) {
     analogWrite(MOTOR_PWM, 0);         // Остановка мотора
     stopAll(true);                     // Поднять прижим
-    // Serial.print("Trial ended, speed="); Serial.println(speed);
+    Serial.print("Trial ended, speed="); Serial.println(speed);
     return;                            // Ожидать подъема
   }
 
@@ -316,12 +313,12 @@ bool checkErrors(float temp, float weight, float speed, float current1, float cu
   // Температура
   if (temp < TEMP_MIN || temp > TEMP_MAX) {
     currentError = 12; // Некорректные показания температуры
-    // Serial.print("Error 12: Temp="); Serial.println(temp);
+    Serial.print("Error 12: Temp="); Serial.println(temp);
     return true;
   }
   if (temp > 80.0) {
     currentError = 13; // Перегрев масла
-    // Serial.print("Error 13: Temp="); Serial.println(temp);
+    Serial.print("Error 13: Temp="); Serial.println(temp);
     return true;
   }
 
@@ -333,12 +330,12 @@ bool checkErrors(float temp, float weight, float speed, float current1, float cu
   // }
   if (weight < WEIGHT_MIN || weight > WEIGHT_MAX) {
     currentError = 22; // Некорректные показания веса
-    // Serial.print("Error 22: Weight="); Serial.println(weight);
+    Serial.print("Error 22: Weight="); Serial.println(weight);
     return true;
   }
   if (pressActive && abs(weight) < 10.0 && millis() - pressStartTime > 32000) {
     currentError = 23; // Поломка прижимного механизма
-    // Serial.println("Error 23: Press failure");
+    Serial.println("Error 23: Press failure");
     return true;
   }
 
@@ -350,31 +347,31 @@ bool checkErrors(float temp, float weight, float speed, float current1, float cu
   // }
   if (speed == 0 && pressActive && millis() - pressStartTime > 2000) {
     currentError = 33; // Зазор в датчике скорости
-    // Serial.println("Error 33: Speed gap");
+    Serial.println("Error 33: Speed gap");
     return true;
   }
 
   // Ток двигателя
   if (current1 < -CURRENT_MAX || current1 > CURRENT_MAX) {
     currentError = 42; // Некорректные показания тока двигателя
-    // Serial.print("Error 42: Current1="); Serial.println(current1);
+    Serial.print("Error 42: Current1="); Serial.println(current1);
     return true;
   }
   if (current1 > 30.0) {
     currentError = 43; // Перегрузка тока двигателя
-    // Serial.print("Error 43: Current1="); Serial.println(current1);
+    Serial.print("Error 43: Current1="); Serial.println(current1);
     return true;
   }
 
   // Ток прижимного механизма
   if (current2 < -CURRENT_MAX || current2 > CURRENT_MAX) {
     currentError = 52; // Некорректные показания тока прижима
-    // Serial.print("Error 52: Current2="); Serial.println(current2);
+    Serial.print("Error 52: Current2="); Serial.println(current2);
     return true;
   }
   if (current2 > 30.0) {
     currentError = 53; // Перегрузка тока прижима
-    // Serial.print("Error 53: Current2="); Serial.println(current2);
+    Serial.print("Error 53: Current2="); Serial.println(current2);
     return true;
   }
 
