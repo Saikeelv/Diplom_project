@@ -29,14 +29,14 @@
 // --- Константы ---
 const float VCC = 5.0;                 // Напряжение питания (5В)
 const float CURRENT_FACTOR = 0.04;     // Коэффициент преобразования для датчиков тока
-const float SPEED_THRESHOLD = 11000.0; // Порог скорости (11000 имп/мин)
-const int MAX_TRIALS = 10;             // Максимальное количество испытаний
+const float SPEED_THRESHOLD = 9000.0; // Порог скорости (11000 имп/мин)
+const int MAX_TRIALS = 3;             // Максимальное количество испытаний
 const float WEIGHT_THRESHOLD = 50.0;   // Порог веса для уменьшения мощности прижима (в граммах)
 const int LIFT_DURATION = 2000;        // Время подъема прижимного механизма (2 секунды)
 const float TEMP_MIN = 0.0;            // Минимальная допустимая температура (°C)
 const float TEMP_MAX = 100.0;          // Максимальная допустимая температура
 const float CURRENT_MAX = 20.0;        // Максимальный допустимый ток
-const float WEIGHT_MIN = -1000.0;      // Минимальный допустимый вес
+const float WEIGHT_MIN = -2000.0;      // Минимальный допустимый вес
 const float WEIGHT_MAX = 10000.0;      // Максимальный допустимый вес
 const float SPEED_MAX = 20000.0;       // Максимальная допустимая скорость (имп/мин)
 const unsigned long SPIN_UP_DELAY = 1000; // Задержка раскрутки мотора (1 секунда)
@@ -282,6 +282,10 @@ void readAndSendData(float weight) {
     stopAll(true);                     // Поднять прижим
     // Serial.print("Trial ended, speed="); Serial.println(speed);
     return;                            // Ожидать подъема
+  }
+  if(weight < 0 && weight > WEIGHT_MIN) 
+  {
+    weight = 0;
   }
 
   // Отправка данных
