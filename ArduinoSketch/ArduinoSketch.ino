@@ -29,8 +29,8 @@
 // --- Константы ---
 const float VCC = 5.0;                 // Напряжение питания (5В)
 const float CURRENT_FACTOR = 0.04;     // Коэффициент преобразования для датчиков тока
-const float SPEED_THRESHOLD = 9000.0; // Порог скорости (11000 имп/мин)
-const int MAX_TRIALS = 3;             // Максимальное количество испытаний
+const float SPEED_THRESHOLD = 7500.0; // Порог скорости (11000 имп/мин)
+const int MAX_TRIALS = 5;             // Максимальное количество испытаний
 const float WEIGHT_THRESHOLD = 50.0;   // Порог веса для уменьшения мощности прижима (в граммах)
 const int LIFT_DURATION = 2000;        // Время подъема прижимного механизма (2 секунды)
 const float TEMP_MIN = 0.0;            // Минимальная допустимая температура (°C)
@@ -139,7 +139,7 @@ void loop() {
 
   if ((experimentRunning || checking) && !lifting) { // Если идет эксперимент или проверка
     // Чтение веса один раз за цикл
-    float units = scale.get_units(5);  // Усреднение 5 измерений
+    float units = scale.get_units(1);  // Усреднение 5 измерений
     float weight = units * 0.035274 / 10; // Перевод в граммы
     adjustPressPower(weight);          // Регулировка мощности прижима
     if (checking) {
@@ -160,7 +160,7 @@ void handleSerial() {
       startExperiment();
     } else if (cmd == '0') {           // Команда остановки
       if (experimentRunning) {
-        float units = scale.get_units(5);
+        float units = scale.get_units(2);
         float weight = units * 0.035274 / 10;
         readAndSendData(weight);       // Последний пакет
         Serial.println("9999");        // Код завершения
@@ -168,7 +168,7 @@ void handleSerial() {
         experimentRunning = false;      // Завершение эксперимента
         stopAll(true);                 // Остановка с подъемом
       } else if (checking) {
-        float units = scale.get_units(5);
+        float units = scale.get_units(2);
         float weight = units * 0.035274 / 10;
         readAndSendData(weight);       // Последний пакет
         Serial.println("8888");        // Код завершения проверки

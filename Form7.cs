@@ -27,7 +27,8 @@ namespace Diplom_project
         {
             
             InitializeComponent();
-            
+            this.checkBoxApprox.CheckedChanged += new System.EventHandler(this.checkBoxApprox_CheckedChanged);
+
             this.experimentId = experimentId;
             this.connectionString = connectionString;
 
@@ -125,7 +126,7 @@ namespace Diplom_project
             MessageBox.Show($"Файл успешно сохранен на рабочем столе!\n{filePath}", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
             this.Close();
         }
-        */
+        
         private void PlotGraph(Dictionary<int, List<(double, double)>> experimentsData, string axisX, string axisY)
         {
             chartExp.Series.Clear();
@@ -162,12 +163,86 @@ namespace Diplom_project
                 colorIndex++; // Меняем цвет для следующего испытания
             }
 
+
             // Настраиваем оси
             chartExp.ChartAreas["MainArea"].AxisX.Title = axisX;
             chartExp.ChartAreas["MainArea"].AxisY.Title = axisY;
             chartExp.ChartAreas["MainArea"].AxisX.MajorGrid.LineDashStyle = ChartDashStyle.Dash;
             chartExp.ChartAreas["MainArea"].AxisY.MajorGrid.LineDashStyle = ChartDashStyle.Dash;
         }
+        */
+        private void PlotGraph(Dictionary<int, List<(double, double)>> experimentsData, string xLabel, string yLabel)
+        {
+            chartExp.Series.Clear();
+            chartExp.ChartAreas[0].AxisX.Title = xLabel;
+            chartExp.ChartAreas[0].AxisY.Title = yLabel;
+            chartExp.ChartAreas[0].AxisX.MajorGrid.LineColor = Color.LightGray;
+            chartExp.ChartAreas[0].AxisY.MajorGrid.LineColor = Color.LightGray;
+
+            List<(double x, double y)> allPoints = new List<(double, double)>();
+
+            foreach (var experiment in experimentsData)
+            {
+                // Основные точки
+                Series series = new Series($"Run {experiment.Key}")
+                {
+                    ChartType = SeriesChartType.Point,
+                    MarkerStyle = MarkerStyle.Circle,
+                    MarkerSize = 6,
+                    BorderWidth = 2
+                };
+
+                foreach (var point in experiment.Value)
+                {
+                    series.Points.AddXY(point.Item1, point.Item2);
+                    allPoints.Add((point.Item1, point.Item2));
+                }
+
+                chartExp.Series.Add(series);
+            }
+
+            // Общая аппроксимация
+            if (checkBoxApprox.Checked && allPoints.Count > 2)
+            {
+                // Оставляем только положительные значения
+                var validPoints = allPoints.Where(p => p.x > 0 && p.y > 0).ToList();
+                if (validPoints.Count < 2)
+                    return;
+
+                // ln(y) = ln(a) + b*x
+                double avgX = validPoints.Average(p => p.x);
+                double avgLnY = validPoints.Average(p => Math.Log(p.y));
+                double sumXlnY = validPoints.Sum(p => (p.x - avgX) * (Math.Log(p.y) - avgLnY));
+                double sumXX = validPoints.Sum(p => (p.x - avgX) * (p.x - avgX));
+
+                double b = sumXX == 0 ? 0 : sumXlnY / sumXX;
+                double lnA = avgLnY - b * avgX;
+                double a = Math.Exp(lnA);
+
+                // Построение кривой
+                Series approxSeries = new Series("Approximation")
+                {
+                    ChartType = SeriesChartType.Line,
+                    Color = Color.Black,
+                    BorderWidth = 3
+                };
+
+                double minX = validPoints.Min(p => p.x);
+                double maxX = validPoints.Max(p => p.x);
+                int steps = 100;
+                double stepSize = (maxX - minX) / steps;
+
+                for (int i = 0; i <= steps; i++)
+                {
+                    double x = minX + i * stepSize;
+                    double y = a * Math.Exp(b * x);
+                    approxSeries.Points.AddXY(x, y);
+                }
+
+                chartExp.Series.Add(approxSeries);
+            }
+        }
+
 
 
 
@@ -308,6 +383,11 @@ namespace Diplom_project
 
             MessageBox.Show("File saved successfully!", "Successfull", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
+        }
+
+        private void checkBoxApprox_CheckedChanged(object sender, EventArgs e)
+        {
+            buttonMake_Click(null, null); // просто перерисовать график
         }
     }
 }
