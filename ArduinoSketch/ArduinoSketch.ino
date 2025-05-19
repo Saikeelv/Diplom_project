@@ -294,14 +294,14 @@ void readAndSendData(float weight) {
     Serial.print(millis() - experimentStartTime); Serial.print(";");
     Serial.print(temp); Serial.print(";");
     Serial.print(weight); Serial.print(";");
-    Serial.print(speed); Serial.print(";");
+    Serial.print(speed/20); Serial.print(";");
     Serial.print(trialCounter); Serial.print(";");
     Serial.println(currentError);
   } else if (checking) {
     Serial.print(packetCounter); Serial.print(";");
     Serial.print(current1); Serial.print(";");
     Serial.print(current2); Serial.print(";");
-    Serial.print(speed); Serial.print(";");
+    Serial.print(speed/20); Serial.print(";");
     Serial.print(temp); Serial.print(";");
     Serial.print(weight); Serial.print(";");
     Serial.println(currentError);
@@ -335,11 +335,11 @@ bool checkErrors(float temp, float weight, float speed, float current1, float cu
   //   Serial.println("Error 21: Scale not ready");
   //   return true;
   // }
-  if (weight < WEIGHT_MIN || weight > WEIGHT_MAX) {
-    currentError = 22; // Некорректные показания веса
+  //if (weight < WEIGHT_MIN || weight > WEIGHT_MAX) {
+  //  currentError = 22; // Некорректные показания веса
     // Serial.print("Error 22: Weight="); Serial.println(weight);
-    return true;
-  }
+  //  return true;
+  //}
   if (pressActive && abs(weight) < 10.0 && millis() - pressStartTime > 32000) {
     currentError = 23; // Поломка прижимного механизма
     // Serial.println("Error 23: Press failure");
@@ -388,7 +388,7 @@ bool checkErrors(float temp, float weight, float speed, float current1, float cu
 void adjustPressPower(float weight) {
   // Регулировка мощности прижимного механизма
   if (abs(weight) > WEIGHT_THRESHOLD) {
-    analogWrite(PRESS_PWM, 85);        // Уменьшение до 1/3 мощности (255/3)
+    analogWrite(PRESS_PWM, 100);        // Уменьшение до 1/3 мощности (255/3)
   } else {
     analogWrite(PRESS_PWM, 128);       // Половина мощности
   }
