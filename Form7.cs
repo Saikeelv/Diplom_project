@@ -47,130 +47,7 @@ namespace Diplom_project
 
 
         /*
-        private void buttonMake_Click(object sender, EventArgs e)
-        {
-            if (comboBoxX.SelectedItem == null || comboBoxY.SelectedItem == null)
-            {
-                MessageBox.Show("Выберите обе оси!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            string columnX = comboBoxX.SelectedItem.ToString();
-            string columnY = comboBoxY.SelectedItem.ToString();
-
-            // Словарь для хранения данных по испытаниям
-            Dictionary<int, List<(string, string)>> experimentsData = new Dictionary<int, List<(string, string)>>();
-
-            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
-            {
-                connection.Open();
-                string query = $@"SELECT run_of_test, {columnX}, {columnY} FROM Data_of_exp WHERE Experiment_FK = @ExperimentId ORDER BY run_of_test";
-
-                using (SQLiteCommand command = new SQLiteCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@ExperimentId", experimentId);
-                    using (SQLiteDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            int runOfTest = reader.GetInt32(0);
-
-                            // Явное приведение типа для защиты от DBNull
-                            string rawX = reader.IsDBNull(1) ? "" : reader.GetString(1);
-                            string rawY = reader.IsDBNull(2) ? "" : reader.GetString(2);
-
-                            string[] valuesX = rawX.Split(';');
-                            string[] valuesY = rawY.Split(';');
-
-                            int minLength = Math.Min(valuesX.Length, valuesY.Length); // Учитываем разную длину
-
-                            if (!experimentsData.ContainsKey(runOfTest))
-                            {
-                                experimentsData[runOfTest] = new List<(string, string)>();
-                            }
-
-                            for (int i = 0; i < minLength; i++)
-                            {
-                                experimentsData[runOfTest].Add((valuesX[i], valuesY[i]));
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (experimentsData.Count == 0)
-            {
-                MessageBox.Show("Нет данных для построения!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            // Создаем файл и записываем данные
-            string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "ExperimentData.txt");
-
-            using (StreamWriter writer = new StreamWriter(filePath, false))
-            {
-                foreach (var experiment in experimentsData)
-                {
-                    writer.WriteLine($"/ Испытание {experiment.Key} /");
-                    writer.WriteLine($"{columnX} ///// {columnY}");
-
-                    foreach (var (x, y) in experiment.Value)
-                    {
-                        writer.WriteLine($"{x} ///// {y}");
-                    }
-
-                    writer.WriteLine(); // Пустая строка между испытаниями
-                }
-            }
-
-            MessageBox.Show($"Файл успешно сохранен на рабочем столе!\n{filePath}", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            this.Close();
-        }
         
-        private void PlotGraph(Dictionary<int, List<(double, double)>> experimentsData, string axisX, string axisY)
-        {
-            chartExp.Series.Clear();
-            chartExp.ChartAreas.Clear();
-
-            // Добавляем область графика
-            ChartArea chartArea = new ChartArea("MainArea");
-            chartExp.ChartAreas.Add(chartArea);
-
-            // Массив цветов (чтобы испытания различались)
-            Color[] colors = { Color.Red, Color.Blue, Color.Green, Color.Orange, Color.Purple,
-                       Color.Cyan, Color.Magenta, Color.Brown, Color.DarkBlue, Color.DarkGreen };
-
-            int colorIndex = 0;
-
-            foreach (var experiment in experimentsData)
-            {
-                string seriesName = $"Test {experiment.Key}";
-                Series series = new Series(seriesName)
-                {
-                    ChartType = SeriesChartType.Point, // Точки, без соединения линиями
-                    MarkerStyle = MarkerStyle.Circle,
-                    MarkerSize = 7,
-                    Color = colors[colorIndex % colors.Length] // Назначаем цвет
-                };
-
-                foreach (var (x, y) in experiment.Value)
-                {
-                    series.Points.AddXY(x, y);
-                }
-
-                chartExp.Series.Add(series);
-
-                colorIndex++; // Меняем цвет для следующего испытания
-            }
-
-
-            // Настраиваем оси
-            chartExp.ChartAreas["MainArea"].AxisX.Title = axisX;
-            chartExp.ChartAreas["MainArea"].AxisY.Title = axisY;
-            chartExp.ChartAreas["MainArea"].AxisX.MajorGrid.LineDashStyle = ChartDashStyle.Dash;
-            chartExp.ChartAreas["MainArea"].AxisY.MajorGrid.LineDashStyle = ChartDashStyle.Dash;
-        }
-        */
         private void PlotGraph(Dictionary<int, List<(double, double)>> experimentsData, string xLabel, string yLabel)
         {
             chartExp.Series.Clear();
@@ -242,8 +119,179 @@ namespace Diplom_project
                 chartExp.Series.Add(approxSeries);
             }
         }
+        */
+        /*
+        private void PlotGraph(Dictionary<int, List<(double, double)>> experimentsData, string xLabel, string yLabel)
+        {
+            chartExp.Series.Clear();
+            chartExp.ChartAreas[0].AxisX.Title = xLabel;
+            chartExp.ChartAreas[0].AxisY.Title = yLabel;
+            chartExp.ChartAreas[0].AxisX.MajorGrid.LineColor = Color.LightGray;
+            chartExp.ChartAreas[0].AxisY.MajorGrid.LineColor = Color.LightGray;
+
+            List<(double x, double y)> allPoints = new List<(double, double)>();
+
+            foreach (var experiment in experimentsData)
+            {
+                Series series = new Series($"Run {experiment.Key}")
+                {
+                    ChartType = SeriesChartType.Point,
+                    MarkerStyle = MarkerStyle.Circle,
+                    MarkerSize = 6,
+                    BorderWidth = 2
+                };
+
+                foreach (var point in experiment.Value)
+                {
+                    series.Points.AddXY(point.Item1, point.Item2);
+                    allPoints.Add((point.Item1, point.Item2));
+                }
+
+                chartExp.Series.Add(series);
+            }
+
+            // 🔹 Фильтрация выбросов перед аппроксимацией
+            if (checkBoxApprox.Checked && allPoints.Count > 2)
+            {
+                // Убираем точки с нулями или отрицательными значениями
+                var filtered = allPoints.Where(p => p.x > 1 && p.y > 1).ToList();
+
+                if (filtered.Count < 2) return;
+
+                double avgX = filtered.Average(p => p.x);
+                double avgY = filtered.Average(p => p.y);
+
+                filtered = filtered
+                    .Where(p => p.x <= avgX * 5 && p.y <= avgY * 5)
+                    .ToList();
+
+                if (filtered.Count < 2)
+                    return;
+
+                // Логарифмическая аппроксимация: ln(y) = ln(a) + b * x
+                
+                double avgLnY = filtered.Average(p => Math.Log(p.y));
+                double sumXlnY = filtered.Sum(p => (p.x - avgX) * (Math.Log(p.y) - avgLnY));
+                double sumXX = filtered.Sum(p => Math.Pow(p.x - avgX, 2));
+
+                double b = sumXX == 0 ? 0 : sumXlnY / sumXX;
+                double lnA = avgLnY - b * avgX;
+                double a = Math.Exp(lnA);
+
+                // Строим аппроксимационную линию
+                Series approxSeries = new Series("Approximation")
+                {
+                    ChartType = SeriesChartType.Line,
+                    Color = Color.Black,
+                    BorderWidth = 3
+                };
+
+                double minX = filtered.Min(p => p.x);
+                double maxX = filtered.Max(p => p.x);
+                int steps = 100;
+                double stepSize = (maxX - minX) / steps;
+
+                for (int i = 0; i <= steps; i++)
+                {
+                    double x = minX + i * stepSize;
+                    double y = a * Math.Exp(b * x);
+                    approxSeries.Points.AddXY(x, y);
+                }
+
+                chartExp.Series.Add(approxSeries);
+            }
+        }
+        */
+        private void PlotGraph(Dictionary<int, List<(double, double)>> experimentsData, string xLabel, string yLabel)
+        {
+            chartExp.Series.Clear();
+            chartExp.ChartAreas[0].AxisX.Title = xLabel;
+            chartExp.ChartAreas[0].AxisY.Title = yLabel;
+            chartExp.ChartAreas[0].AxisX.MajorGrid.LineColor = Color.LightGray;
+            chartExp.ChartAreas[0].AxisY.MajorGrid.LineColor = Color.LightGray;
+
+            List<(int test, double x, double y)> allPoints = new List<(int test, double x, double y)>();
 
 
+            // Собираем все точки
+            foreach (var experiment in experimentsData)
+            {
+                foreach (var point in experiment.Value)
+                {
+                    allPoints.Add((experiment.Key, point.Item1, point.Item2));
+                }
+            }
+
+            // 🔹 Фильтрация выбросов
+            var filtered = allPoints.Where(p => p.x > 1 && p.y > 1).ToList();
+
+            if (filtered.Count < 2) return;
+
+            double avgX = filtered.Average(p => p.x);
+            double avgY = filtered.Average(p => p.y);
+
+            filtered = filtered
+                .Where(p => p.x <= avgX * 5 && p.y <= avgY * 5)
+                .ToList();
+
+            if (filtered.Count < 2) return;
+
+            // 🔹 Группировка по испытаниям для визуализации
+            var grouped = filtered.GroupBy(p => p.test);
+
+            foreach (var group in grouped)
+            {
+                Series series = new Series($"Run {group.Key}")
+                {
+                    ChartType = SeriesChartType.Point,
+                    MarkerStyle = MarkerStyle.Circle,
+                    MarkerSize = 6,
+                    BorderWidth = 2
+                };
+
+                foreach (var (test, x, y) in group)
+                {
+                    series.Points.AddXY(x, y);
+                }
+
+                chartExp.Series.Add(series);
+            }
+
+            // 🔹 Аппроксимация по всем очищенным точкам
+            if (checkBoxApprox.Checked)
+            {
+                double avgLnY = filtered.Average(p => Math.Log(p.y));
+                double avgXfit = filtered.Average(p => p.x);
+
+                double sumXlnY = filtered.Sum(p => (p.x - avgXfit) * (Math.Log(p.y) - avgLnY));
+                double sumXX = filtered.Sum(p => Math.Pow(p.x - avgXfit, 2));
+
+                double b = sumXX == 0 ? 0 : sumXlnY / sumXX;
+                double lnA = avgLnY - b * avgXfit;
+                double a = Math.Exp(lnA);
+
+                Series approxSeries = new Series("Approximation")
+                {
+                    ChartType = SeriesChartType.Line,
+                    Color = Color.Black,
+                    BorderWidth = 3
+                };
+
+                double minX = filtered.Min(p => p.x);
+                double maxX = filtered.Max(p => p.x);
+                int steps = 100;
+                double stepSize = (maxX - minX) / steps;
+
+                for (int i = 0; i <= steps; i++)
+                {
+                    double x = minX + i * stepSize;
+                    double y = a * Math.Exp(b * x);
+                    approxSeries.Points.AddXY(x, y);
+                }
+
+                chartExp.Series.Add(approxSeries);
+            }
+        }
 
 
         private void buttonMake_Click(object sender, EventArgs e)
