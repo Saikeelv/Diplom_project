@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.comboBoxX = new System.Windows.Forms.ComboBox();
             this.comboBoxY = new System.Windows.Forms.ComboBox();
             this.labelX = new System.Windows.Forms.Label();
@@ -39,6 +39,7 @@
             this.chartExp = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.buttonSaveData = new System.Windows.Forms.Button();
             this.checkBoxApprox = new System.Windows.Forms.CheckBox();
+            this.checkBoxAvg = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.chartExp)).BeginInit();
             this.SuspendLayout();
             // 
@@ -98,17 +99,17 @@
             // 
             // chartExp
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chartExp.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.chartExp.Legends.Add(legend1);
+            chartArea2.Name = "ChartArea1";
+            this.chartExp.ChartAreas.Add(chartArea2);
+            legend2.Name = "Legend1";
+            this.chartExp.Legends.Add(legend2);
             this.chartExp.Location = new System.Drawing.Point(27, 103);
             this.chartExp.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.chartExp.Name = "chartExp";
-            series1.ChartArea = "ChartArea1";
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            this.chartExp.Series.Add(series1);
+            series2.ChartArea = "ChartArea1";
+            series2.Legend = "Legend1";
+            series2.Name = "Series1";
+            this.chartExp.Series.Add(series2);
             this.chartExp.Size = new System.Drawing.Size(1176, 559);
             this.chartExp.TabIndex = 5;
             this.chartExp.Text = "chart1";
@@ -130,19 +131,32 @@
             // 
             this.checkBoxApprox.AutoSize = true;
             this.checkBoxApprox.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.checkBoxApprox.Location = new System.Drawing.Point(763, 62);
+            this.checkBoxApprox.Location = new System.Drawing.Point(910, 62);
             this.checkBoxApprox.Name = "checkBoxApprox";
-            this.checkBoxApprox.Size = new System.Drawing.Size(136, 28);
+            this.checkBoxApprox.Size = new System.Drawing.Size(176, 35);
             this.checkBoxApprox.TabIndex = 7;
-            this.checkBoxApprox.Text = "Approximation";
+            this.checkBoxApprox.Text = "Approximation ";
             this.checkBoxApprox.UseVisualStyleBackColor = true;
             this.checkBoxApprox.CheckedChanged += new System.EventHandler(this.checkBoxApprox_CheckedChanged);
+            // 
+            // checkBoxAvg
+            // 
+            this.checkBoxAvg.AutoSize = true;
+            this.checkBoxAvg.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.checkBoxAvg.Location = new System.Drawing.Point(1076, 63);
+            this.checkBoxAvg.Name = "checkBoxAvg";
+            this.checkBoxAvg.Size = new System.Drawing.Size(93, 28);
+            this.checkBoxAvg.TabIndex = 9;
+            this.checkBoxAvg.Text = "Average";
+            this.checkBoxAvg.UseVisualStyleBackColor = true;
+            this.checkBoxAvg.CheckedChanged += new System.EventHandler(this.checkBoxAvg_CheckedChanged);
             // 
             // Form7
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1240, 684);
+            this.Controls.Add(this.checkBoxAvg);
             this.Controls.Add(this.checkBoxApprox);
             this.Controls.Add(this.buttonSaveData);
             this.Controls.Add(this.chartExp);
@@ -171,5 +185,6 @@
         private System.Windows.Forms.DataVisualization.Charting.Chart chartExp;
         private System.Windows.Forms.Button buttonSaveData;
         private System.Windows.Forms.CheckBox checkBoxApprox;
+        private System.Windows.Forms.CheckBox checkBoxAvg;
     }
 }
