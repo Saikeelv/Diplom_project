@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.comboBoxX = new System.Windows.Forms.ComboBox();
             this.comboBoxY = new System.Windows.Forms.ComboBox();
             this.labelX = new System.Windows.Forms.Label();
@@ -99,17 +99,17 @@
             // 
             // chartExp
             // 
-            chartArea2.Name = "ChartArea1";
-            this.chartExp.ChartAreas.Add(chartArea2);
-            legend2.Name = "Legend1";
-            this.chartExp.Legends.Add(legend2);
+            chartArea1.Name = "ChartArea1";
+            this.chartExp.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.chartExp.Legends.Add(legend1);
             this.chartExp.Location = new System.Drawing.Point(27, 103);
             this.chartExp.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.chartExp.Name = "chartExp";
-            series2.ChartArea = "ChartArea1";
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            this.chartExp.Series.Add(series2);
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.chartExp.Series.Add(series1);
             this.chartExp.Size = new System.Drawing.Size(1176, 559);
             this.chartExp.TabIndex = 5;
             this.chartExp.Text = "chart1";
@@ -133,7 +133,7 @@
             this.checkBoxApprox.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.checkBoxApprox.Location = new System.Drawing.Point(910, 62);
             this.checkBoxApprox.Name = "checkBoxApprox";
-            this.checkBoxApprox.Size = new System.Drawing.Size(176, 35);
+            this.checkBoxApprox.Size = new System.Drawing.Size(141, 28);
             this.checkBoxApprox.TabIndex = 7;
             this.checkBoxApprox.Text = "Approximation ";
             this.checkBoxApprox.UseVisualStyleBackColor = true;

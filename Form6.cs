@@ -277,7 +277,7 @@ namespace Diplom_project
             }
 
             // Если ошибок не было, проверяем количество испытаний
-            if (finalError == 1 && totalTests < 5)
+            if (finalError == 1 && totalTests < 10)
             {
                 finalError = 777; // Если испытаний < 10 и ошибок нет, ставим 777
             }

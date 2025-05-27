@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.SQLite;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -22,6 +23,8 @@ namespace Diplom_project
     {
         private string connectionString;
         private int experimentId;
+     
+        
         private List<string> columnNames = new List<string> { "Time", "Temp", "Power", "Speed" };
         public Form7(int experimentId, string connectionString)
         {
@@ -33,7 +36,7 @@ namespace Diplom_project
             
             this.experimentId = experimentId;
             this.connectionString = connectionString;
-
+            
             // Заполняем comboBoxX и comboBoxY
             comboBoxX.Items.AddRange(columnNames.ToArray());
             comboBoxY.Items.AddRange(columnNames.ToArray());
@@ -48,162 +51,7 @@ namespace Diplom_project
         }
 
 
-        /*
         
-        private void PlotGraph(Dictionary<int, List<(double, double)>> experimentsData, string xLabel, string yLabel)
-        {
-            chartExp.Series.Clear();
-            chartExp.ChartAreas[0].AxisX.Title = xLabel;
-            chartExp.ChartAreas[0].AxisY.Title = yLabel;
-            chartExp.ChartAreas[0].AxisX.MajorGrid.LineColor = Color.LightGray;
-            chartExp.ChartAreas[0].AxisY.MajorGrid.LineColor = Color.LightGray;
-
-            List<(double x, double y)> allPoints = new List<(double, double)>();
-
-            foreach (var experiment in experimentsData)
-            {
-                // Основные точки
-                Series series = new Series($"Run {experiment.Key}")
-                {
-                    ChartType = SeriesChartType.Point,
-                    MarkerStyle = MarkerStyle.Circle,
-                    MarkerSize = 6,
-                    BorderWidth = 2
-                };
-
-                foreach (var point in experiment.Value)
-                {
-                    series.Points.AddXY(point.Item1, point.Item2);
-                    allPoints.Add((point.Item1, point.Item2));
-                }
-
-                chartExp.Series.Add(series);
-            }
-
-            // Общая аппроксимация
-            if (checkBoxApprox.Checked && allPoints.Count > 2)
-            {
-                // Оставляем только положительные значения
-                var validPoints = allPoints.Where(p => p.x > 0 && p.y > 0).ToList();
-                if (validPoints.Count < 2)
-                    return;
-
-                // ln(y) = ln(a) + b*x
-                double avgX = validPoints.Average(p => p.x);
-                double avgLnY = validPoints.Average(p => Math.Log(p.y));
-                double sumXlnY = validPoints.Sum(p => (p.x - avgX) * (Math.Log(p.y) - avgLnY));
-                double sumXX = validPoints.Sum(p => (p.x - avgX) * (p.x - avgX));
-
-                double b = sumXX == 0 ? 0 : sumXlnY / sumXX;
-                double lnA = avgLnY - b * avgX;
-                double a = Math.Exp(lnA);
-
-                // Построение кривой
-                Series approxSeries = new Series("Approximation")
-                {
-                    ChartType = SeriesChartType.Line,
-                    Color = Color.Black,
-                    BorderWidth = 3
-                };
-
-                double minX = validPoints.Min(p => p.x);
-                double maxX = validPoints.Max(p => p.x);
-                int steps = 100;
-                double stepSize = (maxX - minX) / steps;
-
-                for (int i = 0; i <= steps; i++)
-                {
-                    double x = minX + i * stepSize;
-                    double y = a * Math.Exp(b * x);
-                    approxSeries.Points.AddXY(x, y);
-                }
-
-                chartExp.Series.Add(approxSeries);
-            }
-        }
-        */
-        /*
-        private void PlotGraph(Dictionary<int, List<(double, double)>> experimentsData, string xLabel, string yLabel)
-        {
-            chartExp.Series.Clear();
-            chartExp.ChartAreas[0].AxisX.Title = xLabel;
-            chartExp.ChartAreas[0].AxisY.Title = yLabel;
-            chartExp.ChartAreas[0].AxisX.MajorGrid.LineColor = Color.LightGray;
-            chartExp.ChartAreas[0].AxisY.MajorGrid.LineColor = Color.LightGray;
-
-            List<(double x, double y)> allPoints = new List<(double, double)>();
-
-            foreach (var experiment in experimentsData)
-            {
-                Series series = new Series($"Run {experiment.Key}")
-                {
-                    ChartType = SeriesChartType.Point,
-                    MarkerStyle = MarkerStyle.Circle,
-                    MarkerSize = 6,
-                    BorderWidth = 2
-                };
-
-                foreach (var point in experiment.Value)
-                {
-                    series.Points.AddXY(point.Item1, point.Item2);
-                    allPoints.Add((point.Item1, point.Item2));
-                }
-
-                chartExp.Series.Add(series);
-            }
-
-            // 🔹 Фильтрация выбросов перед аппроксимацией
-            if (checkBoxApprox.Checked && allPoints.Count > 2)
-            {
-                // Убираем точки с нулями или отрицательными значениями
-                var filtered = allPoints.Where(p => p.x > 1 && p.y > 1).ToList();
-
-                if (filtered.Count < 2) return;
-
-                double avgX = filtered.Average(p => p.x);
-                double avgY = filtered.Average(p => p.y);
-
-                filtered = filtered
-                    .Where(p => p.x <= avgX * 5 && p.y <= avgY * 5)
-                    .ToList();
-
-                if (filtered.Count < 2)
-                    return;
-
-                // Логарифмическая аппроксимация: ln(y) = ln(a) + b * x
-                
-                double avgLnY = filtered.Average(p => Math.Log(p.y));
-                double sumXlnY = filtered.Sum(p => (p.x - avgX) * (Math.Log(p.y) - avgLnY));
-                double sumXX = filtered.Sum(p => Math.Pow(p.x - avgX, 2));
-
-                double b = sumXX == 0 ? 0 : sumXlnY / sumXX;
-                double lnA = avgLnY - b * avgX;
-                double a = Math.Exp(lnA);
-
-                // Строим аппроксимационную линию
-                Series approxSeries = new Series("Approximation")
-                {
-                    ChartType = SeriesChartType.Line,
-                    Color = Color.Black,
-                    BorderWidth = 3
-                };
-
-                double minX = filtered.Min(p => p.x);
-                double maxX = filtered.Max(p => p.x);
-                int steps = 100;
-                double stepSize = (maxX - minX) / steps;
-
-                for (int i = 0; i <= steps; i++)
-                {
-                    double x = minX + i * stepSize;
-                    double y = a * Math.Exp(b * x);
-                    approxSeries.Points.AddXY(x, y);
-                }
-
-                chartExp.Series.Add(approxSeries);
-            }
-        }
-        */
         private void PlotGraph(Dictionary<int, List<(double, double)>> experimentsData, string xLabel, string yLabel)
         {
             chartExp.Series.Clear();
@@ -268,50 +116,133 @@ namespace Diplom_project
             chartExp.ChartAreas[0].AxisY.Minimum = minY;
             chartExp.ChartAreas[0].AxisY.Maximum = maxY;
 
-            // ✔ Аппроксимация
-            if (checkBoxApprox.Checked && allPoints.Count > 2)
+            
+            // ✔ Усреднение и аппроксимация
+            if (allPoints.Count > 2)
             {
                 var filtered = allPoints
-                    .Where(p => p.x > 1 && p.y > 1)
+                    .Where(p => p.x > 0) // Убедимся, что x > 0
                     .ToList();
 
-                double avgX = filtered.Average(p => p.x);
-                double avgY = filtered.Average(p => p.y);
-
-                filtered = filtered
-                    .Where(p => p.x <= avgX * 5 && p.y <= avgY * 5)
-                    .ToList();
-
-                if (filtered.Count >= 2)
+                if (filtered.Count == 0)
                 {
-                    double avgLnY = filtered.Average(p => Math.Log(p.y));
-                    double sumXlnY = filtered.Sum(p => (p.x - avgX) * (Math.Log(p.y) - avgLnY));
-                    double sumXX = filtered.Sum(p => Math.Pow(p.x - avgX, 2));
+                    System.Diagnostics.Debug.WriteLine("Нет точек после фильтра x > 0.");
+                    MessageBox.Show("Нет точек после фильтра x > 0.", "Ошибка");
+                    return;
+                }
 
-                    double b = sumXX == 0 ? 0 : sumXlnY / sumXX;
-                    double lnA = avgLnY - b * avgX;
-                    double a = Math.Exp(lnA);
+                // Усреднение (checkBoxAvg)
+                if (checkBoxAvg.Checked)
+                {
+                    Series avgSeries = new Series("Average Line")
+                    {
+                        ChartType = SeriesChartType.Spline, // Используем сплайн для плавности
+                        Color = Color.Red,
+                        BorderWidth = 2,
+                        MarkerStyle = MarkerStyle.None // Убираем маркеры
+                    };
 
-                    Series approxSeries = new Series("Log Approx")
+                    // Увеличиваем количество интервалов для более точного усреднения
+                    int intervals = 50; // Было 10, теперь 50
+                    double rangeX = maxX - minX;
+                    double interval = rangeX / intervals;
+
+                    // Собираем все точки средних значений
+                    List<(double x, double y)> avgPoints = new List<(double, double)>();
+
+                    for (int i = 0; i < intervals; i++)
+                    {
+                        double xStart = minX + i * interval;
+                        double xEnd = xStart + interval;
+
+                        // Находим точки в текущем интервале
+                        var pointsInInterval = filtered
+                            .Where(p => p.x >= xStart && p.x < xEnd)
+                            .ToList();
+
+                        if (pointsInInterval.Count > 0)
+                        {
+                            double avgY = pointsInInterval.Average(p => p.y);
+                            double avgX = (xStart + xEnd) / 2.0; // Средняя точка интервала
+                            avgPoints.Add((avgX, avgY));
+                        }
+                    }
+
+                    // Сортируем точки по X для правильного построения
+                    avgPoints = avgPoints.OrderBy(p => p.x).ToList();
+
+                    // Добавляем точки в серию (ChartType.Spline автоматически создаст плавную кривую)
+                    foreach (var point in avgPoints)
+                    {
+                        avgSeries.Points.AddXY(point.x, point.y);
+                    }
+
+                    chartExp.Series.Add(avgSeries);
+                }
+
+
+                //аппроксимация линейная
+                // Аппроксимация (checkBoxApprox)
+                if (checkBoxApprox.Checked)
+                {
+                    // Фильтруем точки
+                    var validPoints = filtered
+                        .Where(p => p.x > 0 && p.y > 0)
+                        .OrderBy(p => p.x)
+                        .ToList();
+
+                    if (validPoints.Count < 2)
+                    {
+                        MessageBox.Show("Недостаточно точек для аппроксимации", "Ошибка");
+                        return;
+                    }
+
+                    // Линейная регрессия для y = a * x + b методом наименьших квадратов
+                    double sumX = validPoints.Sum(p => p.x);
+                    double sumY = validPoints.Sum(p => p.y);
+                    double sumXY = validPoints.Sum(p => p.x * p.y);
+                    double sumX2 = validPoints.Sum(p => p.x * p.x);
+                    int n = validPoints.Count;
+
+                    // Коэффициенты
+                    double a = (n * sumXY - sumX * sumY) / (n * sumX2 - Math.Pow(sumX, 2));
+                    double b = (sumY - a * sumX) / n;
+
+                    // Формируем строку для легенды
+                    string legendText = $"y = {a:F2} * x + {b:F2}";
+
+                    // Создаем серию
+                    Series approxSeries = new Series("Linear Approx")
                     {
                         ChartType = SeriesChartType.Line,
                         Color = Color.Black,
-                        BorderWidth = 3
+                        BorderWidth = 3,
+                        MarkerStyle = MarkerStyle.None,
+                        LegendText = legendText // Устанавливаем текст легенды
                     };
 
+                    // Генерируем кривую
                     int steps = 100;
                     double stepSize = (maxX - minX) / steps;
 
                     for (int i = 0; i <= steps; i++)
                     {
                         double x = minX + i * stepSize;
-                        double y = a * Math.Exp(b * x);
+                        double y = a * x + b;
                         approxSeries.Points.AddXY(x, y);
                     }
 
+                    // Удаляем старую аппроксимацию, если есть
+                    var oldSeries = chartExp.Series.FirstOrDefault(s => s.Name == "Linear Approx");
+                    if (oldSeries != null) chartExp.Series.Remove(oldSeries);
+
                     chartExp.Series.Add(approxSeries);
                 }
+
             }
+
+
+
 
             // ✔ Подпись крайней точки
             var lastPoint = allPoints.OrderByDescending(p => p.x).FirstOrDefault();
@@ -330,25 +261,7 @@ namespace Diplom_project
             }
 
             
-            //chartExp.ChartAreas[0].AxisY.MajorGrid.IntervalAutoMode = IntervalAutoMode.VariableCount;
-            // ✔ Линия среднего значения
-            if (checkBoxAvg.Checked && allPoints.Count > 0)
-            {
-                double avgYLine = allPoints.Average(p => p.y);
-
-                Series avgLine = new Series("Average")
-                {
-                    ChartType = SeriesChartType.Line,
-                    Color = Color.Gray,
-                    BorderDashStyle = ChartDashStyle.Dash,
-                    BorderWidth = 2
-                };
-
-                avgLine.Points.AddXY(minX, avgYLine);
-                avgLine.Points.AddXY(maxX, avgYLine);
-
-                chartExp.Series.Add(avgLine);
-            }
+           
         }
 
 
@@ -496,14 +409,16 @@ namespace Diplom_project
             buttonMake_Click(null, null); // просто перерисовать график
         }
 
-       // private void checkBoxApprox2_CheckedChanged(object sender, EventArgs e)
-        //{
-        //    buttonMake_Click(null, null); // просто перерисовать график
-        //}
+      
 
         private void checkBoxAvg_CheckedChanged(object sender, EventArgs e)
         {
             buttonMake_Click(null, null); // просто перерисовать график
         }
+
+        
+
+
+
     }
 }
