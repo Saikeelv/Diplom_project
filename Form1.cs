@@ -1848,14 +1848,14 @@ CREATE TABLE Data_of_exp (
             Form graphForm = new Form
             {
                 Text = $"Comparison: Exp {currentExpNumber} vs Exp {compareExpNumber}",
-                Size = new Size(1200, 650), // Ширина увеличена в 1.5 раза: 800 * 1.5 = 1200
+                Size = new Size(1200, 650),
                 StartPosition = FormStartPosition.CenterParent
             };
 
             Chart chartComparison = new Chart
             {
                 Location = new Point(0, 50),
-                Size = new Size(1200, 550), // Увеличиваем ширину графика
+                Size = new Size(1200, 550),
                 Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom
             };
 
@@ -1863,7 +1863,7 @@ CREATE TABLE Data_of_exp (
             Panel checkBoxPanel = new Panel
             {
                 Location = new Point(0, 0),
-                Size = new Size(1200, 50), // Увеличиваем ширину панели
+                Size = new Size(1200, 50),
                 Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
             };
 
@@ -2073,10 +2073,9 @@ CREATE TABLE Data_of_exp (
 
             graphForm.Controls.Add(checkBoxPanel);
             graphForm.Controls.Add(chartComparison);
-            graphForm.ShowDialog();
+            graphForm.Show(); // Используем Show() вместо ShowDialog() для немодального окна
 
             compareForm.Dispose();
-            graphForm.Dispose();
         }
 
 

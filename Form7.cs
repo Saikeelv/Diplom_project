@@ -116,17 +116,18 @@ namespace Diplom_project
                 // Фиксированный диапазон по оси X от 1000 до 15500
                 chartExp.ChartAreas[0].AxisX.Minimum = 1000;
                 chartExp.ChartAreas[0].AxisX.Maximum = 15500;
+                // Фиксированный минимум по оси Y (Speed) с 500
+                chartExp.ChartAreas[0].AxisY.Minimum = 500;
+                chartExp.ChartAreas[0].AxisY.Maximum = maxY;
             }
             else
             {
                 // Автоматический диапазон по данным
                 chartExp.ChartAreas[0].AxisX.Minimum = minX;
                 chartExp.ChartAreas[0].AxisX.Maximum = maxX;
+                chartExp.ChartAreas[0].AxisY.Minimum = minY;
+                chartExp.ChartAreas[0].AxisY.Maximum = maxY;
             }
-
-            // Установим границы осей Y по данным
-            chartExp.ChartAreas[0].AxisY.Minimum = minY;
-            chartExp.ChartAreas[0].AxisY.Maximum = maxY;
 
             // ✔ Усреднение и аппроксимация
             if (allPoints.Count > 2)
@@ -267,7 +268,6 @@ namespace Diplom_project
                 chartExp.Series["Last Point Label"].Points[0].Label = $"({lastPoint.x:F2}; {lastPoint.y:F2})";
             }
         }
-
 
         private void buttonMake_Click(object sender, EventArgs e)
         {
