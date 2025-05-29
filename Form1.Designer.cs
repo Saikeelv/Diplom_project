@@ -55,6 +55,7 @@
             this.textBoxOilDictionary = new System.Windows.Forms.TextBox();
             this.menuStrip2 = new System.Windows.Forms.MenuStrip();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.creatNewDBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectBDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectCOMPortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -78,7 +79,7 @@
             this.buttonStartExperiment = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.buttonDataExp = new System.Windows.Forms.Button();
-            this.creatNewDBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.buttonCompare = new System.Windows.Forms.Button();
             this.menuStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -337,7 +338,7 @@
             this.settingsToolStripMenuItem});
             this.menuStrip2.Location = new System.Drawing.Point(0, 0);
             this.menuStrip2.Name = "menuStrip2";
-            this.menuStrip2.Size = new System.Drawing.Size(1286, 28);
+            this.menuStrip2.Size = new System.Drawing.Size(1286, 30);
             this.menuStrip2.TabIndex = 31;
             this.menuStrip2.Text = "menuStrip2";
             // 
@@ -350,21 +351,28 @@
             this.sortToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(76, 24);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(76, 26);
             this.settingsToolStripMenuItem.Text = "Settings";
             this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
+            // 
+            // creatNewDBToolStripMenuItem
+            // 
+            this.creatNewDBToolStripMenuItem.Name = "creatNewDBToolStripMenuItem";
+            this.creatNewDBToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
+            this.creatNewDBToolStripMenuItem.Text = "Create new DB";
+            this.creatNewDBToolStripMenuItem.Click += new System.EventHandler(this.creatNewDBToolStripMenuItem_Click);
             // 
             // selectBDToolStripMenuItem
             // 
             this.selectBDToolStripMenuItem.Name = "selectBDToolStripMenuItem";
-            this.selectBDToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.selectBDToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
             this.selectBDToolStripMenuItem.Text = "Select BD";
             this.selectBDToolStripMenuItem.Click += new System.EventHandler(this.selectBDToolStripMenuItem_Click);
             // 
             // selectCOMPortToolStripMenuItem
             // 
             this.selectCOMPortToolStripMenuItem.Name = "selectCOMPortToolStripMenuItem";
-            this.selectCOMPortToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.selectCOMPortToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
             this.selectCOMPortToolStripMenuItem.Text = "Select COM port";
             this.selectCOMPortToolStripMenuItem.Click += new System.EventHandler(this.selectCOMPortToolStripMenuItem_Click);
             // 
@@ -375,7 +383,7 @@
             this.samplesToolStripMenuItem,
             this.experimentsToolStripMenuItem});
             this.sortToolStripMenuItem.Name = "sortToolStripMenuItem";
-            this.sortToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.sortToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
             this.sortToolStripMenuItem.Text = "Sort";
             this.sortToolStripMenuItem.Click += new System.EventHandler(this.sortToolStripMenuItem_Click);
             // 
@@ -460,7 +468,7 @@
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -549,7 +557,7 @@
             // 
             this.buttonStartExperiment.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonStartExperiment.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonStartExperiment.Location = new System.Drawing.Point(914, 676);
+            this.buttonStartExperiment.Location = new System.Drawing.Point(914, 693);
             this.buttonStartExperiment.Name = "buttonStartExperiment";
             this.buttonStartExperiment.Size = new System.Drawing.Size(286, 45);
             this.buttonStartExperiment.TabIndex = 43;
@@ -582,17 +590,24 @@
             this.buttonDataExp.UseVisualStyleBackColor = true;
             this.buttonDataExp.Click += new System.EventHandler(this.buttonDataExp_Click);
             // 
-            // creatNewDBToolStripMenuItem
+            // buttonCompare
             // 
-            this.creatNewDBToolStripMenuItem.Name = "creatNewDBToolStripMenuItem";
-            this.creatNewDBToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.creatNewDBToolStripMenuItem.Text = "Create new DB";
-            this.creatNewDBToolStripMenuItem.Click += new System.EventHandler(this.creatNewDBToolStripMenuItem_Click);
+            this.buttonCompare.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonCompare.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonCompare.Location = new System.Drawing.Point(914, 642);
+            this.buttonCompare.Name = "buttonCompare";
+            this.buttonCompare.Size = new System.Drawing.Size(286, 45);
+            this.buttonCompare.TabIndex = 46;
+            this.buttonCompare.TabStop = false;
+            this.buttonCompare.Text = "COMPARE";
+            this.buttonCompare.UseVisualStyleBackColor = true;
+            this.buttonCompare.Click += new System.EventHandler(this.buttonCompare_Click);
             // 
             // Main
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(1286, 819);
+            this.Controls.Add(this.buttonCompare);
             this.Controls.Add(this.buttonDataExp);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.buttonStartExperiment);
@@ -690,6 +705,7 @@
         private System.Windows.Forms.ToolStripMenuItem sortByErrorToolStripMenuItem;
         private System.Windows.Forms.Button buttonDataExp;
         private System.Windows.Forms.ToolStripMenuItem creatNewDBToolStripMenuItem;
+        private System.Windows.Forms.Button buttonCompare;
     }
 }
 
