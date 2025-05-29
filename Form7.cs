@@ -51,7 +51,7 @@ namespace Diplom_project
         }
 
 
-        
+
         private void PlotGraph(Dictionary<int, List<(double, double)>> experimentsData, string xLabel, string yLabel)
         {
             chartExp.Series.Clear();
@@ -110,13 +110,24 @@ namespace Diplom_project
                 chartExp.Series.Add(series);
             }
 
-            // Установим границы осей только по отфильтрованным точкам
-            chartExp.ChartAreas[0].AxisX.Minimum = minX;
-            chartExp.ChartAreas[0].AxisX.Maximum = maxX;
+            // Установка границ осей
+            if (xLabel == "Power" && yLabel == "Speed")
+            {
+                // Фиксированный диапазон по оси X от 1000 до 15500
+                chartExp.ChartAreas[0].AxisX.Minimum = 1000;
+                chartExp.ChartAreas[0].AxisX.Maximum = 15500;
+            }
+            else
+            {
+                // Автоматический диапазон по данным
+                chartExp.ChartAreas[0].AxisX.Minimum = minX;
+                chartExp.ChartAreas[0].AxisX.Maximum = maxX;
+            }
+
+            // Установим границы осей Y по данным
             chartExp.ChartAreas[0].AxisY.Minimum = minY;
             chartExp.ChartAreas[0].AxisY.Maximum = maxY;
 
-            
             // ✔ Усреднение и аппроксимация
             if (allPoints.Count > 2)
             {
@@ -180,9 +191,7 @@ namespace Diplom_project
                     chartExp.Series.Add(avgSeries);
                 }
 
-
-                //аппроксимация линейная
-                // Аппроксимация (checkBoxApprox)
+                // Аппроксимация линейная (checkBoxApprox)
                 if (checkBoxApprox.Checked)
                 {
                     // Фильтруем точки
@@ -223,11 +232,13 @@ namespace Diplom_project
 
                     // Генерируем кривую
                     int steps = 100;
-                    double stepSize = (maxX - minX) / steps;
+                    double startX = (xLabel == "Power" && yLabel == "Speed") ? 1000 : minX;
+                    double endX = (xLabel == "Power" && yLabel == "Speed") ? 15500 : maxX;
+                    double stepSize = (endX - startX) / steps;
 
                     for (int i = 0; i <= steps; i++)
                     {
-                        double x = minX + i * stepSize;
+                        double x = startX + i * stepSize;
                         double y = a * x + b;
                         approxSeries.Points.AddXY(x, y);
                     }
@@ -238,11 +249,7 @@ namespace Diplom_project
 
                     chartExp.Series.Add(approxSeries);
                 }
-
             }
-
-
-
 
             // ✔ Подпись крайней точки
             var lastPoint = allPoints.OrderByDescending(p => p.x).FirstOrDefault();
@@ -259,9 +266,6 @@ namespace Diplom_project
                 chartExp.Series["Last Point Label"].Points.AddXY(lastPoint.x, lastPoint.y);
                 chartExp.Series["Last Point Label"].Points[0].Label = $"({lastPoint.x:F2}; {lastPoint.y:F2})";
             }
-
-            
-           
         }
 
 
