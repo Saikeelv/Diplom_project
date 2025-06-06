@@ -33,7 +33,8 @@ namespace Diplom_project
             this.checkBoxApprox.CheckedChanged += new System.EventHandler(this.checkBoxApprox_CheckedChanged);
            // this.checkBoxApprox2.CheckedChanged += new EventHandler(this.checkBoxApprox_CheckedChanged);
             this.checkBoxAvg.CheckedChanged += new EventHandler(this.checkBoxAvg_CheckedChanged);
-            
+            this.checkBoxCutOff.CheckedChanged += new EventHandler(this.checkBoxCutOff_CheckedChanged);
+
             this.experimentId = experimentId;
             this.connectionString = connectionString;
             
@@ -78,9 +79,9 @@ namespace Diplom_project
                     .Where(p => p.Item1 > 1 && p.Item2 > 1) // Удаление околонулевых и отрицательных
                     .ToList();
 
-                if (xLabel == "Power" && yLabel == "Speed")
+                if (xLabel == "Power" && yLabel == "Speed" && checkBoxCutOff.Checked)
                 {
-                    points = points.Where(p => p.Item1 >= 1000).ToList(); // Отсечь Power < 1000
+                    points = points.Where(p => p.Item1 >= 5000).ToList(); // Отсечь Power < 5000
                 }
 
                 if (points.Count == 0)
@@ -111,10 +112,19 @@ namespace Diplom_project
             }
 
             // Установка границ осей
-            if (xLabel == "Power" && yLabel == "Speed")
+            if (xLabel == "Power" && yLabel == "Speed" && checkBoxCutOff.Checked)
             {
-                // Фиксированный диапазон по оси X от 1000 до 15500
-                chartExp.ChartAreas[0].AxisX.Minimum = 1000;
+                // Фиксированный диапазон по оси X от 5000 до 15500
+                chartExp.ChartAreas[0].AxisX.Minimum = 5000;
+                chartExp.ChartAreas[0].AxisX.Maximum = 15500;
+                // Фиксированный минимум по оси Y (Speed) с 500
+                chartExp.ChartAreas[0].AxisY.Minimum = 500;
+                chartExp.ChartAreas[0].AxisY.Maximum = maxY;
+            }
+            else if (xLabel == "Power" && yLabel == "Speed")
+            {
+                // Диапазон по оси X от минимального значения до 15500
+                chartExp.ChartAreas[0].AxisX.Minimum = minX;
                 chartExp.ChartAreas[0].AxisX.Maximum = 15500;
                 // Фиксированный минимум по оси Y (Speed) с 500
                 chartExp.ChartAreas[0].AxisY.Minimum = 500;
@@ -129,7 +139,7 @@ namespace Diplom_project
                 chartExp.ChartAreas[0].AxisY.Maximum = maxY;
             }
 
-            // ✔ Усреднение и аппроксимация
+            // Усреднение и аппроксимация
             if (allPoints.Count > 2)
             {
                 var filtered = allPoints
@@ -155,8 +165,13 @@ namespace Diplom_project
                     };
 
                     // Увеличиваем количество интервалов для более точного усреднения
-                    int intervals = 50; // Было 10, теперь 50
+                    int intervals = 50;
                     double rangeX = maxX - minX;
+                    if (rangeX <= 0)
+                    {
+                        System.Diagnostics.Debug.WriteLine("Диапазон X некорректен для усреднения.");
+                        return;
+                    }
                     double interval = rangeX / intervals;
 
                     // Собираем все точки средних значений
@@ -192,12 +207,13 @@ namespace Diplom_project
                     chartExp.Series.Add(avgSeries);
                 }
 
-                // Аппроксимация линейная (checkBoxApprox)
+                // Аппроксимация (checkBoxApprox)
                 if (checkBoxApprox.Checked)
                 {
-                    // Фильтруем точки
+                    // Фильтруем точки с учетом checkBoxCutOff
                     var validPoints = filtered
                         .Where(p => p.x > 0 && p.y > 0)
+                        .Where(p => !checkBoxCutOff.Checked || (checkBoxCutOff.Checked && p.x >= 5000))
                         .OrderBy(p => p.x)
                         .ToList();
 
@@ -207,52 +223,145 @@ namespace Diplom_project
                         return;
                     }
 
-                    // Линейная регрессия для y = a * x + b методом наименьших квадратов
-                    double sumX = validPoints.Sum(p => p.x);
-                    double sumY = validPoints.Sum(p => p.y);
-                    double sumXY = validPoints.Sum(p => p.x * p.y);
-                    double sumX2 = validPoints.Sum(p => p.x * p.x);
-                    int n = validPoints.Count;
+                    Series approxSeries;
+                    double rSquared = 0;
 
-                    // Коэффициенты
-                    double a = (n * sumXY - sumX * sumY) / (n * sumX2 - Math.Pow(sumX, 2));
-                    double b = (sumY - a * sumX) / n;
-
-                    // Формируем строку для легенды
-                    string legendText = $"y = {a:F2} * x + {b:F2}";
-
-                    // Создаем серию
-                    Series approxSeries = new Series("Linear Approx")
+                    if (xLabel == "Power" && yLabel == "Speed")
                     {
-                        ChartType = SeriesChartType.Line,
-                        Color = Color.Black,
-                        BorderWidth = 3,
-                        MarkerStyle = MarkerStyle.None,
-                        LegendText = legendText // Устанавливаем текст легенды
-                    };
+                        // Квадратичная аппроксимация: speed = a*power^2 + b*power + 670
+                        // Решаем систему уравнений методом наименьших квадратов для a и b
+                        double sumX = validPoints.Sum(p => p.x);
+                        double sumX2 = validPoints.Sum(p => p.x * p.x);
+                        double sumX3 = validPoints.Sum(p => p.x * p.x * p.x);
+                        double sumX4 = validPoints.Sum(p => p.x * p.x * p.x * p.x);
+                        double sumY = validPoints.Sum(p => p.y - 670); // Вычитаем константу 670
+                        double sumXY = validPoints.Sum(p => p.x * (p.y - 670));
+                        double sumX2Y = validPoints.Sum(p => (p.x * p.x) * (p.y - 670));
+                        int n = validPoints.Count;
 
-                    // Генерируем кривую
-                    int steps = 100;
-                    double startX = (xLabel == "Power" && yLabel == "Speed") ? 1000 : minX;
-                    double endX = (xLabel == "Power" && yLabel == "Speed") ? 15500 : maxX;
-                    double stepSize = (endX - startX) / steps;
+                        // Матрица A и вектор B для системы A * [a, b] = B
+                        // [sumX4  sumX3][a]   [sumX2Y]
+                        // [sumX3  sumX2][b] = [sumXY]
+                        double[,] A = new double[,] {
+                    { sumX4, sumX3 },
+                    { sumX3, sumX2 }
+                };
+                        double[] B = new double[] { sumX2Y, sumXY };
 
-                    for (int i = 0; i <= steps; i++)
+                        // Решаем систему уравнений методом Гаусса для 2x2
+                        double detA = A[0, 0] * A[1, 1] - A[0, 1] * A[1, 0];
+                        if (Math.Abs(detA) < 1e-10) // Проверка на вырожденность
+                        {
+                            MessageBox.Show("Матрица системы вырожденна. Невозможно выполнить аппроксимацию.", "Ошибка");
+                            return;
+                        }
+
+                        double a = (B[0] * A[1, 1] - B[1] * A[0, 1]) / detA;
+                        double b = (A[0, 0] * B[1] - A[1, 0] * B[0]) / detA;
+
+                        // Вычисляем R²
+                        double meanY = validPoints.Average(p => p.y);
+                        double sst = validPoints.Sum(p => Math.Pow(p.y - meanY, 2));
+                        double ssr = validPoints.Sum(p => Math.Pow(p.y - (a * p.x * p.x + b * p.x + 670), 2));
+                        rSquared = sst > 0 ? 1 - (ssr / sst) : 0;
+
+                        // Формируем строку для легенды (общий вид функции и R²)
+                        string legendText = $"speed = a*power^2 + b*power + 670 (R² = {rSquared:F2})";
+
+                        // Создаем серию
+                        approxSeries = new Series("Quadratic Approx")
+                        {
+                            ChartType = SeriesChartType.Line,
+                            Color = Color.Magenta,
+                            BorderWidth = 3,
+                            MarkerStyle = MarkerStyle.None,
+                            LegendText = legendText
+                        };
+
+                        // Генерируем данные для аппроксимирующей кривой
+                        int steps = 100;
+                        double startX = checkBoxCutOff.Checked ? 5000 : minX; // Учитываем cutoff или минимальное значение
+                        double endX = 15500;
+                        double stepSize = (endX - startX) / steps;
+
+                        for (int i = 0; i <= steps; i++)
+                        {
+                            double x = startX + i * stepSize;
+                            double y = a * x * x + b * x + 670; // speed = a*power^2 + b*power + 670
+                            approxSeries.Points.AddXY(x, y);
+                        }
+                    }
+                    else
                     {
-                        double x = startX + i * stepSize;
-                        double y = a * x + b;
-                        approxSeries.Points.AddXY(x, y);
+                        // Линейная аппроксимация для остальных случаев
+                        double sumX = validPoints.Sum(p => p.x);
+                        double sumY = validPoints.Sum(p => p.y);
+                        double sumXY = validPoints.Sum(p => p.x * p.y);
+                        double sumX2 = validPoints.Sum(p => p.x * p.x);
+                        int n = validPoints.Count;
+
+                        // Коэффициенты
+                        double a = (n * sumXY - sumX * sumY) / (n * sumX2 - Math.Pow(sumX, 2));
+                        double b = (sumY - a * sumX) / n;
+
+                        // Вычисляем R²
+                        double meanY = validPoints.Average(p => p.y);
+                        double sst = validPoints.Sum(p => Math.Pow(p.y - meanY, 2));
+                        double ssr = validPoints.Sum(p => Math.Pow(p.y - (a * p.x + b), 2));
+                        rSquared = sst > 0 ? 1 - (ssr / sst) : 0;
+
+                        // Формируем строку для легенды (общий вид функции и R²)
+                        string legendText = $"y = a*x + b (R² = {rSquared:F2})";
+
+                        // Создаем серию
+                        approxSeries = new Series("Linear Approx")
+                        {
+                            ChartType = SeriesChartType.Line,
+                            Color = Color.Black,
+                            BorderWidth = 3,
+                            MarkerStyle = MarkerStyle.None,
+                            LegendText = legendText
+                        };
+
+                        // Генерируем данные
+                        int steps = 100;
+                        double startX = (!checkBoxCutOff.Checked && xLabel == "Power" && yLabel == "Speed") ? minX : (checkBoxCutOff.Checked ? 5000 : minX);
+                        double endX = (xLabel == "Power" && yLabel == "Speed") ? 15500 : maxX;
+                        double stepSize = (endX - startX) / steps;
+
+                        for (int i = 0; i <= steps; i++)
+                        {
+                            double x = startX + i * stepSize;
+                            double y = a * x + b;
+                            approxSeries.Points.AddXY(x, y);
+                        }
                     }
 
                     // Удаляем старую аппроксимацию, если есть
-                    var oldSeries = chartExp.Series.FirstOrDefault(s => s.Name == "Linear Approx");
+                    var oldSeries = chartExp.Series.FirstOrDefault(s => s.Name == "Linear Approx" || s.Name == "Quadratic Approx");
                     if (oldSeries != null) chartExp.Series.Remove(oldSeries);
 
                     chartExp.Series.Add(approxSeries);
                 }
             }
 
-            // ✔ Подпись крайней точки
+            // Подпись первой точки
+            var firstPoint = allPoints.OrderBy(p => p.x).FirstOrDefault();
+            if (firstPoint.x != 0 || firstPoint.y != 0)
+            {
+                chartExp.Series.Add(new Series("First Point Label")
+                {
+                    ChartType = SeriesChartType.Point,
+                    IsVisibleInLegend = false,
+                    MarkerStyle = MarkerStyle.None,
+                    LabelForeColor = Color.Gray
+                });
+
+                chartExp.Series["First Point Label"].Points.AddXY(firstPoint.x, firstPoint.y);
+                chartExp.Series["First Point Label"].Points[0].Label = $"({firstPoint.x:F2}; {firstPoint.y:F2})";
+            }
+
+            // Подпись крайней точки
             var lastPoint = allPoints.OrderByDescending(p => p.x).FirstOrDefault();
             if (lastPoint.x != 0 || lastPoint.y != 0)
             {
@@ -420,9 +529,9 @@ namespace Diplom_project
             buttonMake_Click(null, null); // просто перерисовать график
         }
 
-        
-
-
-
+        private void checkBoxCutOff_CheckedChanged(object sender, EventArgs e)
+        {
+            buttonMake_Click(null, null); // просто перерисовать график
+        }
     }
 }

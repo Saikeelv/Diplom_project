@@ -40,6 +40,7 @@
             this.buttonSaveData = new System.Windows.Forms.Button();
             this.checkBoxApprox = new System.Windows.Forms.CheckBox();
             this.checkBoxAvg = new System.Windows.Forms.CheckBox();
+            this.checkBoxCutOff = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.chartExp)).BeginInit();
             this.SuspendLayout();
             // 
@@ -47,27 +48,28 @@
             // 
             this.comboBoxX.Font = new System.Drawing.Font("Arial Narrow", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.comboBoxX.FormattingEnabled = true;
-            this.comboBoxX.Location = new System.Drawing.Point(61, 18);
-            this.comboBoxX.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.comboBoxX.Location = new System.Drawing.Point(46, 15);
+            this.comboBoxX.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.comboBoxX.Name = "comboBoxX";
-            this.comboBoxX.Size = new System.Drawing.Size(121, 30);
+            this.comboBoxX.Size = new System.Drawing.Size(92, 30);
             this.comboBoxX.TabIndex = 0;
             // 
             // comboBoxY
             // 
             this.comboBoxY.Font = new System.Drawing.Font("Arial Narrow", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.comboBoxY.FormattingEnabled = true;
-            this.comboBoxY.Location = new System.Drawing.Point(240, 18);
-            this.comboBoxY.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.comboBoxY.Location = new System.Drawing.Point(180, 15);
+            this.comboBoxY.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.comboBoxY.Name = "comboBoxY";
-            this.comboBoxY.Size = new System.Drawing.Size(121, 30);
+            this.comboBoxY.Size = new System.Drawing.Size(92, 30);
             this.comboBoxY.TabIndex = 1;
             // 
             // labelX
             // 
             this.labelX.AutoSize = true;
             this.labelX.Font = new System.Drawing.Font("Arial Narrow", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.labelX.Location = new System.Drawing.Point(21, 20);
+            this.labelX.Location = new System.Drawing.Point(16, 16);
+            this.labelX.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelX.Name = "labelX";
             this.labelX.Size = new System.Drawing.Size(30, 27);
             this.labelX.TabIndex = 2;
@@ -77,7 +79,8 @@
             // 
             this.labelY.AutoSize = true;
             this.labelY.Font = new System.Drawing.Font("Arial Narrow", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.labelY.Location = new System.Drawing.Point(203, 18);
+            this.labelY.Location = new System.Drawing.Point(152, 15);
+            this.labelY.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelY.Name = "labelY";
             this.labelY.Size = new System.Drawing.Size(30, 27);
             this.labelY.TabIndex = 3;
@@ -88,10 +91,10 @@
             // 
             this.buttonMake.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonMake.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonMake.Location = new System.Drawing.Point(27, 52);
-            this.buttonMake.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.buttonMake.Location = new System.Drawing.Point(20, 42);
+            this.buttonMake.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.buttonMake.Name = "buttonMake";
-            this.buttonMake.Size = new System.Drawing.Size(335, 46);
+            this.buttonMake.Size = new System.Drawing.Size(251, 37);
             this.buttonMake.TabIndex = 4;
             this.buttonMake.Text = "MAKE GRAPH";
             this.buttonMake.UseVisualStyleBackColor = true;
@@ -103,14 +106,14 @@
             this.chartExp.ChartAreas.Add(chartArea1);
             legend1.Name = "Legend1";
             this.chartExp.Legends.Add(legend1);
-            this.chartExp.Location = new System.Drawing.Point(27, 103);
-            this.chartExp.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.chartExp.Location = new System.Drawing.Point(20, 84);
+            this.chartExp.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.chartExp.Name = "chartExp";
             series1.ChartArea = "ChartArea1";
             series1.Legend = "Legend1";
             series1.Name = "Series1";
             this.chartExp.Series.Add(series1);
-            this.chartExp.Size = new System.Drawing.Size(1176, 559);
+            this.chartExp.Size = new System.Drawing.Size(882, 454);
             this.chartExp.TabIndex = 5;
             this.chartExp.Text = "chart1";
             // 
@@ -118,10 +121,10 @@
             // 
             this.buttonSaveData.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonSaveData.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonSaveData.Location = new System.Drawing.Point(387, 53);
-            this.buttonSaveData.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.buttonSaveData.Location = new System.Drawing.Point(290, 43);
+            this.buttonSaveData.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.buttonSaveData.Name = "buttonSaveData";
-            this.buttonSaveData.Size = new System.Drawing.Size(335, 46);
+            this.buttonSaveData.Size = new System.Drawing.Size(251, 37);
             this.buttonSaveData.TabIndex = 6;
             this.buttonSaveData.Text = "SAVE DATA";
             this.buttonSaveData.UseVisualStyleBackColor = true;
@@ -131,7 +134,8 @@
             // 
             this.checkBoxApprox.AutoSize = true;
             this.checkBoxApprox.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.checkBoxApprox.Location = new System.Drawing.Point(910, 62);
+            this.checkBoxApprox.Location = new System.Drawing.Point(662, 52);
+            this.checkBoxApprox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.checkBoxApprox.Name = "checkBoxApprox";
             this.checkBoxApprox.Size = new System.Drawing.Size(141, 28);
             this.checkBoxApprox.TabIndex = 7;
@@ -143,7 +147,8 @@
             // 
             this.checkBoxAvg.AutoSize = true;
             this.checkBoxAvg.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.checkBoxAvg.Location = new System.Drawing.Point(1076, 63);
+            this.checkBoxAvg.Location = new System.Drawing.Point(807, 51);
+            this.checkBoxAvg.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.checkBoxAvg.Name = "checkBoxAvg";
             this.checkBoxAvg.Size = new System.Drawing.Size(93, 28);
             this.checkBoxAvg.TabIndex = 9;
@@ -151,11 +156,25 @@
             this.checkBoxAvg.UseVisualStyleBackColor = true;
             this.checkBoxAvg.CheckedChanged += new System.EventHandler(this.checkBoxAvg_CheckedChanged);
             // 
+            // checkBoxCutOff
+            // 
+            this.checkBoxCutOff.AutoSize = true;
+            this.checkBoxCutOff.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.checkBoxCutOff.Location = new System.Drawing.Point(662, 17);
+            this.checkBoxCutOff.Margin = new System.Windows.Forms.Padding(2);
+            this.checkBoxCutOff.Name = "checkBoxCutOff";
+            this.checkBoxCutOff.Size = new System.Drawing.Size(160, 28);
+            this.checkBoxCutOff.TabIndex = 10;
+            this.checkBoxCutOff.Text = "Cut of start pount";
+            this.checkBoxCutOff.UseVisualStyleBackColor = true;
+            this.checkBoxCutOff.CheckedChanged += new System.EventHandler(this.checkBoxCutOff_CheckedChanged);
+            // 
             // Form7
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1240, 684);
+            this.ClientSize = new System.Drawing.Size(930, 556);
+            this.Controls.Add(this.checkBoxCutOff);
             this.Controls.Add(this.checkBoxAvg);
             this.Controls.Add(this.checkBoxApprox);
             this.Controls.Add(this.buttonSaveData);
@@ -165,7 +184,7 @@
             this.Controls.Add(this.labelX);
             this.Controls.Add(this.comboBoxY);
             this.Controls.Add(this.comboBoxX);
-            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "Form7";
             this.Text = "Graph";
             this.Load += new System.EventHandler(this.Form7_Load);
@@ -186,5 +205,6 @@
         private System.Windows.Forms.Button buttonSaveData;
         private System.Windows.Forms.CheckBox checkBoxApprox;
         private System.Windows.Forms.CheckBox checkBoxAvg;
+        private System.Windows.Forms.CheckBox checkBoxCutOff;
     }
 }

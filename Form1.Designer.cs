@@ -338,7 +338,7 @@
             this.settingsToolStripMenuItem});
             this.menuStrip2.Location = new System.Drawing.Point(0, 0);
             this.menuStrip2.Name = "menuStrip2";
-            this.menuStrip2.Size = new System.Drawing.Size(1286, 30);
+            this.menuStrip2.Size = new System.Drawing.Size(1286, 28);
             this.menuStrip2.TabIndex = 31;
             this.menuStrip2.Text = "menuStrip2";
             // 
@@ -351,7 +351,7 @@
             this.sortToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(76, 26);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(76, 24);
             this.settingsToolStripMenuItem.Text = "Settings";
             this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
             // 
@@ -557,7 +557,7 @@
             // 
             this.buttonStartExperiment.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonStartExperiment.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonStartExperiment.Location = new System.Drawing.Point(914, 693);
+            this.buttonStartExperiment.Location = new System.Drawing.Point(914, 642);
             this.buttonStartExperiment.Name = "buttonStartExperiment";
             this.buttonStartExperiment.Size = new System.Drawing.Size(286, 45);
             this.buttonStartExperiment.TabIndex = 43;
@@ -594,7 +594,7 @@
             // 
             this.buttonCompare.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonCompare.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonCompare.Location = new System.Drawing.Point(914, 642);
+            this.buttonCompare.Location = new System.Drawing.Point(914, 693);
             this.buttonCompare.Name = "buttonCompare";
             this.buttonCompare.Size = new System.Drawing.Size(286, 45);
             this.buttonCompare.TabIndex = 46;

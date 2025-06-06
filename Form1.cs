@@ -1804,11 +1804,16 @@ CREATE TABLE Data_of_exp (
                 }
             }
 
-            // Загружаем данные для обоих экспериментов
+            // Инициализируем словарь экспериментов (до 4 максимум)
             Dictionary<int, List<(double x, double y)>> experimentsData = new Dictionary<int, List<(double x, double y)>>();
             experimentsData[currentExperimentId.Value] = new List<(double x, double y)>();
             experimentsData[compareExperimentId] = new List<(double x, double y)>();
 
+            Dictionary<int, int> experimentNumbers = new Dictionary<int, int>();
+            experimentNumbers[currentExperimentId.Value] = currentExpNumber;
+            experimentNumbers[compareExperimentId] = compareExpNumber;
+
+            // Загружаем данные для первых двух экспериментов
             using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
             {
                 connection.Open();
@@ -1859,8 +1864,8 @@ CREATE TABLE Data_of_exp (
                 Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom
             };
 
-            // Панель для CheckBox
-            Panel checkBoxPanel = new Panel
+            // Панель для CheckBox и кнопки
+            Panel controlPanel = new Panel
             {
                 Location = new Point(0, 0),
                 Size = new Size(1200, 50),
@@ -1869,20 +1874,36 @@ CREATE TABLE Data_of_exp (
 
             CheckBox checkBoxApprox = new CheckBox
             {
-                Text = "Show Linear Approximation",
+                Text = "Approximation",
                 Location = new Point(10, 15),
                 Checked = false
             };
 
             CheckBox checkBoxAvg = new CheckBox
             {
-                Text = "Show Average Line",
-                Location = new Point(200, 15),
+                Text = "Avg Line",
+                Location = new Point(120, 15),
                 Checked = false
             };
 
-            checkBoxPanel.Controls.Add(checkBoxApprox);
-            checkBoxPanel.Controls.Add(checkBoxAvg);
+            CheckBox checkBoxCutOff = new CheckBox
+            {
+                Text = "Cut Off Power < 5000",
+                Location = new Point(230, 15),
+                Checked = false
+            };
+
+            Button buttonAddExp = new Button
+            {
+                Text = "Add Exp",
+                Location = new Point(390, 15),
+                Size = new Size(80, 23)
+            };
+
+            controlPanel.Controls.Add(checkBoxApprox);
+            controlPanel.Controls.Add(checkBoxAvg);
+            controlPanel.Controls.Add(checkBoxCutOff);
+            controlPanel.Controls.Add(buttonAddExp);
 
             ChartArea chartArea = new ChartArea
             {
@@ -1906,129 +1927,338 @@ CREATE TABLE Data_of_exp (
             };
             chartComparison.Legends.Add(legend);
 
-            // Определяем границы осей
-            double minX = double.MaxValue, maxX = double.MinValue;
-            double minY = double.MaxValue, maxY = double.MinValue;
-
-            foreach (var expData in experimentsData.Values)
+            // Обработчик для кнопки Add Exp
+            buttonAddExp.Click += (s, args) =>
             {
-                foreach (var point in expData)
+                if (experimentsData.Count >= 4)
                 {
-                    if (point.x < minX) minX = point.x;
-                    if (point.x > maxX) maxX = point.x;
-                    if (point.y < minY) minY = point.y;
-                    if (point.y > maxY) maxY = point.y;
+                    MessageBox.Show("You can compare up to 4 experiments only!", "Limit Reached", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
                 }
-            }
 
-            // Специфические ограничения для Power-Speed
-            if (xAxis == "Power" && yAxis == "Speed")
-            {
-                chartComparison.ChartAreas[0].AxisX.Minimum = 1000;
-                chartComparison.ChartAreas[0].AxisX.Maximum = 15500;
-                chartComparison.ChartAreas[0].AxisY.Minimum = 500;
-            }
-            else
-            {
-                chartComparison.ChartAreas[0].AxisX.Minimum = minX;
-                chartComparison.ChartAreas[0].AxisX.Maximum = maxX;
-                chartComparison.ChartAreas[0].AxisY.Minimum = minY;
-                chartComparison.ChartAreas[0].AxisY.Maximum = maxY;
-            }
+                // Форма выбора нового эксперимента
+                Form addExpForm = new Form
+                {
+                    Text = "Add Experiment",
+                    Size = new Size(400, 150),
+                    StartPosition = FormStartPosition.CenterParent,
+                    FormBorderStyle = FormBorderStyle.FixedDialog
+                };
+
+                Label labelAddExp = new Label
+                {
+                    Text = "Select experiment to add:",
+                    Location = new Point(10, 10),
+                    AutoSize = true
+                };
+
+                ComboBox comboBoxAddExp = new ComboBox
+                {
+                    Location = new Point(10, 35),
+                    Width = 350,
+                    DropDownStyle = ComboBoxStyle.DropDownList
+                };
+
+                Button buttonAddConfirm = new Button
+                {
+                    Text = "Add",
+                    Location = new Point(270, 80),
+                    DialogResult = DialogResult.OK
+                };
+
+                Button buttonAddCancel = new Button
+                {
+                    Text = "Cancel",
+                    Location = new Point(180, 80),
+                    DialogResult = DialogResult.Cancel
+                };
+
+                // Заполняем ComboBox экспериментами (кроме уже выбранных)
+                using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
+                {
+                    connection.Open();
+                    string query = "SELECT Experiment_PK, Number FROM Experiment WHERE Experiment_PK NOT IN (" +
+                                   string.Join(",", experimentsData.Keys.Select(id => id.ToString())) + ")";
+                    using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                    {
+                        using (SQLiteDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                int expId = reader.GetInt32(0);
+                                int expNumber = reader.GetInt32(1);
+                                comboBoxAddExp.Items.Add(new { Id = expId, Number = expNumber });
+                            }
+                        }
+                    }
+                }
+
+                comboBoxAddExp.DisplayMember = "Number";
+                comboBoxAddExp.ValueMember = "Id";
+
+                addExpForm.Controls.Add(labelAddExp);
+                addExpForm.Controls.Add(comboBoxAddExp);
+                addExpForm.Controls.Add(buttonAddConfirm);
+                addExpForm.Controls.Add(buttonAddCancel);
+
+                if (addExpForm.ShowDialog() != DialogResult.OK || comboBoxAddExp.SelectedItem == null)
+                {
+                    addExpForm.Dispose();
+                    return;
+                }
+
+                int newExpId = (comboBoxAddExp.SelectedItem as dynamic).Id;
+                int newExpNumber = (comboBoxAddExp.SelectedItem as dynamic).Number;
+
+                // Добавляем новый эксперимент
+                experimentsData[newExpId] = new List<(double x, double y)>();
+                experimentNumbers[newExpId] = newExpNumber;
+
+                // Загружаем данные для нового эксперимента
+                using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
+                {
+                    connection.Open();
+                    string query = "SELECT run_of_test, " + xAxis + ", " + yAxis + " FROM Data_of_exp WHERE Experiment_FK = @ExperimentId";
+                    using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@ExperimentId", newExpId);
+                        using (SQLiteDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                string rawX = reader.IsDBNull(1) ? "" : reader.GetString(1).Replace(',', '.');
+                                string rawY = reader.IsDBNull(2) ? "" : reader.GetString(2).Replace(',', '.');
+
+                                string[] valuesX = rawX.Split(';');
+                                string[] valuesY = rawY.Split(';');
+                                int minLength = Math.Min(valuesX.Length, valuesY.Length);
+
+                                for (int i = 0; i < minLength; i++)
+                                {
+                                    if (double.TryParse(valuesX[i], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double x) &&
+                                        double.TryParse(valuesY[i], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double y))
+                                    {
+                                        experimentsData[newExpId].Add((x, y));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Обновляем заголовок формы
+                graphForm.Text = "Comparison: " + string.Join(" vs ", experimentNumbers.Values.Select(n => $"Exp {n}"));
+                UpdateGraph();
+                addExpForm.Dispose();
+            };
 
             // Функция для обновления графика
             void UpdateGraph()
             {
                 chartComparison.Series.Clear();
 
-                // Добавляем серии точек
-                Series currentSeries = new Series($"Exp {currentExpNumber} (Red)")
-                {
-                    ChartType = SeriesChartType.Point,
-                    Color = Color.Red,
-                    MarkerStyle = MarkerStyle.Circle,
-                    MarkerSize = 6
-                };
+                // Определяем цвета для экспериментов (до 4)
+                Color[] pointColors = { Color.Red, Color.Blue, Color.Green, Color.Purple };
+                Color[] approxColors = { Color.DarkRed, Color.DarkBlue, Color.DarkGreen, Color.DarkMagenta };
+                Color[] avgColors = { Color.LightCoral, Color.LightBlue, Color.LightGreen, Color.Plum };
+                int colorIndex = 0;
 
-                Series compareSeries = new Series($"Exp {compareExpNumber} (Blue)")
+                // Фильтруем точки для каждого эксперимента
+                Dictionary<int, List<(double x, double y)>> filteredPoints = new Dictionary<int, List<(double x, double y)>>();
+                foreach (var expId in experimentsData.Keys)
                 {
-                    ChartType = SeriesChartType.Point,
-                    Color = Color.Blue,
-                    MarkerStyle = MarkerStyle.Circle,
-                    MarkerSize = 6
-                };
-
-                // Добавляем точки
-                foreach (var point in experimentsData[currentExperimentId.Value])
-                {
-                    currentSeries.Points.AddXY(point.x, point.y);
+                    filteredPoints[expId] = experimentsData[expId]
+                        .Where(p => p.x > 1 && p.y > 1)
+                        .Where(p => !(xAxis == "Power" && yAxis == "Speed" && checkBoxCutOff.Checked && p.x < 5000))
+                        .ToList();
                 }
 
-                foreach (var point in experimentsData[compareExperimentId])
+                // Пересчитываем границы осей на основе отфильтрованных точек
+                double minX = double.MaxValue, maxX = double.MinValue;
+                double minY = double.MaxValue, maxY = double.MinValue;
+
+                var allFilteredPoints = filteredPoints.Values.SelectMany(points => points).ToList();
+                if (allFilteredPoints.Any())
                 {
-                    compareSeries.Points.AddXY(point.x, point.y);
+                    minX = allFilteredPoints.Min(p => p.x);
+                    maxX = allFilteredPoints.Max(p => p.x);
+                    minY = allFilteredPoints.Min(p => p.y);
+                    maxY = allFilteredPoints.Max(p => p.y);
                 }
 
-                chartComparison.Series.Add(currentSeries);
-                chartComparison.Series.Add(compareSeries);
+                // Установка границ осей
+                if (xAxis == "Power" && yAxis == "Speed")
+                {
+                    if (checkBoxCutOff.Checked)
+                    {
+                        chartComparison.ChartAreas[0].AxisX.Minimum = 5000;
+                        chartComparison.ChartAreas[0].AxisX.Maximum = 15500;
+                        chartComparison.ChartAreas[0].AxisY.Minimum = 500;
+                        chartComparison.ChartAreas[0].AxisY.Maximum = maxY > 500 ? maxY : 1000;
+                    }
+                    else
+                    {
+                        chartComparison.ChartAreas[0].AxisX.Minimum = minX > 1 ? minX : 1;
+                        chartComparison.ChartAreas[0].AxisX.Maximum = 15500;
+                        chartComparison.ChartAreas[0].AxisY.Minimum = 500;
+                        chartComparison.ChartAreas[0].AxisY.Maximum = maxY > 500 ? maxY : 1000;
+                    }
+                }
+                else
+                {
+                    chartComparison.ChartAreas[0].AxisX.Minimum = minX > 1 ? minX : 1;
+                    chartComparison.ChartAreas[0].AxisX.Maximum = maxX > minX ? maxX : minX + 1;
+                    chartComparison.ChartAreas[0].AxisY.Minimum = minY > 1 ? minY : 1;
+                    chartComparison.ChartAreas[0].AxisY.Maximum = maxY > minY ? maxY : minY + 1;
+                }
 
-                // Линейная аппроксимация
+                // Добавляем серии точек для каждого эксперимента
+                foreach (var expId in filteredPoints.Keys)
+                {
+                    Series series = new Series($"Exp {experimentNumbers[expId]} ({pointColors[colorIndex].Name})")
+                    {
+                        ChartType = SeriesChartType.Point,
+                        Color = pointColors[colorIndex],
+                        MarkerStyle = MarkerStyle.Circle,
+                        MarkerSize = 6
+                    };
+
+                    foreach (var point in filteredPoints[expId])
+                    {
+                        series.Points.AddXY(point.x, point.y);
+                    }
+
+                    chartComparison.Series.Add(series);
+                    colorIndex++;
+                }
+
+                // Аппроксимация
                 if (checkBoxApprox.Checked)
                 {
-                    foreach (var expId in new[] { currentExperimentId.Value, compareExperimentId })
+                    colorIndex = 0;
+                    foreach (var expId in filteredPoints.Keys)
                     {
-                        var validPoints = experimentsData[expId]
+                        var validPoints = filteredPoints[expId]
                             .Where(p => p.x > 0 && p.y > 0)
                             .OrderBy(p => p.x)
                             .ToList();
 
                         if (validPoints.Count < 2) continue;
 
-                        double sumX = validPoints.Sum(p => p.x);
-                        double sumY = validPoints.Sum(p => p.y);
-                        double sumXY = validPoints.Sum(p => p.x * p.y);
-                        double sumX2 = validPoints.Sum(p => p.x * p.x);
-                        int n = validPoints.Count;
+                        Series approxSeries;
+                        double rSquared = 0;
 
-                        double a = (n * sumXY - sumX * sumY) / (n * sumX2 - Math.Pow(sumX, 2));
-                        double b = (sumY - a * sumX) / n;
-
-                        Series approxSeries = new Series($"Exp {(expId == currentExperimentId.Value ? currentExpNumber : compareExpNumber)} Approx")
+                        if (xAxis == "Power" && yAxis == "Speed")
                         {
-                            ChartType = SeriesChartType.Line,
-                            Color = expId == currentExperimentId.Value ? Color.DarkRed : Color.DarkBlue,
-                            BorderWidth = 2,
-                            MarkerStyle = MarkerStyle.None
-                        };
+                            // Квадратичная аппроксимация: speed = a*power^2 + b*power + 670
+                            double sumX = validPoints.Sum(p => p.x);
+                            double sumX2 = validPoints.Sum(p => p.x * p.x);
+                            double sumX3 = validPoints.Sum(p => p.x * p.x * p.x);
+                            double sumX4 = validPoints.Sum(p => p.x * p.x * p.x * p.x);
+                            double sumY = validPoints.Sum(p => p.y - 670);
+                            double sumXY = validPoints.Sum(p => p.x * (p.y - 670));
+                            double sumX2Y = validPoints.Sum(p => (p.x * p.x) * (p.y - 670));
+                            int n = validPoints.Count;
 
-                        double startX = (xAxis == "Power" && yAxis == "Speed") ? 1000 : minX;
-                        double endX = (xAxis == "Power" && yAxis == "Speed") ? 15500 : maxX;
-                        int steps = 100;
-                        double stepSize = (endX - startX) / steps;
+                            double[,] A = new double[,] { { sumX4, sumX3 }, { sumX3, sumX2 } };
+                            double[] B = new double[] { sumX2Y, sumXY };
+                            double detA = A[0, 0] * A[1, 1] - A[0, 1] * A[1, 0];
+                            if (Math.Abs(detA) < 1e-10)
+                            {
+                                continue;
+                            }
 
-                        for (int i = 0; i <= steps; i++)
+                            double a = (B[0] * A[1, 1] - B[1] * A[0, 1]) / detA;
+                            double b = (A[0, 0] * B[1] - A[1, 0] * B[0]) / detA;
+
+                            // Вычисляем R²
+                            double meanY = validPoints.Average(p => p.y);
+                            double sst = validPoints.Sum(p => Math.Pow(p.y - meanY, 2));
+                            double ssr = validPoints.Sum(p => Math.Pow(p.y - (a * p.x * p.x + b * p.x + 670), 2));
+                            rSquared = sst > 0 ? 1 - (ssr / sst) : 0;
+
+                            string legendText = $"speed = a*power^2 + b*power + 670 (R² = {rSquared:F2})";
+                            approxSeries = new Series($"Exp {experimentNumbers[expId]} Approx")
+                            {
+                                ChartType = SeriesChartType.Line,
+                                Color = approxColors[colorIndex],
+                                BorderWidth = 3,
+                                MarkerStyle = MarkerStyle.None,
+                                LegendText = legendText
+                            };
+
+                            int steps = 100;
+                            double startX = checkBoxCutOff.Checked ? 5000 : minX;
+                            double endX = 15500;
+                            double stepSize = (endX - startX) / steps;
+
+                            for (int i = 0; i <= steps; i++)
+                            {
+                                double x = startX + i * stepSize;
+                                double y = a * x * x + b * x + 670;
+                                approxSeries.Points.AddXY(x, y);
+                            }
+                        }
+                        else
                         {
-                            double x = startX + i * stepSize;
-                            double y = a * x + b;
-                            approxSeries.Points.AddXY(x, y);
+                            double sumX = validPoints.Sum(p => p.x);
+                            double sumY = validPoints.Sum(p => p.y);
+                            double sumXY = validPoints.Sum(p => p.x * p.y);
+                            double sumX2 = validPoints.Sum(p => p.x * p.x);
+                            int n = validPoints.Count;
+
+                            double a = (n * sumXY - sumX * sumY) / (n * sumX2 - Math.Pow(sumX, 2));
+                            double b = (sumY - a * sumX) / n;
+
+                            // Вычисляем R²
+                            double meanY = validPoints.Average(p => p.y);
+                            double sst = validPoints.Sum(p => Math.Pow(p.y - meanY, 2));
+                            double ssr = validPoints.Sum(p => Math.Pow(p.y - (a * p.x + b), 2));
+                            rSquared = sst > 0 ? 1 - (ssr / sst) : 0;
+
+                            string legendText = $"y = a*x + b (R² = {rSquared:F2})";
+                            approxSeries = new Series($"Exp {experimentNumbers[expId]} Approx")
+                            {
+                                ChartType = SeriesChartType.Line,
+                                Color = approxColors[colorIndex],
+                                BorderWidth = 3,
+                                MarkerStyle = MarkerStyle.None,
+                                LegendText = legendText
+                            };
+
+                            int steps = 100;
+                            double startX = minX;
+                            double endX = maxX;
+                            double stepSize = (endX - startX) / steps;
+
+                            for (int i = 0; i <= steps; i++)
+                            {
+                                double x = startX + i * stepSize;
+                                double y = a * x + b;
+                                approxSeries.Points.AddXY(x, y);
+                            }
                         }
 
                         chartComparison.Series.Add(approxSeries);
+                        colorIndex++;
                     }
                 }
 
                 // График среднего
                 if (checkBoxAvg.Checked)
                 {
-                    foreach (var expId in new[] { currentExperimentId.Value, compareExperimentId })
+                    colorIndex = 0;
+                    foreach (var expId in filteredPoints.Keys)
                     {
-                        var filtered = experimentsData[expId].Where(p => p.x > 0).ToList();
+                        var filtered = filteredPoints[expId]
+                            .Where(p => p.x > 0)
+                            .ToList();
                         if (filtered.Count == 0) continue;
 
-                        Series avgSeries = new Series($"Exp {(expId == currentExperimentId.Value ? currentExpNumber : compareExpNumber)} Avg")
+                        Series avgSeries = new Series($"Exp {experimentNumbers[expId]} Avg")
                         {
                             ChartType = SeriesChartType.Spline,
-                            Color = expId == currentExperimentId.Value ? Color.LightCoral : Color.LightBlue,
+                            Color = avgColors[colorIndex],
                             BorderWidth = 2,
                             MarkerStyle = MarkerStyle.None
                         };
@@ -2060,24 +2290,71 @@ CREATE TABLE Data_of_exp (
                         }
 
                         chartComparison.Series.Add(avgSeries);
+                        colorIndex++;
                     }
+                }
+
+                // Подпись первой точки
+                colorIndex = 0;
+                foreach (var expId in filteredPoints.Keys)
+                {
+                    var points = filteredPoints[expId];
+                    var firstPoint = points.OrderBy(p => p.x).FirstOrDefault();
+                    if (firstPoint.x != 0 || firstPoint.y != 0)
+                    {
+                        Series firstPointSeries = new Series($"Exp {experimentNumbers[expId]} First Point")
+                        {
+                            ChartType = SeriesChartType.Point,
+                            IsVisibleInLegend = false,
+                            MarkerStyle = MarkerStyle.None,
+                            LabelForeColor = Color.Gray
+                        };
+
+                        firstPointSeries.Points.AddXY(firstPoint.x, firstPoint.y);
+                        firstPointSeries.Points[0].Label = $"({firstPoint.x:F2}; {firstPoint.y:F2})";
+                        chartComparison.Series.Add(firstPointSeries);
+                    }
+                    colorIndex++;
+                }
+
+                // Подпись крайней точки
+                colorIndex = 0;
+                foreach (var expId in filteredPoints.Keys)
+                {
+                    var points = filteredPoints[expId];
+                    var lastPoint = points.OrderByDescending(p => p.x).FirstOrDefault();
+                    if (lastPoint.x != 0 || lastPoint.y != 0)
+                    {
+                        Series lastPointSeries = new Series($"Exp {experimentNumbers[expId]} Last Point")
+                        {
+                            ChartType = SeriesChartType.Point,
+                            IsVisibleInLegend = false,
+                            MarkerStyle = MarkerStyle.None,
+                            LabelForeColor = Color.Gray
+                        };
+
+                        lastPointSeries.Points.AddXY(lastPoint.x, lastPoint.y);
+                        lastPointSeries.Points[0].Label = $"({lastPoint.x:F2}; {lastPoint.y:F2})";
+                        chartComparison.Series.Add(lastPointSeries);
+                    }
+                    colorIndex++;
                 }
             }
 
             // Добавляем обработчики для CheckBox
             checkBoxApprox.CheckedChanged += (s, args) => UpdateGraph();
             checkBoxAvg.CheckedChanged += (s, args) => UpdateGraph();
+            checkBoxCutOff.CheckedChanged += (s, args) => UpdateGraph();
 
             // Первоначальное построение графика
             UpdateGraph();
 
-            graphForm.Controls.Add(checkBoxPanel);
+            graphForm.Controls.Add(controlPanel);
             graphForm.Controls.Add(chartComparison);
-            graphForm.Show(); // Используем Show() вместо ShowDialog() для немодального окна
+            graphForm.Show();
 
             compareForm.Dispose();
         }
-
 
         ////////
     }
