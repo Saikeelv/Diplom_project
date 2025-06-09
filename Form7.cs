@@ -51,8 +51,6 @@ namespace Diplom_project
         {
         }
 
-
-
         private void PlotGraph(Dictionary<int, List<(double, double)>> experimentsData, string xLabel, string yLabel)
         {
             chartExp.Series.Clear();
@@ -225,27 +223,28 @@ namespace Diplom_project
 
                     Series approxSeries;
                     double rSquared = 0;
+                    double c = 670; // Вернули значение c к 670
 
                     if (xLabel == "Power" && yLabel == "Speed")
                     {
-                        // Квадратичная аппроксимация: speed = a*power^2 + b*power + 670
+                        // Квадратичная аппроксимация: speed = a*power^2 + b*power + c
                         // Решаем систему уравнений методом наименьших квадратов для a и b
                         double sumX = validPoints.Sum(p => p.x);
                         double sumX2 = validPoints.Sum(p => p.x * p.x);
                         double sumX3 = validPoints.Sum(p => p.x * p.x * p.x);
                         double sumX4 = validPoints.Sum(p => p.x * p.x * p.x * p.x);
-                        double sumY = validPoints.Sum(p => p.y - 670); // Вычитаем константу 670
-                        double sumXY = validPoints.Sum(p => p.x * (p.y - 670));
-                        double sumX2Y = validPoints.Sum(p => (p.x * p.x) * (p.y - 670));
+                        double sumY = validPoints.Sum(p => p.y - c); // Вычитаем константу c
+                        double sumXY = validPoints.Sum(p => p.x * (p.y - c));
+                        double sumX2Y = validPoints.Sum(p => (p.x * p.x) * (p.y - c));
                         int n = validPoints.Count;
 
                         // Матрица A и вектор B для системы A * [a, b] = B
                         // [sumX4  sumX3][a]   [sumX2Y]
                         // [sumX3  sumX2][b] = [sumXY]
                         double[,] A = new double[,] {
-                    { sumX4, sumX3 },
-                    { sumX3, sumX2 }
-                };
+            { sumX4, sumX3 },
+            { sumX3, sumX2 }
+        };
                         double[] B = new double[] { sumX2Y, sumXY };
 
                         // Решаем систему уравнений методом Гаусса для 2x2
@@ -262,11 +261,11 @@ namespace Diplom_project
                         // Вычисляем R²
                         double meanY = validPoints.Average(p => p.y);
                         double sst = validPoints.Sum(p => Math.Pow(p.y - meanY, 2));
-                        double ssr = validPoints.Sum(p => Math.Pow(p.y - (a * p.x * p.x + b * p.x + 670), 2));
+                        double ssr = validPoints.Sum(p => Math.Pow(p.y - (a * p.x * p.x + b * p.x + c), 2));
                         rSquared = sst > 0 ? 1 - (ssr / sst) : 0;
 
-                        // Формируем строку для легенды (общий вид функции и R²)
-                        string legendText = $"speed = a*power^2 + b*power + 670 (R² = {rSquared:F2})";
+                        // Формируем строку для легенды с коэффициентами a и b с увеличенной точностью для a
+                        string legendText = $"speed = {a:F8}*power^2 + {b:F4}*power + {c} (R² = {rSquared:F2})";
 
                         // Создаем серию
                         approxSeries = new Series("Quadratic Approx")
@@ -287,7 +286,7 @@ namespace Diplom_project
                         for (int i = 0; i <= steps; i++)
                         {
                             double x = startX + i * stepSize;
-                            double y = a * x * x + b * x + 670; // speed = a*power^2 + b*power + 670
+                            double y = a * x * x + b * x + c; // speed = a*power^2 + b*power + c
                             approxSeries.Points.AddXY(x, y);
                         }
                     }
@@ -310,8 +309,8 @@ namespace Diplom_project
                         double ssr = validPoints.Sum(p => Math.Pow(p.y - (a * p.x + b), 2));
                         rSquared = sst > 0 ? 1 - (ssr / sst) : 0;
 
-                        // Формируем строку для легенды (общий вид функции и R²)
-                        string legendText = $"y = a*x + b (R² = {rSquared:F2})";
+                        // Формируем строку для легенды с коэффициентами a и b
+                        string legendText = $"y = {a:F4}*x + {b:F4} (R² = {rSquared:F2})";
 
                         // Создаем серию
                         approxSeries = new Series("Linear Approx")
@@ -377,6 +376,8 @@ namespace Diplom_project
                 chartExp.Series["Last Point Label"].Points[0].Label = $"({lastPoint.x:F2}; {lastPoint.y:F2})";
             }
         }
+
+
 
         private void buttonMake_Click(object sender, EventArgs e)
         {

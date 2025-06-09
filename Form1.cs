@@ -1864,6 +1864,9 @@ CREATE TABLE Data_of_exp (
                 Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom
             };
 
+            // Устанавливаем шрифт Arial Narrow 12pt
+            chartComparison.Font = new Font("Arial Narrow", 12);
+
             // Панель для CheckBox и кнопки
             Panel controlPanel = new Panel
             {
@@ -1916,6 +1919,12 @@ CREATE TABLE Data_of_exp (
             chartArea.BackColor = Color.White;
             chartComparison.ChartAreas.Add(chartArea);
 
+            // Устанавливаем шрифт для осей
+            chartArea.AxisX.TitleFont = new Font("Arial Narrow", 12);
+            chartArea.AxisY.TitleFont = new Font("Arial Narrow", 12);
+            chartArea.AxisX.LabelStyle.Font = new Font("Arial Narrow", 12);
+            chartArea.AxisY.LabelStyle.Font = new Font("Arial Narrow", 12);
+
             // Добавляем легенду
             Legend legend = new Legend
             {
@@ -1923,7 +1932,8 @@ CREATE TABLE Data_of_exp (
                 Alignment = StringAlignment.Center,
                 BackColor = Color.White,
                 BorderColor = Color.Black,
-                IsDockedInsideChartArea = false
+                IsDockedInsideChartArea = false,
+                Font = new Font("Arial Narrow", 12) // Устанавливаем шрифт для легенды
             };
             chartComparison.Legends.Add(legend);
 
@@ -2147,17 +2157,18 @@ CREATE TABLE Data_of_exp (
 
                         Series approxSeries;
                         double rSquared = 0;
+                        double c = 670; // Используем переменную c вместо константы 670
 
                         if (xAxis == "Power" && yAxis == "Speed")
                         {
-                            // Квадратичная аппроксимация: speed = a*power^2 + b*power + 670
+                            // Квадратичная аппроксимация: speed = a*power^2 + b*power + c
                             double sumX = validPoints.Sum(p => p.x);
                             double sumX2 = validPoints.Sum(p => p.x * p.x);
                             double sumX3 = validPoints.Sum(p => p.x * p.x * p.x);
                             double sumX4 = validPoints.Sum(p => p.x * p.x * p.x * p.x);
-                            double sumY = validPoints.Sum(p => p.y - 670);
-                            double sumXY = validPoints.Sum(p => p.x * (p.y - 670));
-                            double sumX2Y = validPoints.Sum(p => (p.x * p.x) * (p.y - 670));
+                            double sumY = validPoints.Sum(p => p.y - c);
+                            double sumXY = validPoints.Sum(p => p.x * (p.y - c));
+                            double sumX2Y = validPoints.Sum(p => (p.x * p.x) * (p.y - c));
                             int n = validPoints.Count;
 
                             double[,] A = new double[,] { { sumX4, sumX3 }, { sumX3, sumX2 } };
@@ -2174,10 +2185,12 @@ CREATE TABLE Data_of_exp (
                             // Вычисляем R²
                             double meanY = validPoints.Average(p => p.y);
                             double sst = validPoints.Sum(p => Math.Pow(p.y - meanY, 2));
-                            double ssr = validPoints.Sum(p => Math.Pow(p.y - (a * p.x * p.x + b * p.x + 670), 2));
+                            double ssr = validPoints.Sum(p => Math.Pow(p.y - (a * p.x * p.x + b * p.x + c), 2));
                             rSquared = sst > 0 ? 1 - (ssr / sst) : 0;
 
-                            string legendText = $"speed = a*power^2 + b*power + 670 (R² = {rSquared:F2})";
+                            // Формируем строку для легенды с коэффициентами a и b
+                            string legendText = $"speed = {a:F8}*power^2 + {b:F4}*power + {c} (R² = {rSquared:F2})";
+
                             approxSeries = new Series($"Exp {experimentNumbers[expId]} Approx")
                             {
                                 ChartType = SeriesChartType.Line,
@@ -2195,7 +2208,7 @@ CREATE TABLE Data_of_exp (
                             for (int i = 0; i <= steps; i++)
                             {
                                 double x = startX + i * stepSize;
-                                double y = a * x * x + b * x + 670;
+                                double y = a * x * x + b * x + c;
                                 approxSeries.Points.AddXY(x, y);
                             }
                         }
@@ -2216,7 +2229,7 @@ CREATE TABLE Data_of_exp (
                             double ssr = validPoints.Sum(p => Math.Pow(p.y - (a * p.x + b), 2));
                             rSquared = sst > 0 ? 1 - (ssr / sst) : 0;
 
-                            string legendText = $"y = a*x + b (R² = {rSquared:F2})";
+                            string legendText = $"y = {a:F4}*x + {b:F4} (R² = {rSquared:F2})";
                             approxSeries = new Series($"Exp {experimentNumbers[expId]} Approx")
                             {
                                 ChartType = SeriesChartType.Line,
