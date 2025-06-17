@@ -1672,7 +1672,7 @@ CREATE TABLE Data_of_exp (
                 return;
             }
 
-            // Создаем форму выбора эксперимента для сравнения
+            // Create form for selecting experiment to compare
             Form compareForm = new Form
             {
                 Text = "Compare Experiments",
@@ -1681,7 +1681,7 @@ CREATE TABLE Data_of_exp (
                 FormBorderStyle = FormBorderStyle.FixedDialog
             };
 
-            // Компоненты формы
+            // Form components
             Label labelExperiment = new Label
             {
                 Text = "Select experiment to compare with:",
@@ -1740,7 +1740,7 @@ CREATE TABLE Data_of_exp (
                 DialogResult = DialogResult.Cancel
             };
 
-            // Заполняем ComboBox экспериментами (кроме текущего)
+            // Populate ComboBox with experiments (excluding current)
             using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
             {
                 connection.Open();
@@ -1760,15 +1760,14 @@ CREATE TABLE Data_of_exp (
                 }
             }
 
-            // Настраиваем отображение в ComboBox
             comboBoxExperiments.DisplayMember = "Number";
             comboBoxExperiments.ValueMember = "Id";
 
-            // Устанавливаем значения по умолчанию для осей
+            // Set default axis values
             comboBoxXAxis.SelectedIndex = 0; // Time
             comboBoxYAxis.SelectedIndex = 1; // Temp
 
-            // Добавляем компоненты на форму
+            // Add components to form
             compareForm.Controls.Add(labelExperiment);
             compareForm.Controls.Add(comboBoxExperiments);
             compareForm.Controls.Add(labelXAxis);
@@ -1778,21 +1777,21 @@ CREATE TABLE Data_of_exp (
             compareForm.Controls.Add(buttonCompare);
             compareForm.Controls.Add(buttonCancel);
 
-            // Показываем форму выбора
+            // Show selection form
             if (compareForm.ShowDialog() != DialogResult.OK || comboBoxExperiments.SelectedItem == null)
             {
                 compareForm.Dispose();
                 return;
             }
 
-            // Получаем выбранный эксперимент и оси
+            // Get selected experiment and axes
             int compareExperimentId = (comboBoxExperiments.SelectedItem as dynamic).Id;
             string xAxis = comboBoxXAxis.SelectedItem.ToString();
             string yAxis = comboBoxYAxis.SelectedItem.ToString();
             int currentExpNumber = 0;
             int compareExpNumber = (comboBoxExperiments.SelectedItem as dynamic).Number;
 
-            // Получаем номер текущего эксперимента
+            // Get current experiment number
             using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
             {
                 connection.Open();
@@ -1804,7 +1803,7 @@ CREATE TABLE Data_of_exp (
                 }
             }
 
-            // Инициализируем словарь экспериментов (до 4 максимум)
+            // Initialize dictionary for experiments (up to 5)
             Dictionary<int, List<(double x, double y)>> experimentsData = new Dictionary<int, List<(double x, double y)>>();
             experimentsData[currentExperimentId.Value] = new List<(double x, double y)>();
             experimentsData[compareExperimentId] = new List<(double x, double y)>();
@@ -1813,7 +1812,7 @@ CREATE TABLE Data_of_exp (
             experimentNumbers[currentExperimentId.Value] = currentExpNumber;
             experimentNumbers[compareExperimentId] = compareExpNumber;
 
-            // Загружаем данные для первых двух экспериментов
+            // Load data for the first two experiments
             using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
             {
                 connection.Open();
@@ -1849,7 +1848,7 @@ CREATE TABLE Data_of_exp (
                 }
             }
 
-            // Создаем форму для графика
+            // Create graph form
             Form graphForm = new Form
             {
                 Text = $"Comparison: Exp {currentExpNumber} vs Exp {compareExpNumber}",
@@ -1864,10 +1863,9 @@ CREATE TABLE Data_of_exp (
                 Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom
             };
 
-            // Устанавливаем шрифт Arial Narrow 12pt
             chartComparison.Font = new Font("Arial Narrow", 12);
 
-            // Панель для CheckBox и кнопки
+            // Panel for checkboxes and button
             Panel controlPanel = new Panel
             {
                 Location = new Point(0, 0),
@@ -1896,16 +1894,24 @@ CREATE TABLE Data_of_exp (
                 Checked = false
             };
 
+            CheckBox checkBoxLinearSpeed = new CheckBox
+            {
+                Text = "Linear Speed",
+                Location = new Point(340, 15),
+                Checked = false
+            };
+
             Button buttonAddExp = new Button
             {
                 Text = "Add Exp",
-                Location = new Point(390, 15),
+                Location = new Point(450, 15),
                 Size = new Size(80, 23)
             };
 
             controlPanel.Controls.Add(checkBoxApprox);
             controlPanel.Controls.Add(checkBoxAvg);
             controlPanel.Controls.Add(checkBoxCutOff);
+            controlPanel.Controls.Add(checkBoxLinearSpeed);
             controlPanel.Controls.Add(buttonAddExp);
 
             ChartArea chartArea = new ChartArea
@@ -1913,19 +1919,17 @@ CREATE TABLE Data_of_exp (
                 Name = "ChartArea1"
             };
             chartArea.AxisX.Title = xAxis;
-            chartArea.AxisY.Title = yAxis;
+            chartArea.AxisY.Title = yAxis == "Speed" && checkBoxLinearSpeed.Checked ? "Linear Speed (m/s)" : yAxis;
             chartArea.AxisX.MajorGrid.LineColor = Color.LightGray;
             chartArea.AxisY.MajorGrid.LineColor = Color.LightGray;
             chartArea.BackColor = Color.White;
             chartComparison.ChartAreas.Add(chartArea);
 
-            // Устанавливаем шрифт для осей
             chartArea.AxisX.TitleFont = new Font("Arial Narrow", 12);
             chartArea.AxisY.TitleFont = new Font("Arial Narrow", 12);
             chartArea.AxisX.LabelStyle.Font = new Font("Arial Narrow", 12);
             chartArea.AxisY.LabelStyle.Font = new Font("Arial Narrow", 12);
 
-            // Добавляем легенду
             Legend legend = new Legend
             {
                 Docking = Docking.Right,
@@ -1933,20 +1937,19 @@ CREATE TABLE Data_of_exp (
                 BackColor = Color.White,
                 BorderColor = Color.Black,
                 IsDockedInsideChartArea = false,
-                Font = new Font("Arial Narrow", 12) // Устанавливаем шрифт для легенды
+                Font = new Font("Arial Narrow", 12)
             };
             chartComparison.Legends.Add(legend);
 
-            // Обработчик для кнопки Add Exp
+            // Handler for Add Exp button
             buttonAddExp.Click += (s, args) =>
             {
-                if (experimentsData.Count >= 4)
+                if (experimentsData.Count >= 5)
                 {
-                    MessageBox.Show("You can compare up to 4 experiments only!", "Limit Reached", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("You can compare up to 5 experiments only!", "Limit Reached", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                // Форма выбора нового эксперимента
                 Form addExpForm = new Form
                 {
                     Text = "Add Experiment",
@@ -1983,7 +1986,6 @@ CREATE TABLE Data_of_exp (
                     DialogResult = DialogResult.Cancel
                 };
 
-                // Заполняем ComboBox экспериментами (кроме уже выбранных)
                 using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
                 {
                     connection.Open();
@@ -2020,11 +2022,9 @@ CREATE TABLE Data_of_exp (
                 int newExpId = (comboBoxAddExp.SelectedItem as dynamic).Id;
                 int newExpNumber = (comboBoxAddExp.SelectedItem as dynamic).Number;
 
-                // Добавляем новый эксперимент
                 experimentsData[newExpId] = new List<(double x, double y)>();
                 experimentNumbers[newExpId] = newExpNumber;
 
-                // Загружаем данные для нового эксперимента
                 using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
                 {
                     connection.Open();
@@ -2056,34 +2056,55 @@ CREATE TABLE Data_of_exp (
                     }
                 }
 
-                // Обновляем заголовок формы
                 graphForm.Text = "Comparison: " + string.Join(" vs ", experimentNumbers.Values.Select(n => $"Exp {n}"));
                 UpdateGraph();
                 addExpForm.Dispose();
             };
 
-            // Функция для обновления графика
+            // Function to update the graph
             void UpdateGraph()
             {
                 chartComparison.Series.Clear();
+                chartArea.AxisY.Title = yAxis == "Speed" && checkBoxLinearSpeed.Checked ? "Linear Speed (m/s)" : yAxis;
 
-                // Определяем цвета для экспериментов (до 4)
-                Color[] pointColors = { Color.Red, Color.Blue, Color.Green, Color.Purple };
-                Color[] approxColors = { Color.DarkRed, Color.DarkBlue, Color.DarkGreen, Color.DarkMagenta };
-                Color[] avgColors = { Color.LightCoral, Color.LightBlue, Color.LightGreen, Color.Plum };
+                // Установка формата подписей осей с 2 знаками после запятой
+                chartComparison.ChartAreas[0].AxisX.LabelStyle.Format = "{0:F2}";
+                chartComparison.ChartAreas[0].AxisY.LabelStyle.Format = "{0:F2}";
+
+                Color[] pointColors = { Color.Red, Color.Blue, Color.Green, Color.Purple, Color.Orange };
+                Color[] approxColors = { Color.DarkRed, Color.DarkBlue, Color.DarkGreen, Color.DarkMagenta, Color.DarkOrange };
+                Color[] avgColors = { Color.LightCoral, Color.LightBlue, Color.LightGreen, Color.Plum, Color.LightSalmon };
                 int colorIndex = 0;
 
-                // Фильтруем точки для каждого эксперимента
-                Dictionary<int, List<(double x, double y)>> filteredPoints = new Dictionary<int, List<(double x, double y)>>();
+                // Конверсия скорости в линейную, если нужно (радиус = 0.01 м)
+                Dictionary<int, List<(double x, double y)>> processedData = new Dictionary<int, List<(double x, double y)>>();
                 foreach (var expId in experimentsData.Keys)
                 {
-                    filteredPoints[expId] = experimentsData[expId]
-                        .Where(p => p.x > 1 && p.y > 1)
+                    processedData[expId] = new List<(double x, double y)>();
+                    foreach (var point in experimentsData[expId])
+                    {
+                        double x = point.x;
+                        double y = point.y;
+                        if (yAxis == "Speed" && checkBoxLinearSpeed.Checked)
+                        {
+                            y = (2 * Math.PI * 0.01 * y) / 60; // Конверсия RPM в м/с
+                            if (double.IsNaN(y) || double.IsInfinity(y) || y < 0) continue; // Пропуск недопустимых значений
+                        }
+                        processedData[expId].Add((x, y));
+                    }
+                }
+
+                // Фильтрация точек
+                Dictionary<int, List<(double x, double y)>> filteredPoints = new Dictionary<int, List<(double x, double y)>>();
+                foreach (var expId in processedData.Keys)
+                {
+                    filteredPoints[expId] = processedData[expId]
+                        .Where(p => p.x > 1 && p.y > 0) // Убедимся, что y положительное для линейной скорости
                         .Where(p => !(xAxis == "Power" && yAxis == "Speed" && checkBoxCutOff.Checked && p.x < 5000))
                         .ToList();
                 }
 
-                // Пересчитываем границы осей на основе отфильтрованных точек
+                // Пересчет границ осей
                 double minX = double.MaxValue, maxX = double.MinValue;
                 double minY = double.MaxValue, maxY = double.MinValue;
 
@@ -2103,26 +2124,26 @@ CREATE TABLE Data_of_exp (
                     {
                         chartComparison.ChartAreas[0].AxisX.Minimum = 5000;
                         chartComparison.ChartAreas[0].AxisX.Maximum = 15500;
-                        chartComparison.ChartAreas[0].AxisY.Minimum = 500;
-                        chartComparison.ChartAreas[0].AxisY.Maximum = maxY > 500 ? maxY : 1000;
+                        chartComparison.ChartAreas[0].AxisY.Minimum = checkBoxLinearSpeed.Checked ? 0.5 : 500; // Нижняя граница 0.5 для линейной скорости
+                        chartComparison.ChartAreas[0].AxisY.Maximum = checkBoxLinearSpeed.Checked ? maxY : (maxY > 500 ? maxY : 1000);
                     }
                     else
                     {
                         chartComparison.ChartAreas[0].AxisX.Minimum = minX > 1 ? minX : 1;
                         chartComparison.ChartAreas[0].AxisX.Maximum = 15500;
-                        chartComparison.ChartAreas[0].AxisY.Minimum = 500;
-                        chartComparison.ChartAreas[0].AxisY.Maximum = maxY > 500 ? maxY : 1000;
+                        chartComparison.ChartAreas[0].AxisY.Minimum = checkBoxLinearSpeed.Checked ? 0.5 : 500; // Нижняя граница 0.5 для линейной скорости
+                        chartComparison.ChartAreas[0].AxisY.Maximum = checkBoxLinearSpeed.Checked ? maxY : (maxY > 500 ? maxY : 1000);
                     }
                 }
                 else
                 {
                     chartComparison.ChartAreas[0].AxisX.Minimum = minX > 1 ? minX : 1;
                     chartComparison.ChartAreas[0].AxisX.Maximum = maxX > minX ? maxX : minX + 1;
-                    chartComparison.ChartAreas[0].AxisY.Minimum = minY > 1 ? minY : 1;
+                    chartComparison.ChartAreas[0].AxisY.Minimum = minY > 0 ? minY : 0;
                     chartComparison.ChartAreas[0].AxisY.Maximum = maxY > minY ? maxY : minY + 1;
                 }
 
-                // Добавляем серии точек для каждого эксперимента
+                // Добавление серий точек
                 foreach (var expId in filteredPoints.Keys)
                 {
                     Series series = new Series($"Exp {experimentNumbers[expId]} ({pointColors[colorIndex].Name})")
@@ -2135,7 +2156,7 @@ CREATE TABLE Data_of_exp (
 
                     foreach (var point in filteredPoints[expId])
                     {
-                        series.Points.AddXY(point.x, point.y);
+                        series.Points.AddXY(point.x, point.y); // Полная точность для точек
                     }
 
                     chartComparison.Series.Add(series);
@@ -2157,7 +2178,7 @@ CREATE TABLE Data_of_exp (
 
                         Series approxSeries;
                         double rSquared = 0;
-                        double c = 670; // Используем переменную c вместо константы 670
+                        double c = (yAxis == "Speed" && checkBoxLinearSpeed.Checked) ? 0.7 : (yAxis == "Speed" ? 670 : 0);
 
                         if (xAxis == "Power" && yAxis == "Speed")
                         {
@@ -2174,23 +2195,18 @@ CREATE TABLE Data_of_exp (
                             double[,] A = new double[,] { { sumX4, sumX3 }, { sumX3, sumX2 } };
                             double[] B = new double[] { sumX2Y, sumXY };
                             double detA = A[0, 0] * A[1, 1] - A[0, 1] * A[1, 0];
-                            if (Math.Abs(detA) < 1e-10)
-                            {
-                                continue;
-                            }
+                            if (Math.Abs(detA) < 1e-10) continue; // Избежание деления на ноль
 
                             double a = (B[0] * A[1, 1] - B[1] * A[0, 1]) / detA;
                             double b = (A[0, 0] * B[1] - A[1, 0] * B[0]) / detA;
 
-                            // Вычисляем R²
                             double meanY = validPoints.Average(p => p.y);
                             double sst = validPoints.Sum(p => Math.Pow(p.y - meanY, 2));
                             double ssr = validPoints.Sum(p => Math.Pow(p.y - (a * p.x * p.x + b * p.x + c), 2));
                             rSquared = sst > 0 ? 1 - (ssr / sst) : 0;
 
-                            // Формируем строку для легенды с коэффициентами a и b
-                            string legendText = $"speed = {a:F8}*power^2 + {b:F4}*power + {c} (R² = {rSquared:F2})";
-
+                            // Отображение коэффициентов в экспоненциальной форме в скобках
+                            string legendText = $"speed = ({a:E2})*power^2 + ({b:E2})*power + {c} (R² = {rSquared:F2})";
                             approxSeries = new Series($"Exp {experimentNumbers[expId]} Approx")
                             {
                                 ChartType = SeriesChartType.Line,
@@ -2209,11 +2225,12 @@ CREATE TABLE Data_of_exp (
                             {
                                 double x = startX + i * stepSize;
                                 double y = a * x * x + b * x + c;
-                                approxSeries.Points.AddXY(x, y);
+                                if (y >= 0.5) approxSeries.Points.AddXY(x, y); // Полная точность
                             }
                         }
                         else
                         {
+                            // Линейная аппроксимация
                             double sumX = validPoints.Sum(p => p.x);
                             double sumY = validPoints.Sum(p => p.y);
                             double sumXY = validPoints.Sum(p => p.x * p.y);
@@ -2223,13 +2240,13 @@ CREATE TABLE Data_of_exp (
                             double a = (n * sumXY - sumX * sumY) / (n * sumX2 - Math.Pow(sumX, 2));
                             double b = (sumY - a * sumX) / n;
 
-                            // Вычисляем R²
                             double meanY = validPoints.Average(p => p.y);
                             double sst = validPoints.Sum(p => Math.Pow(p.y - meanY, 2));
                             double ssr = validPoints.Sum(p => Math.Pow(p.y - (a * p.x + b), 2));
                             rSquared = sst > 0 ? 1 - (ssr / sst) : 0;
 
-                            string legendText = $"y = {a:F4}*x + {b:F4} (R² = {rSquared:F2})";
+                            // Отображение коэффициентов в экспоненциальной форме в скобках
+                            string legendText = $"y = ({a:E2})*x + ({b:E2}) (R² = {rSquared:F2})";
                             approxSeries = new Series($"Exp {experimentNumbers[expId]} Approx")
                             {
                                 ChartType = SeriesChartType.Line,
@@ -2248,7 +2265,7 @@ CREATE TABLE Data_of_exp (
                             {
                                 double x = startX + i * stepSize;
                                 double y = a * x + b;
-                                approxSeries.Points.AddXY(x, y);
+                                approxSeries.Points.AddXY(x, y); // Полная точность
                             }
                         }
 
@@ -2257,7 +2274,7 @@ CREATE TABLE Data_of_exp (
                     }
                 }
 
-                // График среднего
+                // Средняя линия
                 if (checkBoxAvg.Checked)
                 {
                     colorIndex = 0;
@@ -2290,7 +2307,7 @@ CREATE TABLE Data_of_exp (
                             var pointsInInterval = filtered.Where(p => p.x >= xStart && p.x < xEnd).ToList();
                             if (pointsInInterval.Count > 0)
                             {
-                                double avgY = pointsInInterval.Average(p => p.y);
+                                double avgY = pointsInInterval.Average(p => p.y); // Полная точность
                                 double avgX = (xStart + xEnd) / 2.0;
                                 avgPoints.Add((avgX, avgY));
                             }
@@ -2299,7 +2316,7 @@ CREATE TABLE Data_of_exp (
                         avgPoints = avgPoints.OrderBy(p => p.x).ToList();
                         foreach (var point in avgPoints)
                         {
-                            avgSeries.Points.AddXY(point.x, point.y);
+                            avgSeries.Points.AddXY(point.x, point.y); // Полная точность
                         }
 
                         chartComparison.Series.Add(avgSeries);
@@ -2307,7 +2324,7 @@ CREATE TABLE Data_of_exp (
                     }
                 }
 
-                // Подпись первой точки
+                // Подпись первой и крайней точек с 2 знаками после запятой
                 colorIndex = 0;
                 foreach (var expId in filteredPoints.Keys)
                 {
@@ -2330,7 +2347,6 @@ CREATE TABLE Data_of_exp (
                     colorIndex++;
                 }
 
-                // Подпись крайней точки
                 colorIndex = 0;
                 foreach (var expId in filteredPoints.Keys)
                 {
@@ -2354,12 +2370,13 @@ CREATE TABLE Data_of_exp (
                 }
             }
 
-            // Добавляем обработчики для CheckBox
+            // Add handlers for checkboxes
             checkBoxApprox.CheckedChanged += (s, args) => UpdateGraph();
             checkBoxAvg.CheckedChanged += (s, args) => UpdateGraph();
             checkBoxCutOff.CheckedChanged += (s, args) => UpdateGraph();
+            checkBoxLinearSpeed.CheckedChanged += (s, args) => UpdateGraph();
 
-            // Первоначальное построение графика
+            // Initial graph rendering
             UpdateGraph();
 
             graphForm.Controls.Add(controlPanel);
