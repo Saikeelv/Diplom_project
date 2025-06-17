@@ -2076,6 +2076,30 @@ CREATE TABLE Data_of_exp (
                 Color[] avgColors = { Color.LightCoral, Color.LightBlue, Color.LightGreen, Color.Plum, Color.LightSalmon };
                 int colorIndex = 0;
 
+                // Get sample notes for experiments
+                Dictionary<int, string> sampleNotes = new Dictionary<int, string>();
+                using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
+                {
+                    connection.Open();
+                    string query = @"
+                SELECT e.Experiment_PK, s.Note
+                FROM Experiment e
+                JOIN Sample s ON e.Sample_FK = s.Sample_PK
+                WHERE e.Experiment_PK IN (" + string.Join(",", experimentsData.Keys.Select(id => id.ToString())) + ")";
+                    using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                    {
+                        using (SQLiteDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                int expId = reader.GetInt32(0);
+                                string note = reader["Note"].ToString();
+                                sampleNotes[expId] = note;
+                            }
+                        }
+                    }
+                }
+
                 // Конверсия скорости в линейную, если нужно (радиус = 0.01 м)
                 Dictionary<int, List<(double x, double y)>> processedData = new Dictionary<int, List<(double x, double y)>>();
                 foreach (var expId in experimentsData.Keys)
@@ -2143,10 +2167,11 @@ CREATE TABLE Data_of_exp (
                     chartComparison.ChartAreas[0].AxisY.Maximum = maxY > minY ? maxY : minY + 1;
                 }
 
-                // Добавление серий точек
+                // Добавление серий точек с именами образцов и номерами экспериментов
                 foreach (var expId in filteredPoints.Keys)
                 {
-                    Series series = new Series($"Exp {experimentNumbers[expId]} ({pointColors[colorIndex].Name})")
+                    string sampleNote = sampleNotes.ContainsKey(expId) ? sampleNotes[expId] : "Unknown Sample";
+                    Series series = new Series($"{sampleNote} (Exp {experimentNumbers[expId]})")
                     {
                         ChartType = SeriesChartType.Point,
                         Color = pointColors[colorIndex],
@@ -2167,6 +2192,18 @@ CREATE TABLE Data_of_exp (
                 if (checkBoxApprox.Checked)
                 {
                     colorIndex = 0;
+                    // Добавляем заголовок аппроксимации один раз с белой линией, чтобы убрать видимость
+                    Series headerSeries = new Series("Approximation Header")
+                    {
+                        IsVisibleInLegend = true,
+                        ChartType = SeriesChartType.Line,
+                        LegendText = "Аппроксимация вида: y = a * x^2 + b * x + c",
+                        Color = Color.White, // Белый цвет для убирания линии
+                        BorderWidth = 0,
+                        MarkerStyle = MarkerStyle.None
+                    };
+                    chartComparison.Series.Add(headerSeries);
+
                     foreach (var expId in filteredPoints.Keys)
                     {
                         var validPoints = filteredPoints[expId]
@@ -2206,8 +2243,9 @@ CREATE TABLE Data_of_exp (
                             rSquared = sst > 0 ? 1 - (ssr / sst) : 0;
 
                             // Отображение коэффициентов в экспоненциальной форме в скобках
-                            string legendText = $"speed = ({a:E2})*power^2 + ({b:E2})*power + {c} (R² = {rSquared:F2})";
-                            approxSeries = new Series($"Exp {experimentNumbers[expId]} Approx")
+                            string sampleNote = sampleNotes.ContainsKey(expId) ? sampleNotes[expId] : "Unknown Sample";
+                            string legendText = $"{sampleNote} (Exp {experimentNumbers[expId]}) аппроксимация: a = {a:E2}, b = {b:E2}, c = {c}, R² = {rSquared:F2}";
+                            approxSeries = new Series($"{sampleNote} (Exp {experimentNumbers[expId]}) Approx")
                             {
                                 ChartType = SeriesChartType.Line,
                                 Color = approxColors[colorIndex],
@@ -2246,8 +2284,9 @@ CREATE TABLE Data_of_exp (
                             rSquared = sst > 0 ? 1 - (ssr / sst) : 0;
 
                             // Отображение коэффициентов в экспоненциальной форме в скобках
-                            string legendText = $"y = ({a:E2})*x + ({b:E2}) (R² = {rSquared:F2})";
-                            approxSeries = new Series($"Exp {experimentNumbers[expId]} Approx")
+                            string sampleNote = sampleNotes.ContainsKey(expId) ? sampleNotes[expId] : "Unknown Sample";
+                            string legendText = $"{sampleNote} (Exp {experimentNumbers[expId]}) аппроксимация: a = {a:E2}, b = {b:E2}, c = 0, R² = {rSquared:F2}";
+                            approxSeries = new Series($"{sampleNote} (Exp {experimentNumbers[expId]}) Approx")
                             {
                                 ChartType = SeriesChartType.Line,
                                 Color = approxColors[colorIndex],
@@ -2285,7 +2324,7 @@ CREATE TABLE Data_of_exp (
                             .ToList();
                         if (filtered.Count == 0) continue;
 
-                        Series avgSeries = new Series($"Exp {experimentNumbers[expId]} Avg")
+                        Series avgSeries = new Series($"{sampleNotes[expId]} (Exp {experimentNumbers[expId]}) Avg")
                         {
                             ChartType = SeriesChartType.Spline,
                             Color = avgColors[colorIndex],
@@ -2332,7 +2371,7 @@ CREATE TABLE Data_of_exp (
                     var firstPoint = points.OrderBy(p => p.x).FirstOrDefault();
                     if (firstPoint.x != 0 || firstPoint.y != 0)
                     {
-                        Series firstPointSeries = new Series($"Exp {experimentNumbers[expId]} First Point")
+                        Series firstPointSeries = new Series($"{sampleNotes[expId]} (Exp {experimentNumbers[expId]}) First Point")
                         {
                             ChartType = SeriesChartType.Point,
                             IsVisibleInLegend = false,
@@ -2354,7 +2393,7 @@ CREATE TABLE Data_of_exp (
                     var lastPoint = points.OrderByDescending(p => p.x).FirstOrDefault();
                     if (lastPoint.x != 0 || lastPoint.y != 0)
                     {
-                        Series lastPointSeries = new Series($"Exp {experimentNumbers[expId]} Last Point")
+                        Series lastPointSeries = new Series($"{sampleNotes[expId]} (Exp {experimentNumbers[expId]}) Last Point")
                         {
                             ChartType = SeriesChartType.Point,
                             IsVisibleInLegend = false,
